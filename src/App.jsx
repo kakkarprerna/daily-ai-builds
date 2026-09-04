@@ -180,7 +180,18 @@ const CSS = `
 .ap-navbtn b{display:block;font-size:14.5px;font-weight:600;}
 .ap-navbtn small{display:block;font-size:11.5px;color:var(--p300);margin-top:3px;line-height:1.35;}
 .ap-navbtn.on small{color:#D9DFFA;}
-.ap-foot{margin-top:auto;font-size:11.5px;color:var(--p300);line-height:1.5;}
+.ap-foot{font-size:11.5px;color:var(--p300);line-height:1.5;}
+.ap-keybox{margin-top:auto;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);border-radius:16px;padding:14px;}
+.ap-keybox h4{margin:0 0 6px;font-size:13.5px;font-weight:600;}
+.ap-keybox p{margin:0 0 10px;font-size:11.5px;line-height:1.5;color:var(--p300);}
+.ap-keyin{width:100%;border:1px solid rgba(255,255,255,0.22);background:rgba(0,0,0,0.22);color:#fff;border-radius:10px;padding:9px 11px;font-family:inherit;font-size:12.5px;}
+.ap-keyin::placeholder{color:rgba(255,255,255,0.45);}
+.ap-keyin:focus{outline:2px solid var(--p300);outline-offset:1px;}
+.ap-keybtn{width:100%;margin-top:8px;border:0;border-radius:999px;padding:9px 14px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;background:var(--p600);color:#fff;}
+.ap-keybtn.alt{background:transparent;border:1px solid rgba(255,255,255,0.28);}
+.ap-keystat{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--p300);margin-top:10px;}
+.ap-dot{width:8px;height:8px;border-radius:50%;background:var(--p300);flex:0 0 auto;}
+.ap-dot.on{background:var(--green);}
 .ap-main{flex:1;overflow-y:auto;padding:34px 38px 60px;}
 .ap-wrap{max-width:760px;}
 .ap-h1{font-size:29px;font-weight:700;letter-spacing:-0.02em;margin:0 0 8px;}
@@ -193,8 +204,6 @@ const CSS = `
 .ap-note p{margin:0;font-size:14px;line-height:1.6;color:var(--p900);}
 .ap-ta{width:100%;min-height:180px;border:1px solid var(--line);border-radius:16px;padding:15px;font-family:inherit;font-size:14px;line-height:1.6;resize:vertical;background:#fff;color:var(--ink);}
 .ap-ta:focus{outline:2px solid var(--p600);outline-offset:1px;}
-.ap-key{width:100%;border:1px solid var(--line);border-radius:14px;padding:12px 15px;font-family:inherit;font-size:14px;background:#fff;color:var(--ink);}
-.ap-key:focus{outline:2px solid var(--p600);outline-offset:1px;}
 .ap-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;}
 .ap-btn{border:0;border-radius:999px;padding:11px 22px;font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;background:var(--p600);color:#fff;}
 .ap-btn:hover{background:var(--p700);}
@@ -234,6 +243,7 @@ const CSS = `
  .ap-nav{flex-direction:row;overflow-x:auto;gap:8px;}
  .ap-navbtn{flex:0 0 auto;}
  .ap-navbtn small{display:none;}
+ .ap-keybox{margin-top:0;}
  .ap-foot{display:none;}
  .ap-main{padding:22px 18px 50px;}
  .ap-med dl{grid-template-columns:1fr;}
@@ -501,6 +511,41 @@ export default function AsPrinted() {
             </button>
           ))}
         </nav>
+        <div className="ap-keybox">
+          <h4>Your own key</h4>
+          {keyOpen ? (
+            <>
+              <p>
+                Requests go from this browser straight to Anthropic. The key stays in this tab and is never sent to this app's server.
+              </p>
+              <input
+                className="ap-keyin"
+                type="password"
+                value={userKey}
+                onChange={(e) => setUserKey(e.target.value)}
+                placeholder="sk-ant-..."
+                autoComplete="off"
+                spellCheck="false"
+              />
+              <button className="ap-keybtn alt" onClick={() => { setUserKey(""); setKeyOpen(false); }}>
+                Remove key
+              </button>
+            </>
+          ) : (
+            <>
+              <p>
+                Optional. Add one and your document never passes through this app's server.
+              </p>
+              <button className="ap-keybtn" onClick={() => setKeyOpen(true)}>
+                Add a key
+              </button>
+            </>
+          )}
+          <div className="ap-keystat">
+            <span className={"ap-dot" + (userKey.trim() ? " on" : "")} />
+            {userKey.trim() ? "Using your key" : "Using the app's key"}
+          </div>
+        </div>
         <div className="ap-foot">
           Reading and translation come from Claude Sonnet 4.6. Nothing is stored. This is not a diagnostic tool and does not replace your doctor or pharmacist.
         </div>
@@ -563,42 +608,8 @@ export default function AsPrinted() {
                   </button>
                 </div>
                 <p style={{ marginTop: 14, marginBottom: 0, fontSize: 13 }}>
-                  Long reports work better in sections. Twelve lines at a time is the limit for one pass.
+                  Long reports work better in sections. Twelve lines at a time is the limit for one pass. To keep your document off this app's server entirely, add your own Anthropic key in the sidebar.
                 </p>
-              </div>
-
-              <div className="ap-card">
-                <h3>Use your own key</h3>
-                <p style={{ marginBottom: keyOpen ? 14 : 0 }}>
-                  By default the request goes through this app's server, which holds the key. If you would rather nothing about your document passed through anyone else's infrastructure, paste an Anthropic key here and the request goes straight from your browser to Anthropic instead. The key stays in this tab, is never sent to this app's server and disappears when you close the page.
-                </p>
-                {keyOpen ? (
-                  <>
-                    <input
-                      className="ap-key"
-                      type="password"
-                      value={userKey}
-                      onChange={(e) => setUserKey(e.target.value)}
-                      placeholder="sk-ant-..."
-                      autoComplete="off"
-                      spellCheck="false"
-                    />
-                    <div className="ap-row">
-                      <button className="ap-btn ap-ghost" onClick={() => { setUserKey(""); setKeyOpen(false); }}>
-                        Remove key and close
-                      </button>
-                      <span className="ap-file">
-                        {userKey.trim() ? "Requests will use your key." : "No key entered yet."}
-                      </span>
-                    </div>
-                  </>
-                ) : (
-                  <div className="ap-row">
-                    <button className="ap-btn ap-ghost" onClick={() => setKeyOpen(true)}>
-                      Add a key
-                    </button>
-                  </div>
-                )}
               </div>
 
               {error ? <div className="ap-err">{error}</div> : null}
