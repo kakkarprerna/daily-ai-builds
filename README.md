@@ -2,7 +2,7 @@
 
 Paste a draft PRD or ticket. Handback returns the decisions it has not made yet, ranked by whether the gap blocks the build, sign-off, or launch.
 
-Live: _add your Vercel URL here after the first deploy_
+Live: https://handback-weld.vercel.app
 
 ## The problem
 
