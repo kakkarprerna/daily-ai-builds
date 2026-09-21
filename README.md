@@ -1,53 +1,72 @@
 # Pulse Check
 
-A customer success account health scorecard. Every score comes from a fixed,
-printed formula, not a model or an AI guess, so a rep can always trace a
-number back to the inputs that produced it.
+A customer success health scorecard that shows its working.
 
-Daily AI build, first entry in the customer success diagnostics theme.
+## The problem
 
-## What it does
+Most CS platforms hand a rep a single health score and expect them to trust
+it. When a VP asks why an account dropped from 80 to 68, "the tool says so"
+is not an answer, and a rep who can't explain a score can't defend a renewal
+risk assessment in the room. Health scoring has become a black box exactly
+where CS teams need the opposite: something they can stand behind on a call.
 
-Enter an account's signals (adoption, business outcomes, engagement,
-sentiment, support) and it returns:
+## What Pulse Check does
 
-- An overall health score (0-100) with a red/yellow/green band and trend
-  vs last quarter
-- A breakdown across five weighted categories
-- The top three risks, ranked by a severity score
-- One recommended next action, chosen from a decision table
+Enter an account's signals across five areas (adoption, business outcomes,
+engagement, sentiment, support) and it returns:
 
-The full method, including every weight and threshold, is on the
-**How it works** page inside the app.
+- An overall health score out of 100, banded red, yellow or green, with the
+  trend against last quarter
+- A breakdown of all five category scores
+- The three biggest risks on the account, ranked by severity
+- One recommended next action, chosen from a fixed decision table
 
-## Run locally
+Every number traces back to a printed formula. There is no model call
+anywhere in the scoring path, so the same inputs always produce the same
+score, and the **How it works** page inside the app spells out every weight
+and threshold used.
+
+## Why deterministic, not AI
+
+An AI-generated health score would need to be trusted blind, and a
+confidence-weighted guess is a poor foundation for a renewal conversation.
+Pulse Check treats the score itself as a calculation problem, not a
+reasoning one: fixed weights, fixed thresholds, fixed decision rules. That
+also means the tool works instantly with no API key, no cost per use and no
+risk of drift between two runs of the same account.
+
+## The method, briefly
+
+| Category | Weight | What feeds it |
+|---|---|---|
+| Product adoption | 25% | Active users, core feature usage, usage trend |
+| Business outcomes | 25% | Success milestones hit, ROI demonstrated |
+| Engagement | 20% | Champion strength, exec sponsor, meeting attendance |
+| Sentiment | 15% | CSAT, NPS |
+| Support | 15% | Open critical and non-critical issues |
+
+Full formulas, including why executive sponsorship is weighted above the
+champion relationship, are documented in-app.
+
+## Try it
+
+Three worked examples ship with the app (a watch account, a healthy one and
+one at risk), each scored live by the same engine a real account would use.
+
+## Stack
+
+React + Vite, no backend, no dependencies beyond the framework. Deploys as a
+static site.
 
 ```bash
 npm install
-npm run dev
+npm run dev      # local preview
+npm run build    # static output in dist/
 ```
 
-## Build
+## Part of the series
 
-```bash
-npm run build
-```
-
-Outputs a static site to `dist/`, deployable anywhere that serves static
-files (Vercel, Netlify, GitHub Pages).
-
-## Deploy to your usual stack (GitHub + Vercel)
-
-```bash
-# from this folder
-git init
-git add .
-git commit -m "Pulse Check: CS account health scorecard"
-gh repo create kakkarprerna/pulse-check --public --source=. --push
-
-# then either import the repo at vercel.com/new, or:
-npx vercel --prod
-```
-
-No API key, no environment variables and no serverless function needed —
-this build is fully deterministic and runs entirely client side.
+First build in a customer success diagnostics sub-series within my
+[daily AI builds](https://github.com/kakkarprerna/daily-ai-builds), drawing
+on my time as a founding PM at Ylytic and a Senior PM at Jinn Live, both of
+which carried CSM responsibilities alongside the product role.
