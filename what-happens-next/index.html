@@ -1,0 +1,829 @@
+<title>What Happens Next</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #F6F1E7;
+    --surface: #FFFFFF;
+    --surface-soft: #FBF8F2;
+    --ink: #26221D;
+    --ink-soft: #6D6459;
+    --ink-faint: #948B7C;
+    --border: #E6DDCB;
+    --accent: #3F5E7A;
+    --accent-strong: #2C4356;
+    --accent-soft: #DCE6ED;
+    --accent-soft-2: #EEF3F6;
+    --on-accent: #FFFFFF;
+    --status-urgent: #AE423C;
+    --status-urgent-soft: #F5E1DE;
+    --status-ongoing: #A97A22;
+    --status-ongoing-soft: #F1E5CC;
+    --status-early: #47764F;
+    --status-early-soft: #DFEADF;
+    --shadow-sm: 0 1px 2px rgba(38,34,29,0.07);
+    --shadow-md: 0 10px 28px rgba(38,34,29,0.09);
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --radius-pill: 999px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1A1712;
+      --surface: #23201A;
+      --surface-soft: #2A2620;
+      --ink: #F2EDE3;
+      --ink-soft: #BAB0A0;
+      --ink-faint: #8B8272;
+      --border: #3B3529;
+      --accent: #86ABC9;
+      --accent-strong: #B1CCE2;
+      --accent-soft: #2C3E4B;
+      --accent-soft-2: #263340;
+      --on-accent: #17242D;
+      --status-urgent: #E2948D;
+      --status-urgent-soft: #3D2724;
+      --status-ongoing: #E1B968;
+      --status-ongoing-soft: #3B331F;
+      --status-early: #90C598;
+      --status-early-soft: #223226;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 10px 28px rgba(0,0,0,0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1A1712;
+    --surface: #23201A;
+    --surface-soft: #2A2620;
+    --ink: #F2EDE3;
+    --ink-soft: #BAB0A0;
+    --ink-faint: #8B8272;
+    --border: #3B3529;
+    --accent: #86ABC9;
+    --accent-strong: #B1CCE2;
+    --accent-soft: #2C3E4B;
+    --accent-soft-2: #263340;
+    --on-accent: #17242D;
+    --status-urgent: #E2948D;
+    --status-urgent-soft: #3D2724;
+    --status-ongoing: #E1B968;
+    --status-ongoing-soft: #3B331F;
+    --status-early: #90C598;
+    --status-early-soft: #223226;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 10px 28px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15.5px;
+    line-height: 1.55;
+    padding: 0 !important;
+  }
+  h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; font-weight: 800; text-wrap: balance; letter-spacing: -0.01em; margin: 0; }
+  p { margin: 0; }
+  button { font-family: inherit; cursor: pointer; }
+  svg.icon { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 268px 1fr;
+    min-height: 100%;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
+    background: var(--surface-soft);
+    border-right: 1px solid var(--border);
+    padding: 22px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 6px;
+  }
+  .brand-mark {
+    width: 34px; height: 34px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--on-accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .brand-text { display: flex; flex-direction: column; gap: 1px; }
+  .brand-text strong { font-size: 15px; font-weight: 800; line-height: 1.15; }
+  .brand-text span { font-size: 11.5px; color: var(--ink-faint); font-weight: 600; }
+
+  nav.navlist { display: flex; flex-direction: column; gap: 3px; }
+  .navbtn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    border: none; background: transparent;
+    color: var(--ink-soft); font-weight: 700; font-size: 14px;
+    text-align: left; width: 100%;
+    transition: background .15s ease, color .15s ease;
+  }
+  .navbtn:hover { background: var(--accent-soft-2); color: var(--ink); }
+  .navbtn.active { background: var(--accent); color: var(--on-accent); }
+  .navbtn.active svg { stroke: var(--on-accent); }
+
+  .sidebar-foot {
+    margin-top: auto;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: var(--accent-soft-2);
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+    display: flex; gap: 8px;
+  }
+  .sidebar-foot svg { margin-top: 1px; }
+
+  /* ---------- Main ---------- */
+  main {
+    padding: 34px 40px 60px;
+    max-width: 760px;
+    width: 100%;
+  }
+  .view { display: none; flex-direction: column; gap: 26px; }
+  .view.active { display: flex; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+  .page-head { display: flex; flex-direction: column; gap: 8px; }
+  .page-head h1 { font-size: 27px; }
+  .page-head p.lede { color: var(--ink-soft); font-size: 15px; max-width: 58ch; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 22px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 10px; }
+  .field label.field-label {
+    font-size: 13px; font-weight: 800; color: var(--ink);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .field label.field-label svg { stroke: var(--accent); }
+
+  .chiprow { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13.5px; font-weight: 700;
+    transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--ink); }
+  .chip.selected { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+  .chip-add-wrap { display: flex; gap: 8px; align-items: center; }
+  .chip-add-wrap input {
+    border: 1.5px dashed var(--border);
+    background: transparent;
+    border-radius: var(--radius-pill);
+    padding: 7px 14px;
+    font-size: 13.5px; font-family: inherit; color: var(--ink);
+    min-width: 200px;
+  }
+  .chip-add-wrap input:focus { outline: none; border-color: var(--accent); }
+  .chip-add-wrap button.addbtn {
+    border: 1.5px dashed var(--border); background: transparent; color: var(--ink-faint);
+    border-radius: var(--radius-pill); padding: 7px 12px; font-size: 13px; font-weight: 700;
+  }
+  .chip-add-wrap button.addbtn:hover { color: var(--accent); border-color: var(--accent); }
+
+  select.countrysel {
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: var(--radius-pill);
+    padding: 9px 16px;
+    font-size: 13.5px; font-weight: 700; font-family: inherit;
+    max-width: 280px;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 2px 0; }
+
+  .primarybtn {
+    align-self: flex-start;
+    background: var(--accent); color: var(--on-accent);
+    border: none; border-radius: var(--radius-pill);
+    padding: 13px 26px; font-size: 14.5px; font-weight: 800;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: var(--shadow-sm);
+  }
+  .primarybtn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .primarybtn:not(:disabled):hover { background: var(--accent-strong); }
+  .ghostbtn {
+    background: transparent; color: var(--ink-soft);
+    border: 1.5px solid var(--border); border-radius: var(--radius-pill);
+    padding: 10px 20px; font-size: 13.5px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .ghostbtn:hover { color: var(--ink); border-color: var(--ink-faint); }
+
+  /* Plan output */
+  .banner {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--accent-soft-2); border-radius: var(--radius-md);
+    padding: 12px 16px; font-size: 13px; color: var(--ink-soft);
+  }
+  .banner strong { color: var(--ink); }
+  .banner a.linklike { color: var(--accent-strong); font-weight: 700; cursor: pointer; }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 14px; border-radius: var(--radius-pill);
+    font-size: 12.5px; font-weight: 800; letter-spacing: 0.01em;
+    width: fit-content;
+  }
+  .status-pill.urgent { background: var(--status-urgent-soft); color: var(--status-urgent); }
+  .status-pill.ongoing { background: var(--status-ongoing-soft); color: var(--status-ongoing); }
+  .status-pill.early { background: var(--status-early-soft); color: var(--status-early); }
+
+  .plan-section { display: flex; flex-direction: column; gap: 10px; }
+  .plan-section .sec-head { display: flex; align-items: center; gap: 10px; }
+  .sec-icon {
+    width: 34px; height: 34px; border-radius: var(--radius-sm);
+    background: var(--accent-soft); color: var(--accent-strong);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .plan-section h3 { font-size: 15.5px; }
+  .plan-section .body-text { color: var(--ink-soft); font-size: 14.5px; padding-left: 44px; }
+  .plan-section ul.tick-list { list-style: none; padding-left: 44px; display: flex; flex-direction: column; gap: 9px; margin: 0; }
+  .plan-section ul.tick-list li { display: flex; align-items: flex-start; gap: 9px; font-size: 14.5px; color: var(--ink-soft); }
+  .plan-section ul.tick-list li svg { margin-top: 3px; color: var(--accent); }
+
+  .urgent-box {
+    border: 1.5px solid var(--status-urgent);
+    background: var(--status-urgent-soft);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .urgent-box svg { color: var(--status-urgent); margin-top: 2px; }
+  .urgent-box p { color: var(--ink); font-size: 14.5px; font-weight: 600; }
+
+  .resource-grid { display: flex; flex-direction: column; gap: 10px; padding-left: 44px; }
+  .resource-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    background: var(--surface-soft); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 12px 16px;
+  }
+  .resource-row .rname { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+  .resource-row .rsub { font-size: 12px; color: var(--ink-faint); }
+  .resource-row .rnum { font-size: 15px; font-weight: 800; color: var(--accent-strong); font-variant-numeric: tabular-nums; }
+
+  /* How it works */
+  .step-list { display: flex; flex-direction: column; gap: 16px; }
+  .step { display: flex; gap: 14px; }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-strong);
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0;
+  }
+  .step h4 { font-size: 14.5px; margin-bottom: 3px; }
+  .step p { font-size: 14px; color: var(--ink-soft); }
+
+  /* Examples */
+  .example-card { display: flex; flex-direction: column; gap: 12px; }
+  .example-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: var(--radius-pill);
+    background: var(--accent-soft-2); color: var(--accent-strong);
+  }
+  .example-card h3 { font-size: 16px; }
+  .example-card p.desc { font-size: 13.5px; color: var(--ink-soft); }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .series-row { display: flex; gap: 14px; align-items: flex-start; }
+  .series-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .series-row h4 { font-size: 14.5px; margin-bottom: 3px; }
+  .series-row p { font-size: 13.5px; color: var(--ink-soft); }
+
+  @media (max-width: 780px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar {
+      position: sticky; top: 0; height: auto; max-height: none;
+      flex-direction: row; align-items: center; overflow-x: auto; overflow-y: hidden;
+      padding: 12px 14px; gap: 14px; border-right: none; border-bottom: 1px solid var(--border);
+    }
+    .brand { flex-shrink: 0; }
+    nav.navlist { flex-direction: row; flex-shrink: 0; }
+    .navbtn { white-space: nowrap; }
+    .sidebar-foot { display: none; }
+    main { padding: 24px 18px 50px; }
+    .grid2 { grid-template-columns: 1fr; }
+    .plan-section .body-text, .plan-section ul.tick-list, .resource-grid { padding-left: 0; }
+    .sec-head { margin-bottom: 2px; }
+  }
+</style>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
+      </div>
+      <div class="brand-text">
+        <strong>What Happens Next</strong>
+        <span>part of the safety-signal series</span>
+      </div>
+    </div>
+
+    <nav class="navlist">
+      <button class="navbtn active" data-view="start">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Start a plan
+      </button>
+      <button class="navbtn" data-view="how">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4"/><circle cx="12" cy="8" r="0.5" fill="currentColor" stroke="none"/></svg>
+        How it works
+      </button>
+      <button class="navbtn" data-view="examples">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+        Worked examples
+      </button>
+      <button class="navbtn" data-view="about">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M17 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-3A3.5 3.5 0 0 0 7 18.5V20"/><circle cx="12" cy="8" r="3.2"/></svg>
+        About this series
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px;"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <span>No sign-in. Nothing you enter is saved or sent anywhere, it only exists in this browser tab.</span>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- START VIEW -->
+    <section class="view active" data-view="start">
+      <div class="page-head">
+        <span class="eyebrow">Step two</span>
+        <h1>Build a next-steps plan</h1>
+        <p class="lede">Answer what applies. This turns a flagged conversation into an ordered plan: who to contact first, what to say, what to avoid, and the support lines for your country.</p>
+      </div>
+
+      <div class="banner">
+        <svg class="icon" viewBox="0 0 24 24" style="stroke:var(--accent-strong)"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16" r="0.6" fill="var(--accent-strong)" stroke="none"/></svg>
+        <span>If you haven't looked at the conversation itself yet, <strong>Duty of Care</strong> in this series scores it for you first. This tool picks up from there.</span>
+      </div>
+
+      <div class="card" style="display:flex; flex-direction:column; gap:22px;">
+
+        <div class="field" data-field="category">
+          <label class="field-label"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg>What kind of signal was flagged?</label>
+          <div class="chiprow" data-options='[["physical","Physical safety"],["emotional","Emotional signals"],["trust","Trust and boundaries"]]'></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" data-field="urgency">
+          <label class="field-label"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>How urgent does it feel right now?</label>
+          <div class="chiprow" data-options='[["immediate","Something feels urgent right now"],["ongoing","Concerning, but not an emergency"],["early","A pattern I want to get ahead of"]]'></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" data-field="how_found">
+          <label class="field-label"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 8h16"/></svg>How did this come up?</label>
+          <div class="chiprow" data-options='[["checked_device","I found it while checking their device"],["told_me","They showed me or told me themselves"],["third_party","A friend, teacher or another parent flagged it"]]'></div>
+          <div class="chip-add-wrap" data-custom="how_found">
+            <input type="text" placeholder="Something else..." />
+            <button class="addbtn" type="button">Add</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" data-field="living">
+          <label class="field-label"><svg class="icon" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>Living arrangement</label>
+          <div class="chiprow" data-options='[["full_time","They live with me full-time"],["shared","Co-parenting or split time"],["independent","Living independently, I stay closely involved"]]'></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" data-field="teen_knows">
+          <label class="field-label"><svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 1 1-4-7.2"/><path d="M21 4v6h-6"/></svg>Do they know you're worried?</label>
+          <div class="chiprow" data-options='[["yes","Yes, we have talked about it a little"],["no","No, they do not know I have seen this"],["unsure","Not sure how much they know"]]'></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" data-field="support">
+          <label class="field-label"><svg class="icon" viewBox="0 0 24 24"><path d="M17 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-3A3.5 3.5 0 0 0 7 18.5V20"/><circle cx="12" cy="8" r="3.2"/></svg>Professional support already involved</label>
+          <div class="chiprow" data-options='[["therapist","Already seeing a therapist or counsellor"],["school","School counsellor or pastoral team aware"],["none","No one professional yet"]]'></div>
+          <div class="chip-add-wrap" data-custom="support">
+            <input type="text" placeholder="Something else..." />
+            <button class="addbtn" type="button">Add</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" data-field="country">
+          <label class="field-label"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/></svg>Country, for local support lines</label>
+          <select class="countrysel" id="countrySel">
+            <option value="ES">Spain</option>
+            <option value="UK">United Kingdom</option>
+            <option value="US">United States</option>
+            <option value="OTHER">Somewhere else</option>
+          </select>
+        </div>
+
+      </div>
+
+      <button class="primarybtn" id="buildBtn" disabled>
+        <svg class="icon" viewBox="0 0 24 24" style="stroke:var(--on-accent)"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
+        Build my plan
+      </button>
+    </section>
+
+    <!-- PLAN VIEW -->
+    <section class="view" data-view="plan">
+      <div class="page-head">
+        <span class="eyebrow">Your plan</span>
+        <h1>Here is where to start</h1>
+      </div>
+      <div id="planStatusPill"></div>
+      <div id="planExampleBanner"></div>
+      <div id="planUrgentBox"></div>
+      <div id="planBody" style="display:flex; flex-direction:column; gap:24px;"></div>
+      <button class="ghostbtn" id="editAnswersBtn">
+        <svg class="icon" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M4 12h16"/><path d="M10 6l-6 6 6 6"/></svg>
+        Edit my answers
+      </button>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="view" data-view="how">
+      <div class="page-head">
+        <span class="eyebrow">How it works</span>
+        <h1>A fixed set of rules, not a model</h1>
+        <p class="lede">This tool does not call an AI model. It runs your answers through a fixed set of if/then rules written in advance, the same seven inputs always produce the same plan. That matters here more than flexible wording would.</p>
+      </div>
+
+      <div class="card step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div><h4>You answer seven short questions</h4><p>What was flagged, how urgent it feels, how it came up, your living arrangement, whether the teen knows, existing support, and your country.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div><h4>The urgency and support answers set the track</h4><p>Nine fixed combinations of urgency and existing support decide who to contact first, from "call today" to "mention it at the next session."</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div><h4>The signal type and situation shape the rest</h4><p>The category decides what to watch for next, and how it came up and whether the teen knows shape the what-not-to-do-first notes.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div><h4>Your country adds the right support line</h4><p>A short, named list, not a search result. If your country is not listed, you get the general pattern to look for instead.</p></div>
+        </div>
+      </div>
+
+      <div class="card" style="display:flex; gap:12px; background:var(--accent-soft-2); border-color:transparent;">
+        <svg class="icon" viewBox="0 0 24 24" style="stroke:var(--accent-strong); margin-top:2px;"><path d="M12 9v4"/><circle cx="12" cy="16.5" r="0.6" fill="var(--accent-strong)" stroke="none"/><path d="M10.3 3.9L2.5 18a1.6 1.6 0 0 0 1.4 2.4h16.2a1.6 1.6 0 0 0 1.4-2.4L13.7 3.9a1.6 1.6 0 0 0-2.8 0z"/></svg>
+        <p style="font-size:13.5px; color:var(--ink-soft);">This is a starting point, not a substitute for a professional who can see your specific situation. If there is any chance of immediate danger, that comes before anything on this page.</p>
+      </div>
+    </section>
+
+    <!-- EXAMPLES -->
+    <section class="view" data-view="examples">
+      <div class="page-head">
+        <span class="eyebrow">Worked examples</span>
+        <h1>Three saved situations</h1>
+        <p class="lede">Load one to see a finished plan without entering anything yourself.</p>
+      </div>
+      <div id="exampleList" style="display:flex; flex-direction:column; gap:16px;"></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="view" data-view="about">
+      <div class="page-head">
+        <span class="eyebrow">About this series</span>
+        <h1>Three small tools, one worry</h1>
+        <p class="lede">Built after reading about a teenager who died after an AI chatbot walked him through how to harm himself. AI safety teams optimise heavily for engagement. Someone should be building for the parent left holding the phone afterwards.</p>
+      </div>
+
+      <div class="card" style="display:flex; flex-direction:column; gap:20px;">
+        <div class="series-row">
+          <div class="series-dot" style="background:#B8794A;"></div>
+          <div><h4>Duty of Care</h4><p>Paste in a chat, get back a soft-language read on three signals: physical safety, emotional tone, and trust and boundaries. No sign-in, nothing stored.</p></div>
+        </div>
+        <div class="series-row">
+          <div class="series-dot" style="background:#9C7A3F;"></div>
+          <div><h4>How to Bring It Up</h4><p>The parent side of the conversation itself: an opener, what to avoid, a fallback if they shut down, and when to get professional help.</p></div>
+        </div>
+        <div class="series-row">
+          <div class="series-dot" style="background:var(--accent);"></div>
+          <div><h4>What Happens Next <span style="font-weight:600; color:var(--ink-faint); font-size:12.5px;">— this tool</span></h4><p>For once a signal is confirmed: who to contact first, what not to do in the first hour, and the support lines for your country.</p></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  var state = { category: null, urgency: null, how_found: null, living: null, teen_knows: null, support: null, country: 'ES' };
+  var customLabels = {};
+
+  var ICONS = {
+    contact: '<path d="M17 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-3A3.5 3.5 0 0 0 7 18.5V20"/><circle cx="12" cy="8" r="3.2"/>',
+    say: '<path d="M21 11.5a8.4 8.4 0 0 1-8.4 8.4c-1.2 0-2.4-.3-3.4-.8L4 20l1-4.8a8.3 8.3 0 0 1-.9-3.7A8.4 8.4 0 0 1 12.6 3a8.4 8.4 0 0 1 8.4 8.5z"/>',
+    avoid: '<circle cx="12" cy="12" r="9"/><path d="M8.5 8.5l7 7"/>',
+    watch: '<path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z"/><circle cx="12" cy="12" r="2.6"/>',
+    phone: '<rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M10 18h4"/>'
+  };
+  function iconHtml(name, cls) {
+    return '<svg class="icon' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24">' + ICONS[name] + '</svg>';
+  }
+
+  // ---------- Nav ----------
+  var navBtns = document.querySelectorAll('.navbtn');
+  var views = document.querySelectorAll('.view');
+  function showView(name) {
+    views.forEach(function (v) { v.classList.toggle('active', v.getAttribute('data-view') === name); });
+    navBtns.forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-view') === name); });
+    window.scrollTo(0, 0);
+  }
+  navBtns.forEach(function (b) {
+    b.addEventListener('click', function () { showView(b.getAttribute('data-view')); });
+  });
+
+  // ---------- Chip fields ----------
+  var fields = document.querySelectorAll('.field[data-field]');
+  fields.forEach(function (field) {
+    var key = field.getAttribute('data-field');
+    var row = field.querySelector('.chiprow');
+    if (!row) return;
+    var options = JSON.parse(row.getAttribute('data-options'));
+    options.forEach(function (opt) {
+      var btn = document.createElement('button');
+      btn.className = 'chip';
+      btn.type = 'button';
+      btn.textContent = opt[1];
+      btn.setAttribute('data-value', opt[0]);
+      btn.addEventListener('click', function () {
+        state[key] = opt[0];
+        customLabels[key] = opt[1];
+        row.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('selected'); });
+        btn.classList.add('selected');
+        checkReady();
+      });
+      row.appendChild(btn);
+    });
+  });
+
+  // custom "add your own" chips
+  document.querySelectorAll('.chip-add-wrap').forEach(function (wrap) {
+    var key = wrap.getAttribute('data-custom');
+    var input = wrap.querySelector('input');
+    var btn = wrap.querySelector('button');
+    var row = wrap.closest('.field').querySelector('.chiprow');
+    function addCustom() {
+      var val = input.value.trim();
+      if (!val) return;
+      var id = 'custom_' + key;
+      var existing = row.querySelector('[data-value="' + id + '"]');
+      if (!existing) {
+        var chip = document.createElement('button');
+        chip.className = 'chip';
+        chip.type = 'button';
+        chip.textContent = val;
+        chip.setAttribute('data-value', id);
+        chip.addEventListener('click', function () {
+          state[key] = id;
+          customLabels[key] = val;
+          row.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('selected'); });
+          chip.classList.add('selected');
+          checkReady();
+        });
+        row.appendChild(chip);
+        existing = chip;
+      } else {
+        existing.textContent = val;
+      }
+      existing.click();
+      input.value = '';
+    }
+    btn.addEventListener('click', addCustom);
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addCustom(); } });
+  });
+
+  document.getElementById('countrySel').addEventListener('change', function (e) {
+    state.country = e.target.value;
+  });
+
+  var buildBtn = document.getElementById('buildBtn');
+  function checkReady() {
+    var required = ['category', 'urgency', 'how_found', 'living', 'teen_knows', 'support'];
+    var ready = required.every(function (k) { return state[k]; });
+    buildBtn.disabled = !ready;
+  }
+
+  buildBtn.addEventListener('click', function () {
+    var plan = generatePlan(state);
+    renderPlan(plan, null);
+    showView('plan');
+  });
+  document.getElementById('editAnswersBtn').addEventListener('click', function () { showView('start'); });
+
+  // ---------- Rules engine ----------
+  var CONTACT_TRACK = {
+    'immediate|therapist': "Call their therapist or counsellor today and ask for an urgent slot. If you can't reach them within a few hours, use the support line below in the meantime.",
+    'immediate|school': "This is bigger than school hours can cover. Get an urgent same-day appointment with your GP or paediatrician, and let the school counsellor know once you have a plan in place.",
+    'immediate|none': "Two calls today: your GP or paediatrician for an urgent same-day appointment, and the support line below if you want to talk it through first or can't be seen today.",
+    'ongoing|therapist': "Bring this to their next session, or call ahead if you'd rather not wait for it.",
+    'ongoing|school': "Loop the school counsellor in this week. They can watch for this day to day in a way you can't from home.",
+    'ongoing|none': "Book a GP appointment this week and name this specifically when you call. It gets you a faster, more relevant referral than a general check-up.",
+    'early|therapist': "No need to escalate. Mention it at the next session as one thing among others worth keeping an eye on.",
+    'early|school': "Optional: a quiet heads-up to the school counsellor, mainly so it's on record if the pattern continues.",
+    'early|none': "You likely don't need a professional yet. A GP or the school counsellor is there if the pattern continues or deepens."
+  };
+
+  var WATCH_FOR = {
+    physical: "Repeated searches or conversations in the same territory, changes in sleep or appetite, giving away belongings, or a sudden calm after a period of distress. Any of these alongside this signal moves this from watch to act now.",
+    emotional: "Withdrawal from friends or activities they used to enjoy, a shift in how they talk about themselves, or leaning on the AI chat itself as their main outlet rather than one option among several.",
+    trust: "Whether they bring things to you unprompted afterwards. That usually tells you more than whether they push back in the moment."
+  };
+
+  var SAY_BY_CATEGORY = {
+    physical: "Physical safety signals are worth naming directly and calmly, without softening them just to make the conversation easier to have.",
+    emotional: "Ask what was going on for them at the time, before asking them to explain or justify it. Naming the feeling usually opens more than naming the behaviour.",
+    trust: "This category is often more about whether they can trust you with hard things than about the specific chat itself. How you react here sets the pattern for what they bring you next time."
+  };
+
+  var RESOURCES = {
+    ES: { label: 'Spain', items: [
+      { name: '024 – Línea de atención a la conducta suicida', sub: 'Free, 24/7, calls, also for worried family members', num: '024' },
+      { name: 'Teléfono de la Esperanza', sub: 'Confidential listening line', num: '717 003 717' },
+      { name: 'Emergency services', sub: 'Ambulance, police, fire', num: '112' }
+    ]},
+    UK: { label: 'United Kingdom', items: [
+      { name: 'Samaritans', sub: 'Free, 24/7, confidential', num: '116 123' },
+      { name: 'Childline', sub: 'For under-19s', num: '0800 1111' },
+      { name: 'Emergency services', sub: 'Ambulance, police, fire', num: '999' }
+    ]},
+    US: { label: 'United States', items: [
+      { name: '988 Suicide & Crisis Lifeline', sub: 'Call or text, 24/7', num: '988' },
+      { name: 'Crisis Text Line', sub: 'Text HOME to', num: '741741' },
+      { name: 'Emergency services', sub: 'Ambulance, police, fire', num: '911' }
+    ]},
+    OTHER: { label: 'your country', items: [] }
+  };
+
+  function generatePlan(s) {
+    var track = CONTACT_TRACK[s.urgency + '|' + s.support] ||
+      "Start with whichever professional already knows your family best, a GP, paediatrician or school counsellor, and name this specifically when you call.";
+
+    if (s.living === 'shared') {
+      track += " If time is split with another parent or guardian, loop them in before you act on your own, so the teen isn't getting two different responses.";
+    } else if (s.living === 'independent') {
+      track += " Since they're living independently, involve them in choosing who gets contacted, rather than arranging it entirely around them.";
+    }
+
+    var avoid = [
+      "Leading with the screenshot or transcript as an accusation, it turns this into a fight about privacy instead of the actual worry.",
+      "Removing the device as the very first move, without a conversation first, that cuts off the channel you'd use to understand more."
+    ];
+    if (s.category === 'physical') {
+      avoid.push("Waiting to \"see if it passes\", patterns in this category are worth acting on early rather than monitoring quietly.");
+    }
+    if (s.teen_knows === 'no') {
+      avoid.push("Pretending this came up by chance. Decide how you'll explain how you learned about it before you start, How to Bring It Up in this series is built for exactly that conversation.");
+    }
+    if (s.how_found === 'checked_device') {
+      avoid.push("Hiding that you were checking their device. Being upfront about it, even if it's uncomfortable, matters more here than it feels like it will.");
+    }
+
+    var say = SAY_BY_CATEGORY[s.category] || "Lead with the specific thing you saw or heard, not a general worry, and ask what was going on for them at the time.";
+
+    var watch = WATCH_FOR[s.category] || "Changes in mood, sleep or who they're spending time with, alongside a repeat of this signal.";
+
+    var resBlock = RESOURCES[s.country] || RESOURCES.OTHER;
+
+    return {
+      urgency: s.urgency,
+      contact: track,
+      avoid: avoid,
+      say: say,
+      watch: watch,
+      resources: resBlock,
+      immediate: s.urgency === 'immediate'
+    };
+  }
+
+  var STATUS_META = {
+    immediate: { cls: 'urgent', label: 'Feels urgent right now' },
+    ongoing: { cls: 'ongoing', label: 'Concerning, not an emergency' },
+    early: { cls: 'early', label: 'Early pattern' }
+  };
+
+  function renderPlan(plan, exampleLabel) {
+    document.getElementById('planStatusPill').innerHTML =
+      '<span class="status-pill ' + STATUS_META[plan.urgency].cls + '">' +
+      '<svg class="icon" style="width:13px;height:13px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>' +
+      STATUS_META[plan.urgency].label + '</span>';
+
+    document.getElementById('planExampleBanner').innerHTML = exampleLabel
+      ? '<div class="banner"><svg class="icon" viewBox="0 0 24 24" style="stroke:var(--accent-strong)"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg><span>Showing the worked example: <strong>' + exampleLabel + '</strong>. <a class="linklike" id="tryOwnLink">Try your own situation instead</a></span></div>'
+      : '';
+    var tryOwn = document.getElementById('tryOwnLink');
+    if (tryOwn) tryOwn.addEventListener('click', function () { showView('start'); });
+
+    document.getElementById('planUrgentBox').innerHTML = plan.immediate
+      ? '<div class="urgent-box">' + iconHtml('avoid') + '<p>If there is any chance they are in danger right now, that comes before anything below. Call the emergency number for your country, or go to the nearest emergency department. Come back to the rest of this once that question is answered.</p></div>'
+      : '';
+
+    var resourceRows = plan.resources.items.map(function (r) {
+      return '<div class="resource-row"><div><div class="rname">' + r.name + '</div><div class="rsub">' + r.sub + '</div></div><div class="rnum">' + r.num + '</div></div>';
+    }).join('');
+    if (!plan.resources.items.length) {
+      resourceRows = '<div class="resource-row"><div><div class="rname">No line saved for this country yet</div><div class="rsub">Search "[your country] suicide or crisis line", most countries have a free, confidential one</div></div></div>';
+    }
+
+    var avoidItems = plan.avoid.map(function (a) {
+      return '<li>' + iconHtml('avoid') + '<span>' + a + '</span></li>';
+    }).join('');
+
+    document.getElementById('planBody').innerHTML =
+      '<div class="plan-section"><div class="sec-head"><div class="sec-icon">' + iconHtml('contact') + '</div><h3>Who to contact first</h3></div><div class="body-text">' + plan.contact + '</div></div>' +
+      '<div class="plan-section"><div class="sec-head"><div class="sec-icon">' + iconHtml('say') + '</div><h3>What to say</h3></div><div class="body-text">' + plan.say + ' For the conversation itself, <strong>How to Bring It Up</strong> in this series is built to walk through it step by step.</div></div>' +
+      '<div class="plan-section"><div class="sec-head"><div class="sec-icon">' + iconHtml('avoid') + '</div><h3>What not to do first</h3></div><ul class="tick-list">' + avoidItems + '</ul></div>' +
+      '<div class="plan-section"><div class="sec-head"><div class="sec-icon">' + iconHtml('watch') + '</div><h3>What to watch for next</h3></div><div class="body-text">' + plan.watch + '</div></div>' +
+      '<div class="plan-section"><div class="sec-head"><div class="sec-icon">' + iconHtml('phone') + '</div><h3>Support lines, ' + plan.resources.label + '</h3></div><div class="resource-grid">' + resourceRows + '</div></div>';
+  }
+
+  // ---------- Worked examples ----------
+  var EXAMPLES = [
+    {
+      title: 'Found while checking his phone',
+      tags: ['Physical safety', 'Urgent', 'No support yet'],
+      desc: 'A father found a concerning exchange while checking his 15-year-old\'s phone. The teen doesn\'t know yet. No professional involved so far. Based in Spain.',
+      state: { category: 'physical', urgency: 'immediate', how_found: 'checked_device', living: 'full_time', teen_knows: 'no', support: 'none', country: 'ES' }
+    },
+    {
+      title: 'She brought it up herself',
+      tags: ['Emotional signals', 'Ongoing', 'School aware'],
+      desc: 'A 16-year-old told her mother directly that a chatbot conversation had left her feeling worse. The school counsellor already knows the family. Parents co-parent across two homes. Based in the UK.',
+      state: { category: 'emotional', urgency: 'ongoing', how_found: 'told_me', living: 'shared', teen_knows: 'yes', support: 'school', country: 'UK' }
+    },
+    {
+      title: 'A teacher flagged it',
+      tags: ['Trust and boundaries', 'Early pattern', 'No support yet'],
+      desc: 'A teacher mentioned an odd remark a 14-year-old made about an AI chat. Nothing urgent, but the parent wants to get ahead of it. The teen doesn\'t know it was mentioned. Based in the US.',
+      state: { category: 'trust', urgency: 'early', how_found: 'third_party', living: 'full_time', teen_knows: 'no', support: 'none', country: 'US' }
+    }
+  ];
+
+  var exList = document.getElementById('exampleList');
+  EXAMPLES.forEach(function (ex) {
+    var card = document.createElement('div');
+    card.className = 'card example-card';
+    card.innerHTML =
+      '<div class="example-tags">' + ex.tags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join('') + '</div>' +
+      '<h3>' + ex.title + '</h3>' +
+      '<p class="desc">' + ex.desc + '</p>' +
+      '<button class="ghostbtn" type="button">' +
+      '<svg class="icon" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>' +
+      'Load this example</button>';
+    card.querySelector('button').addEventListener('click', function () {
+      var plan = generatePlan(ex.state);
+      renderPlan(plan, ex.title);
+      showView('plan');
+    });
+    exList.appendChild(card);
+  });
+
+})();
+</script>
