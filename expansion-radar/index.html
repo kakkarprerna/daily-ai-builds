@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expansion Radar</title>
+<meta name="description" content="Scores an account's expansion readiness across five weighted signals and returns the specific upsell or cross-sell play to run.">
+<style>
+:root{color-scheme:light dark;}
+*{box-sizing:border-box;}
+[hidden]{display:none!important;}
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg:#FDF8F6;
+  --surface:#FFFFFF;
+  --surface-alt:#FBEDE8;
+  --text:#241C1A;
+  --text-muted:#71605B;
+  --border:#EFDCD5;
+  --border-soft:#F5E7E1;
+  --accent:#FF6B4A;
+  --accent-dark:#DE4E2E;
+  --accent-tint:#FFE4D9;
+  --accent-contrast:#FFFFFF;
+  --good:#1E9E5A;
+  --good-tint:#DFF5E9;
+  --warn:#C98A0E;
+  --warn-tint:#FBEED2;
+  --bad:#D6493F;
+  --bad-tint:#FBE1DE;
+  --shadow:0 10px 28px rgba(64,32,24,0.10);
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1A1412;
+    --surface:#231B18;
+    --surface-alt:#2C221D;
+    --text:#F6ECE7;
+    --text-muted:#C1AEA6;
+    --border:#3B2C26;
+    --border-soft:#31241F;
+    --accent:#FF8163;
+    --accent-dark:#FFA48A;
+    --accent-tint:#3C2419;
+    --accent-contrast:#1A1412;
+    --good:#49D28A;
+    --good-tint:#173425;
+    --warn:#E3AC3E;
+    --warn-tint:#3A2C13;
+    --bad:#F0776C;
+    --bad-tint:#3B211E;
+    --shadow:0 10px 28px rgba(0,0,0,0.45);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1A1412;
+  --surface:#231B18;
+  --surface-alt:#2C221D;
+  --text:#F6ECE7;
+  --text-muted:#C1AEA6;
+  --border:#3B2C26;
+  --border-soft:#31241F;
+  --accent:#FF8163;
+  --accent-dark:#FFA48A;
+  --accent-tint:#3C2419;
+  --accent-contrast:#1A1412;
+  --good:#49D28A;
+  --good-tint:#173425;
+  --warn:#E3AC3E;
+  --warn-tint:#3A2C13;
+  --bad:#F0776C;
+  --bad-tint:#3B211E;
+  --shadow:0 10px 28px rgba(0,0,0,0.45);
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Manrope',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{
+  font-family:'Sora',system-ui,sans-serif;
+  text-wrap:balance;
+}
+button{font-family:inherit;}
+:focus-visible{outline:2.5px solid var(--accent-dark);outline-offset:2px;}
+
+.app{display:flex;height:100%;min-height:100%;}
+
+/* ---------- Sidebar ---------- */
+.sidebar{
+  width:250px;
+  flex:0 0 250px;
+  background:var(--surface);
+  border-right:1px solid var(--border-soft);
+  display:flex;
+  flex-direction:column;
+  padding:24px 16px;
+  gap:24px;
+  height:100%;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px;}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  flex:0 0 34px;
+}
+.brand-mark svg{width:19px;height:19px;stroke:var(--accent-contrast);}
+.brand-name{font-size:16px;font-weight:800;letter-spacing:-0.01em;}
+.brand-tag{font-size:11.5px;color:var(--text-muted);margin-top:1px;}
+
+.nav{display:flex;flex-direction:column;gap:4px;}
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;border-radius:var(--radius-sm);
+  cursor:pointer;border:1px solid transparent;
+  background:none;text-align:left;width:100%;
+}
+.nav-item svg{width:17px;height:17px;stroke:var(--text-muted);flex:0 0 17px;}
+.nav-item .nav-label{font-size:13.5px;font-weight:700;color:var(--text);}
+.nav-item .nav-sub{font-size:11px;color:var(--text-muted);font-weight:500;}
+.nav-item[aria-current="true"]{background:var(--accent-tint);border-color:var(--accent-tint);}
+.nav-item[aria-current="true"] svg{stroke:var(--accent-dark);}
+.nav-item[aria-current="true"] .nav-label{color:var(--accent-dark);}
+.nav-item:hover{background:var(--surface-alt);}
+
+.sidebar-foot{margin-top:auto;font-size:11px;color:var(--text-muted);padding:0 6px;line-height:1.5;}
+
+/* ---------- Main ---------- */
+.main{flex:1;min-width:0;height:100%;overflow-y:auto;}
+.view{padding:32px clamp(16px,4vw,48px) 64px;max-width:980px;margin:0 auto;}
+.view[hidden]{display:none!important;}
+
+.page-head{margin-bottom:26px;}
+.page-eyebrow{
+  font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--accent-dark);margin-bottom:6px;
+}
+.page-title{font-size:26px;font-weight:800;letter-spacing:-0.015em;margin:0 0 6px;}
+.page-desc{font-size:14px;color:var(--text-muted);max-width:62ch;line-height:1.55;margin:0;}
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);
+  padding:22px clamp(16px,3vw,26px);
+}
+.card + .card{margin-top:18px;}
+.card-title{font-size:14.5px;font-weight:800;margin:0 0 3px;display:flex;align-items:center;gap:8px;}
+.card-title svg{width:16px;height:16px;stroke:var(--accent-dark);}
+.card-sub{font-size:12px;color:var(--text-muted);margin:0 0 16px;}
+
+/* ---------- Form field ---------- */
+.field{margin-bottom:22px;}
+.field:last-child{margin-bottom:0;}
+.field-label{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  font-size:13px;font-weight:700;margin-bottom:9px;
+}
+.field-label .fl-value{font-size:12px;font-weight:700;color:var(--accent-dark);font-variant-numeric:tabular-nums;}
+
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{
+  padding:7px 14px;border-radius:999px;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text);
+  font-size:12.5px;font-weight:600;cursor:pointer;
+  transition:border-color .12s, background .12s;
+}
+.chip:hover{border-color:var(--accent);}
+.chip[aria-pressed="true"]{
+  background:var(--accent);border-color:var(--accent);color:var(--accent-contrast);
+}
+.chip-add{
+  display:flex;align-items:center;gap:6px;
+  border:1.5px dashed var(--border);background:none;
+  border-radius:999px;padding:6px 12px 6px 10px;
+  font-size:12px;font-weight:700;color:var(--text-muted);cursor:pointer;
+}
+.chip-add:hover{border-color:var(--accent);color:var(--accent-dark);}
+.chip-add svg{width:13px;height:13px;stroke:currentColor;}
+.chip-add-input{
+  display:none;gap:6px;align-items:center;margin-top:8px;
+}
+.chip-add-input.open{display:flex;}
+.chip-add-input input{
+  flex:1;min-width:0;padding:7px 11px;border-radius:999px;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text);font-size:12.5px;font-family:inherit;
+}
+.chip-add-input button{
+  padding:7px 13px;border-radius:999px;border:none;background:var(--accent);
+  color:var(--accent-contrast);font-size:12px;font-weight:700;cursor:pointer;
+}
+
+input[type="range"]{
+  width:100%;accent-color:var(--accent);height:20px;cursor:pointer;
+}
+.range-scale{display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+
+.field-hint{font-size:11.5px;color:var(--text-muted);margin-top:6px;line-height:1.45;}
+
+/* ---------- Score result ---------- */
+.score-wrap{display:flex;gap:20px;flex-wrap:wrap;align-items:stretch;}
+.score-dial{
+  flex:0 0 168px;width:168px;height:168px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.score-dial svg{position:absolute;inset:0;transform:rotate(-90deg);}
+.score-dial-inner{position:relative;text-align:center;}
+.score-num{font-family:'Sora',sans-serif;font-size:40px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
+.score-max{font-size:11px;color:var(--text-muted);font-weight:700;}
+
+.score-meta{flex:1;min-width:220px;display:flex;flex-direction:column;justify-content:center;gap:10px;}
+.band-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 13px;border-radius:999px;font-size:12.5px;font-weight:800;
+  width:fit-content;
+}
+.band-pill svg{width:13px;height:13px;}
+.band-not-ready{background:var(--bad-tint);color:var(--bad);}
+.band-watch{background:var(--warn-tint);color:var(--warn);}
+.band-ready{background:var(--accent-tint);color:var(--accent-dark);}
+.band-strike{background:var(--good-tint);color:var(--good);}
+.score-why{font-size:12.5px;color:var(--text-muted);line-height:1.55;}
+.score-why b{color:var(--text);font-weight:700;}
+
+/* ---------- Category breakdown ---------- */
+.cat-list{display:flex;flex-direction:column;gap:14px;}
+.cat-row{display:flex;align-items:center;gap:12px;}
+.cat-icon{
+  width:30px;height:30px;border-radius:9px;background:var(--accent-tint);
+  display:flex;align-items:center;justify-content:center;flex:0 0 30px;
+}
+.cat-icon svg{width:15px;height:15px;stroke:var(--accent-dark);}
+.cat-body{flex:1;min-width:0;}
+.cat-top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;margin-bottom:5px;}
+.cat-top span:last-child{color:var(--text-muted);font-weight:700;font-variant-numeric:tabular-nums;}
+.cat-track{height:7px;border-radius:99px;background:var(--surface-alt);overflow:hidden;}
+.cat-fill{height:100%;background:var(--accent);border-radius:99px;}
+.cat-weight{font-size:10.5px;color:var(--text-muted);flex:0 0 auto;font-weight:700;}
+
+/* ---------- Play card ---------- */
+.play-card{
+  border-radius:var(--radius-lg);border:1.5px solid var(--accent);
+  background:var(--accent-tint);padding:22px clamp(16px,3vw,26px);
+}
+.play-kicker{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--accent-dark);margin-bottom:6px;}
+.play-name{font-size:19px;font-weight:800;margin:0 0 8px;letter-spacing:-.01em;}
+.play-line{
+  font-size:13.5px;font-style:normal;line-height:1.55;margin:0 0 14px;
+  background:var(--surface);border-radius:var(--radius-sm);padding:12px 14px;
+  border:1px solid var(--border-soft);
+}
+.play-bring{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;}
+.play-bring li{display:flex;gap:9px;font-size:12.5px;line-height:1.5;}
+.play-bring svg{width:14px;height:14px;stroke:var(--accent-dark);flex:0 0 14px;margin-top:2px;}
+
+/* ---------- How it works ---------- */
+.method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;}
+.method-cat{
+  border:1px solid var(--border-soft);border-radius:var(--radius-md);padding:15px 16px;background:var(--surface-alt);
+}
+.method-cat-head{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.method-cat-head svg{width:16px;height:16px;stroke:var(--accent-dark);}
+.method-cat-head b{font-size:13px;}
+.method-cat-weight{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--accent-dark);}
+.method-cat p{font-size:12px;color:var(--text-muted);margin:0;line-height:1.55;}
+
+.band-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px;}
+.band-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);padding:0 10px 8px 0;font-weight:800;}
+.band-table td{padding:9px 10px 9px 0;border-top:1px solid var(--border-soft);}
+.rule-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;}
+.rule-list li{font-size:12.5px;line-height:1.55;padding:11px 13px;background:var(--surface-alt);border-radius:var(--radius-sm);border:1px solid var(--border-soft);}
+.rule-list b{color:var(--accent-dark);}
+
+.disclosure{
+  display:flex;gap:11px;padding:15px 16px;border-radius:var(--radius-md);
+  background:var(--surface-alt);border:1px solid var(--border-soft);font-size:12.5px;color:var(--text-muted);line-height:1.55;
+}
+.disclosure svg{width:17px;height:17px;stroke:var(--text-muted);flex:0 0 17px;margin-top:1px;}
+
+/* ---------- Examples ---------- */
+.example-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.example-card{
+  border:1px solid var(--border-soft);border-radius:var(--radius-lg);background:var(--surface);
+  padding:19px 19px 17px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:11px;
+}
+.example-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.example-name{font-weight:800;font-size:15px;}
+.example-band{font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+.example-desc{font-size:12.5px;color:var(--text-muted);line-height:1.55;margin:0;flex:1;}
+.example-play{font-size:11.5px;font-weight:700;color:var(--accent-dark);}
+.example-load{
+  margin-top:4px;padding:9px 14px;border-radius:999px;border:1.5px solid var(--accent);
+  background:none;color:var(--accent-dark);font-weight:800;font-size:12.5px;cursor:pointer;
+}
+.example-load:hover{background:var(--accent);color:var(--accent-contrast);}
+
+/* ---------- Mobile ---------- */
+@media (max-width:760px){
+  .app{flex-direction:column;}
+  .sidebar{
+    width:100%;flex:0 0 auto;height:auto;
+    flex-direction:row;align-items:center;padding:14px 16px;gap:14px;
+    overflow-x:auto;border-right:none;border-bottom:1px solid var(--border-soft);
+  }
+  .brand{flex:0 0 auto;}
+  .brand-tag{display:none;}
+  .nav{flex-direction:row;gap:6px;}
+  .nav-item{flex:0 0 auto;}
+  .nav-sub{display:none;}
+  .sidebar-foot{display:none;}
+  .main{height:auto;flex:1;}
+  .view{padding:22px 16px 48px;}
+  .score-dial{flex:0 0 140px;width:140px;height:140px;}
+  .score-num{font-size:32px;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <nav class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/><line x1="12" y1="3" x2="12" y2="6.2"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Expansion Radar</div>
+        <div class="brand-tag">Grow the accounts you have</div>
+      </div>
+    </div>
+
+    <div class="nav" role="tablist" aria-label="Sections">
+      <button class="nav-item" data-view="score" aria-current="true" role="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        <span><span class="nav-label">Score an account</span><br/><span class="nav-sub">Enter signals, get a play</span></span>
+      </button>
+      <button class="nav-item" data-view="method" role="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r="0.9" fill="currentColor" stroke="none"/></svg>
+        <span><span class="nav-label">How it works</span><br/><span class="nav-sub">Formula and rules</span></span>
+      </button>
+      <button class="nav-item" data-view="examples" role="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></svg>
+        <span><span class="nav-label">Examples</span><br/><span class="nav-sub">Three worked accounts</span></span>
+      </button>
+    </div>
+
+    <div class="sidebar-foot">Companion to Pulse Check &middot; deterministic, no account data leaves this page.</div>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ---- SCORE VIEW ---- -->
+    <section class="view" id="view-score">
+      <div class="page-head">
+        <div class="page-eyebrow">Score an account</div>
+        <h1 class="page-title">Where's the next expansion coming from?</h1>
+        <p class="page-desc">Enter what you're seeing on the account. Nothing here reads live usage data, it's the signals you already carry in your head, turned into a score and a next move.</p>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/></svg>
+          Usage depth and growth
+        </h2>
+        <p class="card-sub">How much of what they bought is actually getting used, and whether that's climbing.</p>
+
+        <div class="field">
+          <div class="field-label"><span>Active seats used</span><span class="fl-value" id="val-seats">65%</span></div>
+          <input type="range" id="in-seats" min="0" max="100" value="65"/>
+          <div class="range-scale"><span>0%</span><span>100%</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Feature adoption breadth</span><span class="fl-value" id="val-breadth">55%</span></div>
+          <input type="range" id="in-breadth" min="0" max="100" value="55"/>
+          <div class="range-scale"><span>Barely scratching it</span><span>Using most of it</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Usage growth, last quarter</span></div>
+          <div class="chip-row" id="grp-growth" data-field="growthRate">
+            <button class="chip" data-value="flat">Flat or declining</button>
+            <button class="chip" data-value="steady">Steady growth</button>
+            <button class="chip" data-value="fast">Fast growth</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4.5" height="10.5" rx="1"/><rect x="9.7" y="5.5" width="4.5" height="15" rx="1"/><rect x="16.4" y="2.5" width="4.5" height="18" rx="1"/></svg>
+          Organisational spread
+        </h2>
+        <p class="card-sub">Whether this has grown beyond the person who signed the contract.</p>
+
+        <div class="field">
+          <div class="field-label"><span>Teams using it beyond the original buyer</span></div>
+          <div class="chip-row" id="grp-spread" data-field="orgSpread">
+            <button class="chip" data-value="just-original">Just the original team</button>
+            <button class="chip" data-value="one-additional">One additional team</button>
+            <button class="chip" data-value="multiple">Multiple teams</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Executive sponsor engagement</span></div>
+          <div class="chip-row" id="grp-exec" data-field="execEngagement">
+            <button class="chip" data-value="none">No exec relationship</button>
+            <button class="chip" data-value="aware">Aware, but distant</button>
+            <button class="chip" data-value="engaged">Actively engaged</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5 5 0 0 0-7 0L12 6.3l-1.8-1.7a5 5 0 1 0-7 7.1L12 20l8.8-8.3a5 5 0 0 0 0-7.1z"/></svg>
+          Champion advocacy
+        </h2>
+        <p class="card-sub">Signs the person you sold to is now selling for you.</p>
+
+        <div class="field">
+          <div class="field-label"><span>Advocacy signals seen</span></div>
+          <div class="chip-row" id="grp-champion" data-field="championSignals" data-multi="true">
+            <button class="chip" data-value="referral">Gave a referral</button>
+            <button class="chip" data-value="reference">Agreed to a reference call or case study</button>
+            <button class="chip" data-value="qbr-praise">Speaks positively in QBRs</button>
+            <button class="chip" data-value="training-request">Requested more training or seats</button>
+          </div>
+          <button class="chip-add" id="add-champion-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add a signal
+          </button>
+          <div class="chip-add-input" id="add-champion-input">
+            <input type="text" placeholder="e.g. asked to speak at our user event" maxlength="60"/>
+            <button type="button" id="add-champion-confirm">Add</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>NPS or CSAT signal</span></div>
+          <div class="chip-row" id="grp-nps" data-field="npsCsat">
+            <button class="chip" data-value="detractor">Detractor</button>
+            <button class="chip" data-value="passive">Passive</button>
+            <button class="chip" data-value="promoter">Promoter</button>
+            <button class="chip" data-value="not-measured">Not measured</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5"/><path d="M2.5 8.5L12 2.5l9.5 6"/><path d="M9.5 14.5h5"/></svg>
+          Buying signals
+        </h2>
+        <p class="card-sub">Whether they're already reaching past what they bought, and whether they've expanded before.</p>
+
+        <div class="field">
+          <div class="field-label"><span>Feature requests raised</span></div>
+          <div class="chip-row" id="grp-requests" data-field="featureRequests">
+            <button class="chip" data-value="none">None raised</button>
+            <button class="chip" data-value="existing">For things they already have</button>
+            <button class="chip" data-value="adjacent">For adjacent or new capabilities</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Prior expansion history</span></div>
+          <div class="chip-row" id="grp-history" data-field="expansionHistory">
+            <button class="chip" data-value="never">Never expanded</button>
+            <button class="chip" data-value="new-account">New account, under 6 months</button>
+            <button class="chip" data-value="expanded-before">Has expanded before</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Unused or idle seats remaining</span><span class="fl-value" id="val-unused">10%</span></div>
+          <input type="range" id="in-unused" min="0" max="100" value="10"/>
+          <div class="field-hint">Not scored directly, it decides whether Seat Expansion is on the table.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+          Timing fit
+        </h2>
+        <p class="card-sub">How close the renewal or budget cycle is, since timing shapes which ask lands.</p>
+        <div class="field">
+          <div class="field-label"><span>Renewal or budget cycle timing</span></div>
+          <div class="chip-row" id="grp-timing" data-field="renewalTiming">
+            <button class="chip" data-value="gt6">More than 6 months away</button>
+            <button class="chip" data-value="3-6">3 to 6 months away</button>
+            <button class="chip" data-value="lt3">Within 3 months</button>
+            <button class="chip" data-value="not-linked">Not renewal-linked</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="card" id="result-card" style="margin-top:22px;">
+        <h2 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 11-13h-7l1-7z"/></svg>
+          Expansion readiness
+        </h2>
+
+        <div class="score-wrap">
+          <div class="score-dial">
+            <svg viewBox="0 0 168 168">
+              <circle cx="84" cy="84" r="74" fill="none" stroke="var(--surface-alt)" stroke-width="14"/>
+              <circle id="dial-arc" cx="84" cy="84" r="74" fill="none" stroke="var(--accent)" stroke-width="14" stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465"/>
+            </svg>
+            <div class="score-dial-inner">
+              <div class="score-num" id="score-num">0</div>
+              <div class="score-max">out of 100</div>
+            </div>
+          </div>
+          <div class="score-meta">
+            <span class="band-pill" id="band-pill">Not ready</span>
+            <p class="score-why" id="score-why">Fill in the signals above to see where this account stands.</p>
+          </div>
+        </div>
+
+        <div style="height:20px;"></div>
+
+        <div class="cat-list" id="cat-list"></div>
+      </div>
+
+      <div class="play-card" style="margin-top:18px;" id="play-card">
+        <div class="play-kicker">Recommended play</div>
+        <div class="play-name" id="play-name">Nurture play</div>
+        <p class="play-line" id="play-line">Fill in the form to get a tailored opener.</p>
+        <ul class="play-bring" id="play-bring"></ul>
+      </div>
+    </section>
+
+    <!-- ---- METHOD VIEW ---- -->
+    <section class="view" id="view-method" hidden>
+      <div class="page-head">
+        <div class="page-eyebrow">How it works</div>
+        <h1 class="page-title">The formula behind the score</h1>
+        <p class="page-desc">Fixed weights, no model call, nothing sent anywhere. Every number below is printed so you can argue with it.</p>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Five weighted categories</h2>
+        <div class="method-grid">
+          <div class="method-cat">
+            <div class="method-cat-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/></svg><b>Usage depth &amp; growth</b><span class="method-cat-weight">25%</span></div>
+            <p>Seats used, feature breadth, and the growth trend, averaged.</p>
+          </div>
+          <div class="method-cat">
+            <div class="method-cat-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4.5" height="10.5" rx="1"/><rect x="9.7" y="5.5" width="4.5" height="15" rx="1"/><rect x="16.4" y="2.5" width="4.5" height="18" rx="1"/></svg><b>Organisational spread</b><span class="method-cat-weight">20%</span></div>
+            <p>Teams beyond the original buyer, plus how engaged the exec sponsor is.</p>
+          </div>
+          <div class="method-cat">
+            <div class="method-cat-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5 5 0 0 0-7 0L12 6.3l-1.8-1.7a5 5 0 1 0-7 7.1L12 20l8.8-8.3a5 5 0 0 0 0-7.1z"/></svg><b>Champion advocacy</b><span class="method-cat-weight">20%</span></div>
+            <p>Number of advocacy signals seen, capped at three, plus NPS or CSAT.</p>
+          </div>
+          <div class="method-cat">
+            <div class="method-cat-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5"/><path d="M2.5 8.5L12 2.5l9.5 6"/><path d="M9.5 14.5h5"/></svg><b>Buying signals</b><span class="method-cat-weight">20%</span></div>
+            <p>What kind of feature requests are coming in, and whether they've expanded with you before.</p>
+          </div>
+          <div class="method-cat">
+            <div class="method-cat-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><b>Timing fit</b><span class="method-cat-weight">15%</span></div>
+            <p>How close the renewal or budget cycle sits. Closer generally means a cleaner window to ask.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Score bands</h2>
+        <table class="band-table">
+          <thead><tr><th>Score</th><th>Band</th><th>What it means</th></tr></thead>
+          <tbody>
+            <tr><td>0&ndash;39</td><td><span class="band-pill band-not-ready" style="font-size:11px;padding:3px 9px;">Not ready</span></td><td>Keep serving the account well. No ask yet.</td></tr>
+            <tr><td>40&ndash;59</td><td><span class="band-pill band-watch" style="font-size:11px;padding:3px 9px;">Watch</span></td><td>Plant the seed. Log it and revisit next quarter.</td></tr>
+            <tr><td>60&ndash;79</td><td><span class="band-pill band-ready" style="font-size:11px;padding:3px 9px;">Ready to approach</span></td><td>Schedule the conversation this month.</td></tr>
+            <tr><td>80&ndash;100</td><td><span class="band-pill band-strike" style="font-size:11px;padding:3px 9px;">Strike now</span></td><td>The signals are stacked. Don't let this one wait.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Which play gets picked</h2>
+        <p class="card-sub">Checked in this order, first match wins:</p>
+        <ol class="rule-list">
+          <li><b>Seat Expansion</b> &mdash; idle seats sit at 15% or more, usage is growing, and the overall score clears 50.</li>
+          <li><b>Cross-sell Adjacent Module</b> &mdash; multiple teams are already in it, and the feature requests point outside the current plan.</li>
+          <li><b>Tier Upgrade Conversation</b> &mdash; the score is 80 or above and the renewal sits within six months.</li>
+          <li><b>Reference-to-Expansion Bridge</b> &mdash; they've agreed to a reference or case study, and the score clears 60.</li>
+          <li><b>Nurture Play</b> &mdash; none of the above. Keep the relationship warm, no ask yet.</li>
+        </ol>
+      </div>
+
+      <div class="disclosure">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r="0.9" fill="currentColor" stroke="none"/></svg>
+        <div>This is a decision-support heuristic built from CSM experience, not a prediction model. It doesn't read any live usage data, connect to any account, or store anything you enter. Every chip field lets you add your own wording if none of the presets fit, and a custom entry scores as neutral (0.5) for its category, since there's no built-in weight yet for something that didn't exist when the formula was written. Treat the score as a prompt to go check, not a verdict.</div>
+      </div>
+    </section>
+
+    <!-- ---- EXAMPLES VIEW ---- -->
+    <section class="view" id="view-examples" hidden>
+      <div class="page-head">
+        <div class="page-eyebrow">Examples</div>
+        <h1 class="page-title">Three accounts, three plays</h1>
+        <p class="page-desc">Load one to see the full form filled in and the play it produces.</p>
+      </div>
+      <div class="example-grid" id="example-grid"></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var state = {
+    activeSeatsPct: 65,
+    featureBreadthPct: 55,
+    growthRate: 'steady',
+    orgSpread: 'one-additional',
+    execEngagement: 'aware',
+    championSignals: [],
+    npsCsat: 'passive',
+    featureRequests: 'existing',
+    expansionHistory: 'new-account',
+    unusedSeatsPct: 10,
+    renewalTiming: '3-6'
+  };
+
+  var championLabels = {
+    'referral':'Gave a referral',
+    'reference':'Agreed to a reference call or case study',
+    'qbr-praise':'Speaks positively in QBRs',
+    'training-request':'Requested more training or seats'
+  };
+  var customCounter = 0;
+
+  // ---------------- nav ----------------
+  var navItems = document.querySelectorAll('.nav-item');
+  var views = {
+    score: document.getElementById('view-score'),
+    method: document.getElementById('view-method'),
+    examples: document.getElementById('view-examples')
+  };
+  navItems.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      navItems.forEach(function(b){ b.setAttribute('aria-current','false'); });
+      btn.setAttribute('aria-current','true');
+      Object.keys(views).forEach(function(k){ views[k].hidden = (k !== btn.dataset.view); });
+      views[btn.dataset.view].scrollTop = 0;
+      document.querySelector('.main').scrollTop = 0;
+    });
+  });
+
+  // ---------------- sliders ----------------
+  function bindSlider(id, valId, stateKey, suffix){
+    var el = document.getElementById(id);
+    var out = document.getElementById(valId);
+    el.addEventListener('input', function(){
+      state[stateKey] = Number(el.value);
+      out.textContent = el.value + (suffix || '%');
+      compute();
+    });
+  }
+  bindSlider('in-seats','val-seats','activeSeatsPct');
+  bindSlider('in-breadth','val-breadth','featureBreadthPct');
+  bindSlider('in-unused','val-unused','unusedSeatsPct');
+
+  // ---------------- single-select chip groups ----------------
+  function paintSingle(groupEl, value){
+    groupEl.querySelectorAll('.chip').forEach(function(c){
+      c.setAttribute('aria-pressed', c.dataset.value === value ? 'true' : 'false');
+    });
+  }
+
+  function attachCustomAdd(groupEl, field){
+    var addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'chip-add';
+    addBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add your own';
+
+    var addWrap = document.createElement('div');
+    addWrap.className = 'chip-add-input';
+    addWrap.innerHTML = '<input type="text" maxlength="40" placeholder="Type an option"/><button type="button">Add</button>';
+
+    var parent = groupEl.parentNode;
+    parent.insertBefore(addBtn, groupEl.nextSibling);
+    parent.insertBefore(addWrap, addBtn.nextSibling);
+
+    var input = addWrap.querySelector('input');
+    var confirmBtn = addWrap.querySelector('button');
+
+    addBtn.addEventListener('click', function(){
+      addWrap.classList.toggle('open');
+      if(addWrap.classList.contains('open')) input.focus();
+    });
+
+    function commit(){
+      var text = input.value.trim();
+      if(!text) return;
+      customCounter++;
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'chip';
+      chip.dataset.value = 'custom-' + field + '-' + customCounter;
+      chip.textContent = text;
+      groupEl.appendChild(chip);
+      input.value = '';
+      addWrap.classList.remove('open');
+      chip.click();
+    }
+    confirmBtn.addEventListener('click', commit);
+    input.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); commit(); } });
+  }
+
+  ['grp-growth','grp-spread','grp-exec','grp-nps','grp-requests','grp-history','grp-timing'].forEach(function(id){
+    var groupEl = document.getElementById(id);
+    var field = groupEl.dataset.field;
+    paintSingle(groupEl, state[field]);
+    groupEl.addEventListener('click', function(e){
+      var chip = e.target.closest('.chip');
+      if(!chip) return;
+      state[field] = chip.dataset.value;
+      paintSingle(groupEl, state[field]);
+      compute();
+    });
+    attachCustomAdd(groupEl, field);
+  });
+
+  // ---------------- champion multi-select + custom add ----------------
+  var champGroup = document.getElementById('grp-champion');
+  function paintChampion(){
+    champGroup.querySelectorAll('.chip').forEach(function(c){
+      c.setAttribute('aria-pressed', state.championSignals.indexOf(c.dataset.value) > -1 ? 'true' : 'false');
+    });
+  }
+  champGroup.addEventListener('click', function(e){
+    var chip = e.target.closest('.chip');
+    if(!chip) return;
+    var v = chip.dataset.value;
+    var idx = state.championSignals.indexOf(v);
+    if(idx > -1){ state.championSignals.splice(idx,1); } else { state.championSignals.push(v); }
+    paintChampion();
+    compute();
+  });
+
+  var addBtn = document.getElementById('add-champion-btn');
+  var addWrap = document.getElementById('add-champion-input');
+  var addInput = addWrap.querySelector('input');
+  var addConfirm = document.getElementById('add-champion-confirm');
+  addBtn.addEventListener('click', function(){
+    addWrap.classList.toggle('open');
+    if(addWrap.classList.contains('open')) addInput.focus();
+  });
+  function commitCustomChampion(){
+    var text = addInput.value.trim();
+    if(!text) return;
+    customCounter++;
+    var id = 'custom-' + customCounter;
+    championLabels[id] = text;
+    var chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.dataset.value = id;
+    chip.textContent = text;
+    chip.setAttribute('aria-pressed','true');
+    champGroup.appendChild(chip);
+    state.championSignals.push(id);
+    addInput.value = '';
+    addWrap.classList.remove('open');
+    compute();
+  }
+  addConfirm.addEventListener('click', commitCustomChampion);
+  addInput.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); commitCustomChampion(); } });
+
+  // ---------------- scoring ----------------
+  var CAT_META = [
+    {key:'cat1', label:'Usage depth & growth', weight:0.25},
+    {key:'cat2', label:'Organisational spread', weight:0.20},
+    {key:'cat3', label:'Champion advocacy', weight:0.20},
+    {key:'cat4', label:'Buying signals', weight:0.20},
+    {key:'cat5', label:'Timing fit', weight:0.15}
+  ];
+
+  function avg(arr){ return arr.reduce(function(a,b){return a+b;},0) / arr.length; }
+  // A custom, user-typed option has no built-in weight, so it scores as neutral (0.5)
+  // for whichever category it sits in, rather than breaking the calculation.
+  function scoreMap(map, key){ return (key in map) ? map[key] : 0.5; }
+
+  function scoreAll(){
+    var cats = {};
+    cats.cat1 = avg([
+      state.activeSeatsPct/100,
+      state.featureBreadthPct/100,
+      scoreMap({flat:0, steady:0.6, fast:1}, state.growthRate)
+    ]);
+    cats.cat2 = avg([
+      scoreMap({'just-original':0, 'one-additional':0.5, 'multiple':1}, state.orgSpread),
+      scoreMap({none:0, aware:0.5, engaged:1}, state.execEngagement)
+    ]);
+    cats.cat3 = avg([
+      Math.min(state.championSignals.length/3, 1),
+      scoreMap({promoter:1, passive:0.5, detractor:0, 'not-measured':0.5}, state.npsCsat)
+    ]);
+    cats.cat4 = avg([
+      scoreMap({none:0, existing:0.5, adjacent:1}, state.featureRequests),
+      scoreMap({'expanded-before':1, 'new-account':0.5, never:0.3}, state.expansionHistory)
+    ]);
+    cats.cat5 = scoreMap({gt6:0.3, '3-6':0.7, lt3:1, 'not-linked':0.6}, state.renewalTiming);
+
+    var overall = 0;
+    CAT_META.forEach(function(m){ overall += cats[m.key] * m.weight; });
+    return { cats: cats, overall: Math.round(overall*100) };
+  }
+
+  function band(score){
+    if(score >= 80) return {name:'Strike now', cls:'band-strike', icon:'strike'};
+    if(score >= 60) return {name:'Ready to approach', cls:'band-ready'};
+    if(score >= 40) return {name:'Watch', cls:'band-watch'};
+    return {name:'Not ready', cls:'band-not-ready'};
+  }
+
+  function pickPlay(overall){
+    var hasReference = state.championSignals.indexOf('reference') > -1;
+    if(state.unusedSeatsPct >= 15 && (state.growthRate === 'steady' || state.growthRate === 'fast') && overall >= 50){
+      return {
+        name:'Seat expansion',
+        line:'You’re sitting on unused seats while usage keeps climbing. Worth talking about adding seats before you hit a ceiling?',
+        bring:[
+          'The unused-seat count and the growth trend side by side',
+          'A rough timeline for when they’ll actually run out of room',
+          'A price for adding seats now versus waiting for renewal'
+        ]
+      };
+    }
+    if(state.orgSpread === 'multiple' && state.featureRequests === 'adjacent'){
+      return {
+        name:'Cross-sell adjacent module',
+        line:'A few different teams are already stretching this past what it was bought for. Want to see how the adjacent module would fit what they’re already reaching for?',
+        bring:[
+          'Which teams are involved and what each one is trying to do',
+          'The specific adjacent capability their requests point to',
+          'A scoped pilot rather than a full add-on, if the budget is tight'
+        ]
+      };
+    }
+    if(overall >= 80 && (state.renewalTiming === 'lt3' || state.renewalTiming === '3-6')){
+      return {
+        name:'Tier upgrade conversation',
+        line:'Renewal is close and usage has grown a lot since they signed. Let’s look at whether the next tier actually saves them money at this volume.',
+        bring:[
+          'Current usage against the limits of their existing tier',
+          'A cost comparison at the next tier, run at their real volume',
+          'The renewal date, so the conversation lands with time to decide'
+        ]
+      };
+    }
+    if(hasReference && overall >= 60){
+      return {
+        name:'Reference-to-expansion bridge',
+        line:'They’ve been happy enough to do a reference call. That’s a natural moment to ask what’s next on their roadmap and see where you fit.',
+        bring:[
+          'A thank-you for the reference, genuinely, before the ask',
+          'A question about their roadmap for the next two quarters',
+          'One capability of yours that maps onto what they mention'
+        ]
+      };
+    }
+    return {
+      name:'Nurture play',
+      line:'Not enough is stacked up yet to bring an ask. Keep the relationship warm and check back next quarter.',
+      bring:[
+        'A log of today’s signals so next quarter isn’t a blank page',
+        'One piece of value delivered with no ask attached',
+        'A calendar note to revisit this in eight to twelve weeks'
+      ]
+    };
+  }
+
+  var scoreNum = document.getElementById('score-num');
+  var dialArc = document.getElementById('dial-arc');
+  var bandPill = document.getElementById('band-pill');
+  var scoreWhy = document.getElementById('score-why');
+  var catList = document.getElementById('cat-list');
+  var playName = document.getElementById('play-name');
+  var playLine = document.getElementById('play-line');
+  var playBring = document.getElementById('play-bring');
+  var CIRC = 2 * Math.PI * 74;
+
+  function compute(){
+    var result = scoreAll();
+    scoreNum.textContent = result.overall;
+    var offset = CIRC - (CIRC * result.overall/100);
+    dialArc.style.strokeDasharray = CIRC;
+    dialArc.style.strokeDashoffset = offset;
+
+    var b = band(result.overall);
+    bandPill.className = 'band-pill ' + b.cls;
+    bandPill.textContent = b.name;
+
+    var top = CAT_META.slice().sort(function(a,c){ return (result.cats[c.key]*c.weight) - (result.cats[a.key]*a.weight); })[0];
+    scoreWhy.innerHTML = 'Driven most by <b>' + top.label.toLowerCase() + '</b>, the heaviest-weighted signal moving the needle this time.';
+
+    catList.innerHTML = '';
+    CAT_META.forEach(function(m){
+      var pct = Math.round(result.cats[m.key]*100);
+      var row = document.createElement('div');
+      row.className = 'cat-row';
+      row.innerHTML =
+        '<div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg></div>' +
+        '<div class="cat-body"><div class="cat-top"><span>' + m.label + '</span><span>' + pct + '%</span></div>' +
+        '<div class="cat-track"><div class="cat-fill" style="width:' + pct + '%;"></div></div></div>' +
+        '<div class="cat-weight">' + Math.round(m.weight*100) + '%</div>';
+      catList.appendChild(row);
+    });
+
+    var play = pickPlay(result.overall);
+    playName.textContent = play.name;
+    playLine.textContent = play.line;
+    playBring.innerHTML = '';
+    play.bring.forEach(function(item){
+      var li = document.createElement('li');
+      li.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"/></svg><span>' + item + '</span>';
+      playBring.appendChild(li);
+    });
+  }
+
+  // ---------------- examples ----------------
+  var examples = [
+    {
+      name:'Torrey Analytics',
+      band:'Watch',
+      bandCls:'band-watch',
+      play:'Nurture play',
+      desc:'Steady but shallow. One team, one additional team touching it, no champion signals logged yet, renewal is a long way off.',
+      values:{
+        activeSeatsPct:55, featureBreadthPct:45, growthRate:'steady',
+        orgSpread:'one-additional', execEngagement:'engaged', championSignals:[],
+        npsCsat:'passive', featureRequests:'existing', expansionHistory:'new-account',
+        unusedSeatsPct:20, renewalTiming:'gt6'
+      }
+    },
+    {
+      name:'Halden Foods',
+      band:'Ready to approach',
+      bandCls:'band-ready',
+      play:'Reference-to-expansion bridge',
+      desc:'A vocal promoter who’s already agreed to a reference call and asked for more training. Renewal sits three to six months out.',
+      values:{
+        activeSeatsPct:75, featureBreadthPct:60, growthRate:'steady',
+        orgSpread:'one-additional', execEngagement:'aware', championSignals:['reference','training-request'],
+        npsCsat:'promoter', featureRequests:'existing', expansionHistory:'expanded-before',
+        unusedSeatsPct:8, renewalTiming:'3-6'
+      }
+    },
+    {
+      name:'Bramwell Logistics',
+      band:'Strike now',
+      bandCls:'band-strike',
+      play:'Cross-sell adjacent module',
+      desc:'Multiple teams are already in it, growth is fast, and the requests coming in point well past the current plan.',
+      values:{
+        activeSeatsPct:94, featureBreadthPct:80, growthRate:'fast',
+        orgSpread:'multiple', execEngagement:'engaged', championSignals:['referral','qbr-praise'],
+        npsCsat:'promoter', featureRequests:'adjacent', expansionHistory:'expanded-before',
+        unusedSeatsPct:6, renewalTiming:'3-6'
+      }
+    }
+  ];
+
+  var exampleGrid = document.getElementById('example-grid');
+  examples.forEach(function(ex, i){
+    var card = document.createElement('div');
+    card.className = 'example-card';
+    card.innerHTML =
+      '<div class="example-top"><span class="example-name">' + ex.name + '</span>' +
+      '<span class="band-pill ' + ex.bandCls + '" style="font-size:11px;padding:3px 9px;">' + ex.band + '</span></div>' +
+      '<p class="example-desc">' + ex.desc + '</p>' +
+      '<span class="example-play">&rarr; ' + ex.play + '</span>' +
+      '<button class="example-load" data-idx="' + i + '">Load into the form</button>';
+    exampleGrid.appendChild(card);
+  });
+  exampleGrid.addEventListener('click', function(e){
+    var btn = e.target.closest('.example-load');
+    if(!btn) return;
+    var ex = examples[Number(btn.dataset.idx)];
+    Object.assign(state, JSON.parse(JSON.stringify(ex.values)));
+
+    document.getElementById('in-seats').value = state.activeSeatsPct;
+    document.getElementById('val-seats').textContent = state.activeSeatsPct + '%';
+    document.getElementById('in-breadth').value = state.featureBreadthPct;
+    document.getElementById('val-breadth').textContent = state.featureBreadthPct + '%';
+    document.getElementById('in-unused').value = state.unusedSeatsPct;
+    document.getElementById('val-unused').textContent = state.unusedSeatsPct + '%';
+
+    paintSingle(document.getElementById('grp-growth'), state.growthRate);
+    paintSingle(document.getElementById('grp-spread'), state.orgSpread);
+    paintSingle(document.getElementById('grp-exec'), state.execEngagement);
+    paintSingle(document.getElementById('grp-nps'), state.npsCsat);
+    paintSingle(document.getElementById('grp-requests'), state.featureRequests);
+    paintSingle(document.getElementById('grp-history'), state.expansionHistory);
+    paintSingle(document.getElementById('grp-timing'), state.renewalTiming);
+    paintChampion();
+
+    navItems.forEach(function(b){ b.setAttribute('aria-current', b.dataset.view === 'score' ? 'true' : 'false'); });
+    Object.keys(views).forEach(function(k){ views[k].hidden = (k !== 'score'); });
+    document.querySelector('.main').scrollTop = 0;
+    compute();
+  });
+
+  // ---------------- init ----------------
+  paintChampion();
+  compute();
+})();
+</script>
+</body>
+</html>
