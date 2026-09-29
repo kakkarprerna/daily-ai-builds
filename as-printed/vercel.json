@@ -1,0 +1,1 @@
+{ "functions": { "api/decode.js": { "maxDuration": 30 } } }
