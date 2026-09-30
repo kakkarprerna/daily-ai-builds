@@ -4,7 +4,7 @@ Rules-based next-steps planner for the moment an AI-chat safety signal is confir
 
 ## Live
 
-- App: [add your Vercel URL]
+- App: https://what-happens-next-lake.vercel.app
 - Series so far: Duty of Care (conversation analyser), How to Bring It Up (parent conversation guide), What Happens Next (this build)
 
 ## Why this exists
