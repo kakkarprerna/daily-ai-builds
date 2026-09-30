@@ -10,7 +10,7 @@ Most builds use React and Vite on Vercel, with prompts and API keys held in a se
 
 | Build | What it does | Live |
 |---|---|---|
-| [Exit Criteria Builder](./exit-criteria-builder) | Sets measurable exit criteria for each stage of a product roadmap. | [Open app](https://daily-ai-builds.vercel.app) |
+| [Exit Criteria Builder](./exit-criteria-builder) | Sets measurable exit criteria for each stage of a product roadmap. | [Open app](https://exit-criteria-builder.vercel.app) |
 | [Handback](./handback) | Paste a draft PRD and get the questions engineering will send back, ranked by whether the gap blocks the build, sign-off or launch. 22 deterministic rules, every one printed in the app. No model, no API key, runs entirely in the browser. | [Open app](https://handback-weld.vercel.app) |
 | [Signal Translator](./signal-translator) | Triage tool for product managers: paste a stack trace, failed API response or webhook payload and get a plain-language verdict, blast radius, self-checks and a draft ticket. | [Open app](https://signal-translator.vercel.app) |
 | [Repro Builder](./repro-builder) | Turns a vague bug report into a reproduction script that changes one variable at a time, plus the questions worth asking the reporter and a verdict: confirmed bug, spec gap, or expected behaviour the user disliked. | [Open app](https://repro-builder.vercel.app) |
@@ -46,7 +46,7 @@ Most builds use React and Vite on Vercel, with prompts and API keys held in a se
 | Build | What it does | Live |
 |---|---|---|
 | [Duty of Care](./duty-of-care) | A private, judgement free read on whether an AI chat conversation drifted somewhere risky. Daily AI build in the AI safety for teens series, built after the Sam Nelson case. | [Open app](https://duty-of-care.vercel.app) |
-| [How to Bring It Up](./how-to-bring-it-up) | A low-pressure way to open a hard conversation about something you noticed involving an AI chatbot. Companion piece to Duty of Care in the AI safety for teens daily build series. | [Open app](https://hot-to-bring-it-up.vercel.app) |
+| [How to Bring It Up](./how-to-bring-it-up) | A low-pressure way to open a hard conversation about something you noticed involving an AI chatbot. Companion piece to Duty of Care in the AI safety for teens daily build series. | [Open app](https://how-to-bring-it-up.vercel.app) |
 
 ## Everyday and specialist tools
 
