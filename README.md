@@ -1,120 +1,60 @@
-# AI or Me?
+# Daily AI builds
 
-**Decide whether a product task should go to AI or stay with you, without losing the skills that matter.**
+Small AI tools, each aimed at one specific problem. I plan and direct every build with AI coding tools, then ship it to a live link with worked examples, so you can see it working without setting anything up.
 
-**[Open the live app →](https://ai-or-me-advice.vercel.app)** No sign-in, no key needed. Load an example from the sidebar to see a full result in one click.
+Each folder is a self-contained app with its own README covering what it does, how it works and where its data comes from.
 
-Part of my [daily AI builds](https://github.com/kakkarprerna/daily-ai-builds) series.
+Most builds use React and Vite on Vercel, with prompts and API keys held in a serverless function rather than the browser. Newer builds default to Meta Muse Glimmer 30B and let visitors bring their own Anthropic, OpenAI or Gemini key.
 
----
+## Product management
 
-## Why I built this
+| Build | What it does | Live |
+|---|---|---|
+| [AI or Me?](./ai-or-me) | Ten questions about a task decide whether AI should do it or you should, so leaning on AI doesn't stop you building the skill. A fixed, printed formula gives the verdict with no model involved; an optional second read uses one. | [Open app](https://ai-or-me-advice.vercel.app) |
+| [Exit Criteria Builder](./exit-criteria-builder) | Sets measurable exit criteria for each stage of a product roadmap. | [Open app](https://exit-criteria-builder.vercel.app) |
+| [Handback](./handback) | Paste a draft PRD and get the questions engineering will send back, ranked by whether the gap blocks the build, sign-off or launch. 22 deterministic rules, every one printed in the app. No model, no API key, runs entirely in the browser. | [Open app](https://handback-weld.vercel.app) |
+| [Signal Translator](./signal-translator) | Triage tool for product managers: paste a stack trace, failed API response or webhook payload and get a plain-language verdict, blast radius, self-checks and a draft ticket. | [Open app](https://signal-translator.vercel.app) |
+| [Repro Builder](./repro-builder) | Turns a vague bug report into a reproduction script that changes one variable at a time, plus the questions worth asking the reporter and a verdict: confirmed bug, spec gap, or expected behaviour the user disliked. | [Open app](https://repro-builder.vercel.app) |
+| [Data or Product?](./data-or-product) | Tells a PM whether a metric moved because the measurement broke or because users behaved differently, with the cheap checks that settle it | [Open app](https://data-or-product.vercel.app) |
+| [Who Owns This?](./who-owns-this) | Find who owns a website or domain using public web, domain, and company signals. | [Open app](https://who-owns-this-delta.vercel.app) |
+| [Pattern or One-Off?](./pattern-or-one-off) | Takes a bug report and tells you whether it's a pattern worth escalating or a one-off you can close out. A PM triage tool that skips pulling in engineering first | [Open app](https://pattern-or-one-off.vercel.app) |
+| [Works on Staging](./works-on-staging) | It works on staging, so why not in production? Diagnoses environment drift for PMs: likely cause, checks to run yourself, and a handover note for engineering. | [Open app](https://works-on-staging.vercel.app) |
+| [Ship Check](./ship-check) | Vibe coding debt scanner: describe how something got built, get back a verdict, ranked risks, and questions to ask an engineer before shipping | [Open app](https://ship-check-app.vercel.app) |
 
-AI has made a lot of PM work faster. It has also made it easy to stop practising the skills that make a PM worth listening to: synthesis, trade-off reasoning, product judgement. If AI writes every first draft, you never find out whether you could have.
+## AI quality and evaluation
 
-A 2025 study by Microsoft Research and Carnegie Mellon surveyed 319 knowledge workers and found that people with more confidence in AI reported less critical thinking, while people confident in their own skills reported more ([Lee et al., CHI 2025](https://www.microsoft.com/en-us/research/publication/the-impact-of-generative-ai-on-critical-thinking-self-reported-reductions-in-cognitive-effort-and-confidence-effects-from-a-survey-of-knowledge-workers/)).
+| Build | What it does | Live |
+|---|---|---|
+| [Eval Starter Kit](./eval-starter-kit) | Describe an AI feature, get a starter eval set: test cases, pass and fail rules, priorities and a model-judge prompt | [Open app](https://eval-starter-kit.vercel.app) |
+| [Silent Failure Detector](./silent-failure-detector) | Audits AI answers by scoring confidence language against claim verifiability, flagging fluent wrong answers that standard evals miss. | Code only |
+| [Escalation Quality Scorer](./escalation-quality-scorer) | Scores AI-to-human handoffs on context transfer and redundant questions, catching escalations where the customer has to repeat themselves. | Code only |
+| [Cost-of-Error Estimator](./cost-of-error-estimator) | Estimates the monthly cost of AI product failures and ranks them by exposure, so PMs know where to invest in evals and guardrails first. | Code only |
+| [Root Cause Detector](./root-cause-detector) | Diagnoses which stage of an AI agent's workflow most likely caused a failure, given a plain-language description of what went wrong. React and Vite, calls the Anthropic API directly from the browser. Ships with a worked example from a real voice-agent incident. | [Open app](https://root-cause-detector.vercel.app) |
+| [A/B Eval Dashboard](./ab-eval-dashboard) | Compares two models' answers using a third model as judge. | Code only |
+| [Prompt Injection Harness](./prompt-injection-harness) | Tests prompts against injection attacks. | Code only |
 
-So the question I wanted a tool for is a simple one. For this task, today, should AI do it, or should I?
+## Customer success
 
-## What it does
+| Build | What it does | Live |
+|---|---|---|
+| [Pulse Check](./pulse-check) | Deterministic customer success health scorecard - turns account signals into a scored, banded diagnosis with ranked risks and a recommended next action. No model, every formula printed. | [Open app](https://pulse-check-rho-one.vercel.app) |
+| [Churn Autopsy](./churn-autopsy) | Blameless churn post-mortems: find the first real warning sign, the point of no return, and early-warning rules for the rest of your book. | [Open app](https://churn-autopsy-sandy.vercel.app) |
+| [Expansion Radar](./expansion-radar) | Scores an account's expansion readiness and returns the specific upsell or cross-sell play to run, not just a health number. Companion to Pulse Check. | [Open app](https://expansion-radar-eight.vercel.app) |
+| [What Happens Next](./what-happens-next) | Rules-based next-steps planner for parents after an AI chatbot conversation flags a safety concern. Deterministic decision logic maps signal type, urgency and existing support to who to contact, what to avoid, and country-specific crisis lines. Third build in a daily AI safety series. | [Open app](https://what-happens-next-lake.vercel.app) |
 
-You answer ten multiple-choice questions about a task. You get:
+## Teenagers and AI chatbots
 
-| Output | What it tells you |
-|---|---|
-| **Verdict** | One of four: Do it yourself, You first then AI, AI drafts you decide, Hand it over |
-| **Two scores** | Learning value (what you'd give up) and AI fit (how safely AI could do it), each out of 100 |
-| **The grid** | Where your task lands, so you can see how close it is to another verdict |
-| **Confidence** | High, Medium or Low, based on distance from the nearest boundary |
-| **How to work on it** | Concrete steps for that verdict, such as writing your own version before asking AI to critique it |
-| **What pushed it here** | The answers that moved each score most |
-| **What would change it** | Single answer changes that would flip the verdict |
-| **The skill at stake** | The skill this kind of task builds, plus a short practice |
-| **Second read** (optional) | An AI model reads your own description of the task and looks for what the chips missed |
+| Build | What it does | Live |
+|---|---|---|
+| [Duty of Care](./duty-of-care) | A private, judgement free read on whether an AI chat conversation drifted somewhere risky. Daily AI build in the AI safety for teens series, built after the Sam Nelson case. | [Open app](https://duty-of-care.vercel.app) |
+| [How to Bring It Up](./how-to-bring-it-up) | A low-pressure way to open a hard conversation about something you noticed involving an AI chatbot. Companion piece to Duty of Care in the AI safety for teens daily build series. | [Open app](https://how-to-bring-it-up.vercel.app) |
 
-## The four verdicts
+## Everyday and specialist tools
 
-```
-                AI fit →
-          0        40           70        100
-   100 ┌────────┬──────────────────────────┐
-       │        │    You first, then AI    │
- L     │ Do it  │                          │
- e  55 │yourself├─────────────┬────────────┤
- a     │        │ AI drafts,  │  Hand it   │
- r     │        │ you decide  │   over     │
- n   0 └────────┴─────────────┴────────────┘
-```
-
-## How it decides
-
-**The verdict is deterministic.** A fixed formula with printed weights, no AI model involved. That is deliberate: a tool about not over-relying on AI should not hand its main judgement to one.
-
-**Learning value** comes from four answers: where you are with the skill (35%), whether you've done it without AI before (25%), whether your thinking is the deliverable (25%) and how often you do it (15%).
-
-**AI fit** comes from seven: whether you could check the answer (25%), what happens if it's wrong (20%), the kind of task (20%), how much context only you hold (15%), whether your thinking is the deliverable (10%), data sensitivity (5%) and time pressure (5%).
-
-**Guardrails override the maths:**
-- Still learning a core skill you've never done unaided: learning value is held at 70 or above
-- You couldn't check the answer: AI fit is capped at 60, so full hand-over is ruled out
-- Confidential or personal data: AI fit is capped at 69
-- Hard to undo and impossible to check: always do it yourself
-
-Every weight, value and rule is printed in the app under **How it works**. The weights are my product judgement after ten years of PM work. They are not research findings.
-
-Any answer you type yourself scores as neutral (0.5), since it has no built-in weight.
-
-## Second read
-
-The optional second read sends your task description, your answers and the verdict to a model, which returns five tagged lines: the case against the verdict, what the chips missed, the skill at stake, a prompt to paste that asks AI for critique rather than an answer, and a 30-minute practice.
-
-- **Default:** Muse Glimmer 30B on NVIDIA's free endpoint, on my key, held in a serverless function
-- **Bring your own key:** Anthropic, OpenAI or Gemini. The key goes with that one request and is never stored or logged
-- The prompt lives server-side in `api/second-read.js`, never in the client bundle
-- Model output uses tagged lines rather than JSON, which keeps the provider swap cheap
-- It never changes the verdict
-
-## Worked examples
-
-Three examples load with saved second reads, so you can see the full result without a key. Open **Examples** in the [live app](https://ai-or-me-advice.vercel.app) to try them.
-
-| Example | Verdict |
-|---|---|
-| Pricing a new tier, first time | Do it yourself |
-| Synthesising 12 discovery interviews | You first, then AI |
-| Weekly release notes from Jira | Hand it over |
-
-## Privacy
-
-No sign-in, no database, no analytics. Answers stay in your browser tab. The only thing that leaves it is the second read request, and only when you press the button.
-
-## Run it
-
-```bash
-npm install
-cp .env.example .env.local   # add LLM_MODEL and LLM_API_KEY for the free model
-npx vercel dev               # runs the app and the /api function together
-```
-
-`npm run dev` also works for the rubric and examples; the second read needs `vercel dev` or a deployment.
-
-## Deploy
-
-Vercel, with **Root Directory** set to `ai-or-me`. Environment variables:
-
-| Variable | Purpose |
-|---|---|
-| `LLM_BASE_URL` | OpenAI-shaped endpoint, defaults to `https://integrate.api.nvidia.com/v1` |
-| `LLM_MODEL` | Model id for the free default |
-| `LLM_API_KEY` | Key for the free default |
-| `ANTHROPIC_MODEL`, `OPENAI_MODEL`, `GEMINI_MODEL` | Optional overrides for bring-your-own-key providers |
-
-## Stack
-
-React 18, Vite, lucide-react icons, Plus Jakarta Sans. One Vercel serverless function.
-
-## Limits
-
-- Ten questions can't capture every task. That is why the second read exists, and why you can add your own answers
-- The weights reflect one PM's view. If you disagree with one, that tells you something about what you value in your own growth
-- The second read is an AI model and can be wrong
+| Build | What it does | Live |
+|---|---|---|
+| [Says Who?](./says-who) | Paste a piece of baby or toddler advice and see how it compares with WHO, NHS, AAP and Spain's AEP guidance: where they agree, where they differ by country, and what to ask your paediatrician. Fourteen fixed safety rules run in the browser with no model. | [Open app](https://says-who-advice.vercel.app) |
+| [Dígame](./digame) | Phone call scripts for people new to Spain, generated before you dial. Runs on Anthropic, Gemini or a free open-weight model. | [Open app](https://digame-rho.vercel.app) |
+| [As Printed](./as-printed) | Decodes Spanish medical documents word for word: translation, expanded abbreviations, dosing restated in plain English. Deliberately never interprets results. | [Open app](https://as-printed.vercel.app) |
+| [Before the Basket](./before-the-basket) | Scores a grocery or ready-made product on how it was produced and how it was processed, against the best and worst practice where you live. React + Vite, serverless AI judge, three worked examples. | [Open app](https://before-the-basket.vercel.app) |
+| [Lab Report Translator](./lab-report-translator) | Reads a soil or leaf analysis and tells the farmer in plain language what is short, what it means for their crop, and what to do about it. Paste the lab sheet in any language, get the answer in any language. | [Open app](https://lab-report-translator-lilac.vercel.app) |
