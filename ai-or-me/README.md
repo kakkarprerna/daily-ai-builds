@@ -2,6 +2,8 @@
 
 **Decide whether a product task should go to AI or stay with you, without losing the skills that matter.**
 
+**[Open the live app →](https://ai-or-me-advice.vercel.app)** No sign-in, no key needed. Load an example from the sidebar to see a full result in one click.
+
 Part of my [daily AI builds](https://github.com/kakkarprerna/daily-ai-builds) series.
 
 ---
@@ -74,7 +76,7 @@ The optional second read sends your task description, your answers and the verdi
 
 ## Worked examples
 
-Three examples load with saved second reads, so you can see the full result without a key.
+Three examples load with saved second reads, so you can see the full result without a key. Open **Examples** in the [live app](https://ai-or-me-advice.vercel.app) to try them.
 
 | Example | Verdict |
 |---|---|
