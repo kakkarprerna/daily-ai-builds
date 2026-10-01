@@ -52,6 +52,7 @@ Most builds use React and Vite on Vercel, with prompts and API keys held in a se
 
 | Build | What it does | Live |
 |---|---|---|
+| [Says Who?](./says-who) | Paste a piece of baby or toddler advice and see how it compares with WHO, NHS, AAP and Spain's AEP guidance: where they agree, where they differ by country, and what to ask your paediatrician. Fourteen fixed safety rules run in the browser with no model. | [Open app](https://says-who-advice.vercel.app) |
 | [Dígame](./digame) | Phone call scripts for people new to Spain, generated before you dial. Runs on Anthropic, Gemini or a free open-weight model. | [Open app](https://digame-rho.vercel.app) |
 | [As Printed](./as-printed) | Decodes Spanish medical documents word for word: translation, expanded abbreviations, dosing restated in plain English. Deliberately never interprets results. | [Open app](https://as-printed.vercel.app) |
 | [Before the Basket](./before-the-basket) | Scores a grocery or ready-made product on how it was produced and how it was processed, against the best and worst practice where you live. React + Vite, serverless AI judge, three worked examples. | [Open app](https://before-the-basket.vercel.app) |

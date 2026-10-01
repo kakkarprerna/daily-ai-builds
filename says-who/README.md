@@ -4,6 +4,8 @@
 
 Every new parent gets advice from everywhere at once: grandparents, friends, forums, Instagram, AI chatbots. Much of it contradicts itself, some of it was right thirty years ago, and a small part of it is unsafe. Says Who? takes one tip, compares it with published guidance from **WHO, NHS, AAP and Spain's AEP**, and shows where those bodies agree, where they differ, and what to ask your paediatrician.
 
+**Live app: [says-who-advice.vercel.app](https://says-who-advice.vercel.app)**
+
 Built for parents of children aged 0 to 3. Part of my [daily AI builds](https://github.com/kakkarprerna/daily-ai-builds) series.
 
 ---
@@ -28,7 +30,7 @@ The most useful thing Says Who? often shows is that the bodies don't agree. Scre
 
 ## Try it without a key
 
-Open **Examples** in the sidebar. Three checks are saved, so they work with no model and no key:
+Open the [live app](https://says-who-advice.vercel.app) and go to **Examples** in the sidebar. Three checks are saved, so they work with no model and no key:
 
 1. **Cereal in the bottle**: a grandparent tip for a 4-month-old. *Not supported.*
 2. **Start solids at 4 months**: a forum claim about allergies. *Mixed*, because allergen guidance really did change.
