@@ -1,60 +1,112 @@
-# Daily AI builds
+# Daily AI Builds
 
-Small AI tools, each aimed at one specific problem. I plan and direct every build with AI coding tools, then ship it to a live link with worked examples, so you can see it working without setting anything up.
+Small, working AI tools built by a product manager. One problem per build, each with a live app or worked examples you can open without an API key.
 
-Each folder is a self-contained app with its own README covering what it does, how it works and where its data comes from.
+I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational AI, API-first SaaS and analytics. Each build starts from a problem I've seen at work or in daily life. I write the brief, make the product and design calls, set the guardrails and review every version. The code is written by AI coding tools working from my prompts and review.
 
-Most builds use React and Vite on Vercel, with prompts and API keys held in a serverless function rather than the browser. Newer builds default to Meta Muse Glimmer 30B and let visitors bring their own Anthropic, OpenAI or Gemini key.
+---
 
-## Product management
+## Latest
 
-| Build | What it does | Live |
-|---|---|---|
-| [AI or Me?](./ai-or-me) | Ten questions about a task decide whether AI should do it or you should, so leaning on AI doesn't stop you building the skill. A fixed, printed formula gives the verdict with no model involved; an optional second read uses one. | [Open app](https://ai-or-me-advice.vercel.app) |
-| [Exit Criteria Builder](./exit-criteria-builder) | Sets measurable exit criteria for each stage of a product roadmap. | [Open app](https://exit-criteria-builder.vercel.app) |
-| [Handback](./handback) | Paste a draft PRD and get the questions engineering will send back, ranked by whether the gap blocks the build, sign-off or launch. 22 deterministic rules, every one printed in the app. No model, no API key, runs entirely in the browser. | [Open app](https://handback-weld.vercel.app) |
-| [Signal Translator](./signal-translator) | Triage tool for product managers: paste a stack trace, failed API response or webhook payload and get a plain-language verdict, blast radius, self-checks and a draft ticket. | [Open app](https://signal-translator.vercel.app) |
-| [Repro Builder](./repro-builder) | Turns a vague bug report into a reproduction script that changes one variable at a time, plus the questions worth asking the reporter and a verdict: confirmed bug, spec gap, or expected behaviour the user disliked. | [Open app](https://repro-builder.vercel.app) |
-| [Data or Product?](./data-or-product) | Tells a PM whether a metric moved because the measurement broke or because users behaved differently, with the cheap checks that settle it | [Open app](https://data-or-product.vercel.app) |
-| [Who Owns This?](./who-owns-this) | Find who owns a website or domain using public web, domain, and company signals. | [Open app](https://who-owns-this-delta.vercel.app) |
-| [Pattern or One-Off?](./pattern-or-one-off) | Takes a bug report and tells you whether it's a pattern worth escalating or a one-off you can close out. A PM triage tool that skips pulling in engineering first | [Open app](https://pattern-or-one-off.vercel.app) |
-| [Works on Staging](./works-on-staging) | It works on staging, so why not in production? Diagnoses environment drift for PMs: likely cause, checks to run yourself, and a handover note for engineering. | [Open app](https://works-on-staging.vercel.app) |
-| [Ship Check](./ship-check) | Vibe coding debt scanner: describe how something got built, get back a verdict, ranked risks, and questions to ask an engineer before shipping | [Open app](https://ship-check-app.vercel.app) |
+**[Loop Ready](./loop-ready)** · [live app](https://loop-ready.vercel.app)
+Paste a job description and the hiring stages. Get a stage-by-stage prep plan, a day-by-day schedule and resources picked from a library of 27 links checked by hand. The model chooses resources by id and never writes a URL, so it cannot invent one.
 
-## AI quality and evaluation
+---
 
-| Build | What it does | Live |
-|---|---|---|
-| [Eval Starter Kit](./eval-starter-kit) | Describe an AI feature, get a starter eval set: test cases, pass and fail rules, priorities and a model-judge prompt | [Open app](https://eval-starter-kit.vercel.app) |
-| [Silent Failure Detector](./silent-failure-detector) | Audits AI answers by scoring confidence language against claim verifiability, flagging fluent wrong answers that standard evals miss. | Code only |
-| [Escalation Quality Scorer](./escalation-quality-scorer) | Scores AI-to-human handoffs on context transfer and redundant questions, catching escalations where the customer has to repeat themselves. | Code only |
-| [Cost-of-Error Estimator](./cost-of-error-estimator) | Estimates the monthly cost of AI product failures and ranks them by exposure, so PMs know where to invest in evals and guardrails first. | Code only |
-| [Root Cause Detector](./root-cause-detector) | Diagnoses which stage of an AI agent's workflow most likely caused a failure, given a plain-language description of what went wrong. React and Vite, calls the Anthropic API directly from the browser. Ships with a worked example from a real voice-agent incident. | [Open app](https://root-cause-detector.vercel.app) |
-| [A/B Eval Dashboard](./ab-eval-dashboard) | Compares two models' answers using a third model as judge. | Code only |
-| [Prompt Injection Harness](./prompt-injection-harness) | Tests prompts against injection attacks. | Code only |
+## The builds
 
-## Customer success
+### Career and PM practice
 
-| Build | What it does | Live |
-|---|---|---|
-| [Pulse Check](./pulse-check) | Deterministic customer success health scorecard - turns account signals into a scored, banded diagnosis with ranked risks and a recommended next action. No model, every formula printed. | [Open app](https://pulse-check-rho-one.vercel.app) |
-| [Churn Autopsy](./churn-autopsy) | Blameless churn post-mortems: find the first real warning sign, the point of no return, and early-warning rules for the rest of your book. | [Open app](https://churn-autopsy-sandy.vercel.app) |
-| [Expansion Radar](./expansion-radar) | Scores an account's expansion readiness and returns the specific upsell or cross-sell play to run, not just a health number. Companion to Pulse Check. | [Open app](https://expansion-radar-eight.vercel.app) |
-| [What Happens Next](./what-happens-next) | Rules-based next-steps planner for parents after an AI chatbot conversation flags a safety concern. Deterministic decision logic maps signal type, urgency and existing support to who to contact, what to avoid, and country-specific crisis lines. Third build in a daily AI safety series. | [Open app](https://what-happens-next-lake.vercel.app) |
+| Build | What it does | Try it |
+| --- | --- | --- |
+| [Loop Ready](./loop-ready) | JD and hiring stages in, prep plan per round out, with verified resources only | [Live](https://loop-ready.vercel.app) |
+| [AI or Me?](./ai-or-me) | Helps a PM decide whether a task needs AI at all, or is better done by hand to keep the skill | [Live](https://ai-or-me-advice.vercel.app) |
 
-## Teenagers and AI chatbots
+### PM workflow diagnosis
+Tools that help a PM work out what is wrong before pulling in engineering.
 
-| Build | What it does | Live |
-|---|---|---|
-| [Duty of Care](./duty-of-care) | A private, judgement free read on whether an AI chat conversation drifted somewhere risky. Daily AI build in the AI safety for teens series, built after the Sam Nelson case. | [Open app](https://duty-of-care.vercel.app) |
-| [How to Bring It Up](./how-to-bring-it-up) | A low-pressure way to open a hard conversation about something you noticed involving an AI chatbot. Companion piece to Duty of Care in the AI safety for teens daily build series. | [Open app](https://how-to-bring-it-up.vercel.app) |
+| Build | What it does | Try it |
+| --- | --- | --- |
+| [Signal Translator](./signal-translator) | Turns a stack trace, failed API response or webhook payload into a plain verdict, blast radius and draft ticket | Worked examples |
+| [Repro Builder](./repro-builder) | Turns a vague user complaint into a reproduction script that isolates one variable at a time | Worked examples |
+| [Handback](./handback) | Audits a draft PRD and lists the questions engineering will send back, ranked by what they block. No model, rules only | [Live](https://handback-weld.vercel.app) |
+| [Data or Product?](./data-or-product) | Says whether a metric anomaly looks like broken measurement or a real change in behaviour | Worked examples |
+| [Who Owns This?](./who-owns-this) | Ranks the systems most likely to own a bug and drafts the handoff message | Worked examples |
+| [Pattern or One-Off?](./pattern-or-one-off) | Judges whether a bug report is a pattern or a one-off, and what would change that verdict | Worked examples |
 
-## Everyday and specialist tools
+### AI reliability and evaluation
 
-| Build | What it does | Live |
-|---|---|---|
-| [Says Who?](./says-who) | Paste a piece of baby or toddler advice and see how it compares with WHO, NHS, AAP and Spain's AEP guidance: where they agree, where they differ by country, and what to ask your paediatrician. Fourteen fixed safety rules run in the browser with no model. | [Open app](https://says-who-advice.vercel.app) |
-| [Dígame](./digame) | Phone call scripts for people new to Spain, generated before you dial. Runs on Anthropic, Gemini or a free open-weight model. | [Open app](https://digame-rho.vercel.app) |
-| [As Printed](./as-printed) | Decodes Spanish medical documents word for word: translation, expanded abbreviations, dosing restated in plain English. Deliberately never interprets results. | [Open app](https://as-printed.vercel.app) |
-| [Before the Basket](./before-the-basket) | Scores a grocery or ready-made product on how it was produced and how it was processed, against the best and worst practice where you live. React + Vite, serverless AI judge, three worked examples. | [Open app](https://before-the-basket.vercel.app) |
-| [Lab Report Translator](./lab-report-translator) | Reads a soil or leaf analysis and tells the farmer in plain language what is short, what it means for their crop, and what to do about it. Paste the lab sheet in any language, get the answer in any language. | [Open app](https://lab-report-translator-lilac.vercel.app) |
+| Build | What it does | Try it |
+| --- | --- | --- |
+| [Silent Failure Detector](./silent-failure-detector) | Flags AI answers that sound confident about claims that cannot be checked | Worked examples |
+| [Escalation Quality Scorer](./escalation-quality-scorer) | Scores AI-to-human handoffs on context passed and questions repeated | Worked examples |
+| [Root Cause Detector](./root-cause-detector) | Points to the stage of an AI agent's workflow most likely to have caused a failure | Worked example |
+| Cost-of-Error Estimator | Estimates the monthly cost of each AI failure type and ranks them | |
+| Prompt injection test harness | Runs injection attempts against a prompt and records which ones get through | |
+| A/B eval dashboard | Compares two model outputs with a third model as judge | |
+
+### Customer success diagnostics
+Drawn from my time running customer success alongside product.
+
+| Build | What it does | Try it |
+| --- | --- | --- |
+| Pulse Check | Account health score from 0 to 100 across five weighted categories, with top risks and one next action. Fixed formula, no model | |
+| Expansion Radar | Expansion readiness score and the play to run next. Fixed formula, no model | |
+| Churn Autopsy | A post-mortem on a lost account's timeline | [Live](https://churn-autopsy-sandy.vercel.app) |
+
+### Teen safety with AI chatbots
+Tools aimed at reducing harm when AI chatbots give teenagers dangerous advice. No sign-in, nothing stored, and worked examples written without any real method or dosage detail.
+
+| Build | What it does |
+| --- | --- |
+| Duty of Care | Reads a pasted chat and scores three softly named signals: physical safety, emotional signals, trust and boundaries |
+| How to Bring It Up | For parents and guardians: an opener, what to avoid, what to listen for and when to get professional help |
+| What Happens Next | Once a concern is confirmed: who to contact first, what to say and named support lines by country. Rules only, no model, for reliability |
+
+### Everyday life
+Several of these came from living in Spain as an expat.
+
+| Build | What it does | Try it |
+| --- | --- | --- |
+| [Dígame](./digame) | Writes a phone script for calling a Spanish office, in the order the call happens, with Spanish read aloud | [Live](https://digame-rho.vercel.app) |
+| [As Printed](./as-printed) | Translates Spanish medical documents literally, expands abbreviations and lists questions for the doctor. It does not interpret | Worked examples |
+| [Says Who?](./says-who) | Paste a parenting tip for ages 0 to 3 and see how well official health bodies back it | [Live](https://says-who-advice.vercel.app) |
+| [Before the Basket](./before-the-basket) | Scores a grocery item on how it was produced and processed, from its ingredients or a label photo | [Live](https://before-the-basket.vercel.app) |
+| [Lab Report Translator](./lab-report-translator) | Reads a soil or leaf analysis and returns per-nutrient status, timed actions and the limits of the test | Worked examples |
+
+---
+
+## How the builds are made
+
+The same patterns run through most of them.
+
+- **Free model by default.** Recent builds run on Meta Muse Glimmer through NVIDIA's free endpoint, on my key. Visitors can switch to Anthropic, OpenAI or Gemini with their own key, which is used for one request and never stored.
+- **Prompts stay on the server.** The system prompt and API key sit in a Vercel serverless function, not in the browser bundle.
+- **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
+- **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time.
+- **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
+
+## Running a build locally
+
+Each folder is its own Vite project.
+
+```bash
+cd <build-folder>
+npm install
+npx vercel dev   # runs the app and its API function together
+```
+
+Builds with a model call need these environment variables, set in Vercel or a local `.env.local`:
+
+| Variable | Value |
+| --- | --- |
+| `LLM_BASE_URL` | `https://integrate.api.nvidia.com/v1` |
+| `LLM_MODEL` | The Muse Glimmer model id on NVIDIA |
+| `LLM_API_KEY` | Your NVIDIA API key |
+
+To deploy one build on Vercel, import this repo and set the Root Directory to that build's folder.
+
+## Contact
+
+Find me on LinkedIn as Prerna Kakkar, or on GitHub at [kakkarprerna](https://github.com/kakkarprerna).

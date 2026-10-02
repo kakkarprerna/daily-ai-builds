@@ -2,6 +2,8 @@
 
 **Paste a job description and the hiring stages. Get a stage-by-stage prep plan, a day-by-day schedule, and resources you can trust.**
 
+**Try it live: [loop-ready.vercel.app](https://loop-ready.vercel.app)**. No sign-in. The free model runs by default, and three worked examples open without any key.
+
 Part of my [daily AI builds](https://github.com/kakkarprerna/daily-ai-builds) series.
 
 ---
@@ -127,3 +129,7 @@ Add an entry to `src/data/resources.js` with an `id`, `url`, `type`, `cost` and 
 ## Stack
 
 React 18, Vite, lucide-react icons, one Vercel serverless function. No database, no sign-in, no tracking.
+
+## How this was built
+
+I'm a product manager. I wrote the brief, chose the closed-library design, checked every resource link by hand and reviewed each version of the app. The code was written by AI coding tools working from my prompts and review.
