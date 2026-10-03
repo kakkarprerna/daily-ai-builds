@@ -8,8 +8,8 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
-**[Loop Ready](./loop-ready)** · [live app](https://loop-ready.vercel.app)
-Paste a job description and the hiring stages. Get a stage-by-stage prep plan, a day-by-day schedule and resources picked from a library of 27 links checked by hand. The model chooses resources by id and never writes a URL, so it cannot invent one.
+**[Prompt Drift Watch](./prompt-drift-watch)** · [live app](https://prompt-drift-watch.vercel.app)
+Paste the current and proposed versions of a system prompt, say what you meant to change, and add a few real user messages. Each message runs under both prompts, and every difference is labelled as intended or a side effect, ending in Ship, Retest or Hold. It also quotes the wording in the new prompt most likely behind each side effect.
 
 ---
 
@@ -38,6 +38,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Prompt Drift Watch](./prompt-drift-watch) | Runs the same messages under two versions of a system prompt and flags behaviour changes you didn't ask for | [Live](https://prompt-drift-watch.vercel.app) |
 | [Silent Failure Detector](./silent-failure-detector) | Flags AI answers that sound confident about claims that cannot be checked | Worked examples |
 | [Escalation Quality Scorer](./escalation-quality-scorer) | Scores AI-to-human handoffs on context passed and questions repeated | Worked examples |
 | [Root Cause Detector](./root-cause-detector) | Points to the stage of an AI agent's workflow most likely to have caused a failure | Worked example |

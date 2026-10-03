@@ -4,6 +4,8 @@
 
 Prompt Drift Watch runs the same user messages through two versions of a system prompt, puts the replies side by side, and labels every difference as something you asked for or a side effect you didn't. It ends with a verdict: **Ship**, **Retest** or **Hold**.
 
+**[Open the live app](https://prompt-drift-watch.vercel.app)** · no sign-up, and three worked examples load without a key
+
 Part of my [daily AI builds](https://github.com/kakkarprerna/daily-ai-builds) series.
 
 ---
@@ -27,7 +29,7 @@ The stated intent matters most. *"I only wanted shorter replies"* is the yardsti
 
 ## Try it without a key
 
-Three worked examples load instantly with saved replies and full reports:
+Open [prompt-drift-watch.vercel.app](https://prompt-drift-watch.vercel.app) and go to **Worked examples**. Three saved runs load instantly with replies and full reports:
 
 1. **Support bot asked to be shorter** (Hold). A broadband assistant trimmed for length loses its cancellation terms, refund route and empathy on outages.
 2. **Booking assistant gets Spanish** (Retest). A physio clinic adds Spanish support, and English patients start getting Spanish greetings and dates.
@@ -52,13 +54,25 @@ Confidence drops when the tests are few or narrow. The Method section in the app
 
 ## Models and keys
 
-By default everything runs on **Meta Muse Glimmer** through NVIDIA's free endpoint, on the site's own key, so visitors need nothing. Visitors can switch to **Anthropic**, **OpenAI** or **Gemini** with their own key. A visitor's key lives only in that browser tab's memory and travels with each request through the server function. It is never stored or logged.
+On the [live app](https://prompt-drift-watch.vercel.app), everything runs by default on **Meta Muse Glimmer** through NVIDIA's free endpoint, on my key, so visitors need nothing. Visitors can switch to **Anthropic**, **OpenAI** or **Gemini** with their own key. A visitor's key lives only in that browser tab's memory and travels with each request through the server function. It is never stored or logged.
 
 The model replies in tagged lines (`VERDICT:`, `CHANGE:`, `CAUSE:` and so on) rather than JSON. That format survives smaller models far better, and it is what made swapping providers cheap.
 
 ## Privacy
 
 No sign-in, no database, no analytics on pasted text. Prompts and messages go through a Vercel serverless function to the chosen model provider and nowhere else. The judging instructions live server-side and never ship in the browser bundle.
+
+## Deploy your own
+
+Import the `daily-ai-builds` repo into Vercel, set the Root Directory to `prompt-drift-watch`, and add the three environment variables listed below. Or deploy from this folder with the CLI:
+
+```bash
+vercel link --yes --project prompt-drift-watch
+vercel env add LLM_BASE_URL production
+vercel env add LLM_MODEL production
+vercel env add LLM_API_KEY production
+vercel --prod
+```
 
 ## Tech
 
