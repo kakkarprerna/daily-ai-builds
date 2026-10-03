@@ -46,11 +46,11 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 | [Prompt Drift Watch](./prompt-drift-watch) | Runs the same messages under two versions of a system prompt and flags behaviour changes you didn't ask for | [Live](https://prompt-drift-watch.vercel.app) |
 | [Eval Starter Kit](./eval-starter-kit) | Turns a description of an AI feature into a starter eval set with pass and fail conditions | [Live](https://eval-starter-kit.vercel.app) |
 | [Root Cause Detector](./root-cause-detector) | Points to the stage of an AI agent's workflow most likely to have caused a failure | [Live](https://root-cause-detector-prerna-kakkar.vercel.app) |
-| [Silent Failure Detector](./silent-failure-detector) | Flags AI answers that sound confident about claims that cannot be checked | Worked examples in code |
-| [Escalation Quality Scorer](./escalation-quality-scorer) | Scores AI-to-human handoffs on context passed and questions repeated | Worked examples in code |
-| [Cost-of-Error Estimator](./cost-of-error-estimator) | Estimates the monthly cost of each AI failure type and ranks them | Code |
-| [Prompt Injection Test Harness](./prompt-injection-harness) | Runs injection attempts against a prompt and records which ones get through | Code |
-| [A/B Eval Dashboard](./ab-eval-dashboard) | Compares two system prompts on one test set with a third model as judge | Code |
+| [Silent Failure Detector](./silent-failure-detector) | Flags AI answers that sound confident about claims that cannot be checked, with a redline of every claim | [Live](https://silent-failure-detector.vercel.app) |
+| [Escalation Quality Scorer](./escalation-quality-scorer) | Scores AI-to-human handoffs on context passed and questions repeated, and rewrites the handoff note | [Live](https://escalation-quality-scorer.vercel.app) |
+| [Cost-of-Error Estimator](./cost-of-error-estimator) | Estimates the monthly cost of each AI failure type, ranks them and tests what a fix would save | [Live](https://cost-of-error-estimator.vercel.app) |
+| [Prompt Injection Test Harness](./prompt-injection-harness) | Runs 14 injection attempts against a prompt and checks each reply for the secret, with a positive control | [Live](https://prompt-injection-harness.vercel.app) |
+| [A/B Eval Dashboard](./ab-eval-dashboard) | Compares two system prompts on one test set with a judge model, and checks the verdict survives swapping the order | [Live](https://ab-eval-dashboard.vercel.app) |
 
 ### Customer success diagnostics
 Drawn from my time running customer success alongside product.
@@ -89,7 +89,7 @@ Several of these came from living in Spain as an expat.
 The same patterns run through most of them.
 
 - **Free model by default.** Recent builds run on Meta Muse Glimmer through NVIDIA's free endpoint, on my key. Visitors can switch to Anthropic, OpenAI or Gemini with their own key, which is used for one request and never stored.
-- **Prompts stay on the server.** The system prompt and API key sit in a Vercel serverless function, not in the browser bundle.
+- **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
 - **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason.
@@ -114,6 +114,8 @@ Builds with a model call need these environment variables, set in Vercel or a lo
 | `LLM_API_KEY` | Your NVIDIA API key |
 
 To deploy one build on Vercel, import this repo and set the Root Directory to that build's folder.
+
+Builds with a `functions/` folder (Silent Failure Detector, Escalation Quality Scorer, Cost-of-Error Estimator, Prompt Injection Test Harness, A/B Eval Dashboard) also deploy to Cloudflare Pages for free: `npm run deploy:cloudflare` from the build folder, after setting `LLM_API_KEY` and `LLM_MODEL` with `npx wrangler pages secret put`.
 
 ## Contact
 

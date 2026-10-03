@@ -1,0 +1,13 @@
+/* Silent Failure Detector: one dominant colour (indigo) used at several levels. */
+:root {
+  --p-50: #eef0ff;
+  --p-100: #e0e3ff;
+  --p-200: #c4c9ff;
+  --p-300: #a1a6fb;
+  --p-500: #5b52ec;
+  --p-600: #4a3fd6;
+  --p-700: #3a30ad;
+  --p-900: #221c66;
+  --p-rgb: 74, 63, 214;
+  --bg: #f8f8fe;
+}

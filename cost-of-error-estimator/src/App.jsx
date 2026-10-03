@@ -1,968 +1,602 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, Loader2, Stamp, RotateCcw, Info, Key, Eye, EyeOff } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import {
+  Compass,
+  SlidersHorizontal,
+  BarChart3,
+  FlaskConical,
+  BookOpen,
+  Settings2,
+  ArrowRight,
+  Plus,
+  Trash2,
+  Play,
+  Loader2,
+  Eraser,
+  Info,
+  Target,
+  Coins,
+  CalendarDays,
+  Layers,
+  TriangleAlert,
+  Eye,
+  ListChecks,
+  Wand2,
+  ShieldCheck,
+  Brain,
+  Sigma,
+  Calculator,
+  PiggyBank,
+  Scale,
+  Receipt,
+  Building2,
+  Users,
+  Hash,
+} from 'lucide-react';
+import { Shell, Banners, SectionHead, Empty, ChipRow, Pill, Conf, MethodGrid, IconList, Steps, SettingsPanel, SavedBanner, useSettings, pickOne, addOption } from './kit/ui.jsx';
+import { callApi } from './kit/api.js';
+import { parseEstimate, rank, money } from './parse.js';
+import { EXAMPLES } from './examples.js';
 
-const CONFIDENCE_STYLES = {
-  high: { color: '#1F6F5C', label: 'HIGH CONFIDENCE' },
-  medium: { color: '#B8862E', label: 'MEDIUM CONFIDENCE' },
-  low: { color: '#C0392B', label: 'LOW CONFIDENCE' },
-};
-
-function uid() {
-  return Math.random().toString(36).slice(2, 10);
-}
-
-const DEFAULT_CONTEXT =
-  "B2B SaaS customer support chatbot for a mid-market platform. About 8,000 monthly active users, $4,800 average annual contract value, support team of 6.";
-
-const DEFAULT_CATEGORIES = [
-  {
-    id: uid(),
-    name: 'Confidently wrong refund answer',
-    frequency: 40,
-    description:
-      "Bot states the wrong refund policy with full confidence; a human agent has to step in after the customer complains.",
-  },
-  {
-    id: uid(),
-    name: 'Missed escalation',
-    frequency: 25,
-    description:
-      "Bot doesn't recognise repeated frustration and never hands off to a human agent.",
-  },
-  {
-    id: uid(),
-    name: 'Hallucinated integration status',
-    frequency: 15,
-    description:
-      "Bot tells an enterprise user a feature or integration is live when it isn't, which turns into a support escalation.",
-  },
+const SECTIONS = [
+  { id: 'start', title: 'Start here', desc: 'What this works out, in a minute', icon: Compass },
+  { id: 'setup', title: 'Your product', desc: 'Context and the ways it fails', icon: SlidersHorizontal },
+  { id: 'ranking', title: 'Ranking', desc: 'Monthly cost of each failure, ranked', icon: BarChart3 },
+  { id: 'whatif', title: 'What if we fix it?', desc: 'Savings from a guardrail', icon: Calculator },
+  { id: 'examples', title: 'Worked examples', desc: 'Three saved estimates, no key needed', icon: FlaskConical },
+  { id: 'method', title: 'Method', desc: 'Where the figures come from', icon: BookOpen },
+  { id: 'settings', title: 'Model & key', desc: 'Pick who makes the estimate', icon: Settings2 },
 ];
 
+const PRODUCTS = ['Support chatbot', 'Voice agent', 'Sales assistant', 'Returns assistant', 'Internal copilot', 'Booking assistant'];
+const CURRENCIES = ['EUR', 'USD', 'GBP'];
+const SYMBOL = { EUR: '€', USD: '$', GBP: '£' };
+const blankCat = () => ({ name: '', frequency: '', description: '' });
+
 export default function App() {
-  const [context, setContext] = useState(DEFAULT_CONTEXT);
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
-  const [results, setResults] = useState(null);
-  const [isEstimating, setIsEstimating] = useState(false);
-  const [error, setError] = useState(null);
-  const [showIntro, setShowIntro] = useState(true);
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('coe_api_key') || '');
-  const [showKey, setShowKey] = useState(false);
-  const [openedDate] = useState(() =>
-    new Date()
-      .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-      .toUpperCase()
+  const [section, setSection] = useState('start');
+  const mainRef = useRef(null);
+  const { settings, setSettings, provider, keyMissing } = useSettings();
+
+  const [productOpts, setProductOpts] = useState(PRODUCTS);
+  const [product, setProduct] = useState([]);
+  const [currency, setCurrency] = useState(['EUR']);
+  const [context, setContext] = useState('');
+  const [contactCost, setContactCost] = useState('');
+  const [customerValue, setCustomerValue] = useState('');
+  const [cats, setCats] = useState([blankCat(), blankCat()]);
+  const [reportText, setReportText] = useState('');
+  const [estimatedFor, setEstimatedFor] = useState(0);
+  const [saved, setSaved] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [whatIf, setWhatIf] = useState({ idx: null, pct: 60, cost: '' });
+
+  const cur = currency[0] || 'EUR';
+  const est = useMemo(() => parseEstimate(reportText), [reportText]);
+  const ranked = useMemo(() => rank(cats, est.costs), [cats, est]);
+  const stale = est.ok && estimatedFor !== cats.length;
+  const fmt = (n) => money(n, cur);
+
+  const go = (id) => {
+    setSection(id);
+    if (mainRef.current) mainRef.current.scrollTop = 0;
+    window.scrollTo?.(0, 0);
+  };
+
+  const setCat = (i, patch) => setCats((cs) => cs.map((c, k) => (k === i ? { ...c, ...patch } : c)));
+  const addCat = () => setCats((cs) => (cs.length >= 8 ? cs : [...cs, blankCat()]));
+  const removeCat = (i) => {
+    setCats((cs) => cs.filter((_, k) => k !== i));
+    if (est.ok) {
+      setReportText('');
+      setSaved(null);
+    }
+  };
+
+  const loadExample = (ex) => {
+    setProductOpts((o) => (o.includes(ex.product) ? o : [...o, ex.product]));
+    setProduct([ex.product]);
+    setCurrency([ex.currency]);
+    setContext(ex.context);
+    setContactCost(ex.contactCost);
+    setCustomerValue(ex.customerValue);
+    setCats(ex.categories.map((c) => ({ ...c })));
+    setReportText(ex.report);
+    setEstimatedFor(ex.categories.length);
+    setSaved(ex.title);
+    setWhatIf({ idx: null, pct: 60, cost: '' });
+    setError('');
+    go('ranking');
+  };
+
+  const clearAll = () => {
+    setProduct([]);
+    setContext('');
+    setContactCost('');
+    setCustomerValue('');
+    setCats([blankCat(), blankCat()]);
+    setReportText('');
+    setSaved(null);
+    go('setup');
+  };
+
+  const run = async () => {
+    setError('');
+    const valid = cats.filter((c) => c.name.trim());
+    if (!valid.length) return setError('Add at least one failure category with a name.');
+    if (valid.length !== cats.length) return setError('Every category needs a name. Remove the empty ones or fill them in.');
+    if (keyMissing) return setError(`Add your ${provider.name} key in Model & key first.`);
+    setBusy(true);
+    try {
+      const { report } = await callApi(
+        'estimate',
+        { context, product: product.join(', '), currency: cur, contactCost, customerValue, categories: cats },
+        settings
+      );
+      if (!parseEstimate(report).ok) throw new Error('The model replied, but not in the expected format. Try again, or switch provider.');
+      setReportText(report);
+      setEstimatedFor(cats.length);
+      setSaved(null);
+      setWhatIf({ idx: null, pct: 60, cost: '' });
+      go('ranking');
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const top = ranked.rows[0];
+  const maxMid = Math.max(1, ...ranked.rows.map((r) => r.monthHigh));
+  const wiRow = ranked.rows.find((r) => r.idx === (whatIf.idx ?? top?.idx));
+  const wiSave = wiRow ? wiRow.monthMid * (whatIf.pct / 100) : 0;
+  const wiCost = Math.max(0, Number(whatIf.cost) || 0);
+  const wiNet = wiSave - wiCost;
+
+  const badge = (id) => {
+    if (id === 'ranking' && est.ok && top) return { text: `${fmt(ranked.total)}/mo` };
+    if (id === 'setup') {
+      const n = cats.filter((c) => c.name.trim()).length;
+      return n ? { text: `${n} failures` } : null;
+    }
+    return null;
+  };
+
+  const noResult = (
+    <Empty
+      icon={BarChart3}
+      title="No estimate yet"
+      action={
+        <div className="row" style={{ justifyContent: 'center' }}>
+          <button className="btn primary" onClick={() => go('examples')}>
+            <FlaskConical size={18} /> Load a worked example
+          </button>
+          <button className="btn ghost" onClick={() => go('setup')}>
+            Describe your product
+          </button>
+        </div>
+      }
+    >
+      Describe your product and list how it fails, or open a saved example.
+    </Empty>
   );
 
-  function updateCategory(id, field, value) {
-    setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
-    setResults(null);
-  }
-
-  function addCategory() {
-    setCategories((prev) => [...prev, { id: uid(), name: '', frequency: 1, description: '' }]);
-    setResults(null);
-  }
-
-  function removeCategory(id) {
-    setCategories((prev) => prev.filter((c) => c.id !== id));
-    setResults(null);
-  }
-
-  function saveApiKey(value) {
-    setApiKey(value);
-    if (value) {
-      localStorage.setItem('coe_api_key', value);
-    } else {
-      localStorage.removeItem('coe_api_key');
-    }
-  }
-
-  function resetLedger() {
-    setContext(DEFAULT_CONTEXT);
-    setCategories(DEFAULT_CATEGORIES);
-    setResults(null);
-    setError(null);
-  }
-
-  async function estimateExposure() {
-    setError(null);
-    if (!apiKey.trim()) {
-      setError('Add your Anthropic API key above before stamping the ledger.');
-      return;
-    }
-    const validCategories = categories.filter((c) => c.name.trim());
-    if (!validCategories.length) {
-      setError('Add at least one failure category with a name before stamping the ledger.');
-      return;
-    }
-    setIsEstimating(true);
-    setResults(null);
-
-    const systemPrompt = `You are a conservative AI-product risk actuary helping a product manager prioritise where to invest in evaluation and guardrails. Given a product's business context and a list of AI failure categories, estimate the realistic USD cost PER INCIDENT for each category (not a monthly total). Ground every estimate in the stated business context. Be conservative rather than dramatic. Respond with ONLY a JSON array, no markdown fences, no prose before or after, matching exactly this schema:
-[{"id": "string matching the given id", "cost_low": number, "cost_high": number, "confidence": "high" | "medium" | "low", "drivers": ["short phrase", "short phrase"], "rationale": "one sentence, under 20 words"}]`;
-
-    const userPrompt = `Business context:
-${context}
-
-Failure categories:
-${validCategories
-  .map(
-    (c) =>
-      `- id: ${c.id} | name: ${c.name} | est. frequency: ${c.frequency || 0}/month | description: ${
-        c.description || 'n/a'
-      }`
-  )
-  .join('\n')}`;
-
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey.trim(),
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          // Update this if Anthropic renames or retires the model.
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system: systemPrompt,
-          messages: [{ role: 'user', content: userPrompt }],
-        }),
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) throw new Error('bad key');
-        throw new Error('bad response');
-      }
-
-      const data = await response.json();
-      const text = (data.content || [])
-        .filter((block) => block.type === 'text')
-        .map((block) => block.text)
-        .join('\n');
-
-      const cleaned = text.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(cleaned);
-
-      const merged = validCategories.map((c) => {
-        const match = parsed.find((p) => p.id === c.id) || {};
-        const low = Number(match.cost_low) || 0;
-        const high = Number(match.cost_high) || 0;
-        const midpoint = (low + high) / 2;
-        const monthlyExposure = midpoint * (Number(c.frequency) || 0);
-        return {
-          ...c,
-          costLow: low,
-          costHigh: high,
-          confidence: match.confidence || 'medium',
-          drivers: match.drivers || [],
-          rationale: match.rationale || '',
-          monthlyExposure,
-        };
-      });
-
-      merged.sort((a, b) => b.monthlyExposure - a.monthlyExposure);
-      setResults(merged);
-    } catch (err) {
-      if (err.message === 'bad key') {
-        setError('That API key was rejected. Check it at console.anthropic.com and try again.');
-      } else {
-        setError('Could not estimate exposure — the response may not have parsed cleanly. Try again.');
-      }
-    } finally {
-      setIsEstimating(false);
-    }
-  }
-
-  const total = results ? results.reduce((sum, r) => sum + r.monthlyExposure, 0) : 0;
-  const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US');
-
   return (
-    <div className="coe-root">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+    <Shell
+      brand={{ name: 'Cost-of-Error Estimator', sub: 'Which AI failure to fix first', icon: BarChart3 }}
+      sections={SECTIONS}
+      section={section}
+      go={go}
+      badge={badge}
+      provider={provider}
+      keyMissing={keyMissing}
+      mainRef={mainRef}
+    >
+      <Banners error={error} setError={setError} progress={busy ? 'Estimating a cost range for each failure' : ''} />
 
-        .coe-root {
-          background: linear-gradient(180deg, #f6f2e6 0%, #ece4d0 100%);
-          min-height: 100%;
-          padding: 56px 20px;
-          font-family: 'IBM Plex Sans', sans-serif;
-          box-sizing: border-box;
-        }
-        .coe-root * { box-sizing: border-box; }
-
-        .coe-page {
-          max-width: 900px;
-          margin: 0 auto;
-          background: #fbf8ef;
-          border-radius: 10px;
-          box-shadow: 0 24px 60px rgba(60,50,20,0.16), 0 1px 0 rgba(255,255,255,0.6) inset;
-          overflow: hidden;
-          position: relative;
-          color: #23241f;
-        }
-
-        .coe-banner {
-          background: linear-gradient(125deg, #24816c 0%, #14453a 100%);
-          padding: 34px 46px 30px;
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 20px;
-          flex-wrap: wrap;
-        }
-        .coe-eyebrow {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 11.5px;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          color: #e8c77f;
-          margin-bottom: 9px;
-          animation: coe-fadein 0.5s ease both;
-        }
-        .coe-title {
-          font-family: 'Special Elite', monospace;
-          font-size: 36px;
-          color: #fbf8ef;
-          margin: 0 0 10px;
-          letter-spacing: 0.01em;
-          animation: coe-fadein 0.5s ease 0.06s both;
-        }
-        .coe-subtitle {
-          font-size: 14.5px;
-          line-height: 1.65;
-          color: rgba(251,248,239,0.82);
-          max-width: 520px;
-          margin: 0;
-          animation: coe-fadein 0.5s ease 0.12s both;
-        }
-        .coe-opened-tag {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10.5px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #e8c77f;
-          border: 1px solid rgba(232,199,127,0.55);
-          border-radius: 20px;
-          padding: 7px 13px;
-          white-space: nowrap;
-          animation: coe-fadein 0.5s ease 0.18s both;
-        }
-        .coe-opened-tag b { color: #fbf8ef; }
-
-        @keyframes coe-fadein {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .coe-eyebrow, .coe-title, .coe-subtitle, .coe-opened-tag { animation: none; }
-        }
-
-        .coe-body {
-          background:
-            repeating-linear-gradient(
-              to bottom,
-              transparent 0px,
-              transparent 30px,
-              rgba(31,111,92,0.06) 31px
-            ),
-            #fbf8ef;
-          padding: 34px 46px 40px;
-        }
-
-        .coe-intro {
-          background: rgba(31,111,92,0.07);
-          border: 1px solid rgba(31,111,92,0.28);
-          border-left: 4px solid #1f6f5c;
-          border-radius: 6px;
-          padding: 18px 20px 16px;
-          margin-bottom: 28px;
-        }
-        .coe-intro-title {
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 11.5px;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #1f6f5c;
-          margin-bottom: 12px;
-        }
-        .coe-intro ol {
-          margin: 0 0 14px;
-          padding-left: 18px;
-          font-size: 13.5px;
-          line-height: 1.65;
-          color: #33352d;
-        }
-        .coe-intro li { margin-bottom: 5px; }
-        .coe-intro-note {
-          font-size: 12.5px;
-          line-height: 1.6;
-          color: #4a4a3f;
-          margin: 0;
-        }
-        .coe-intro-note strong { color: #23241f; }
-        .coe-intro-toggle {
-          background: none;
-          border: none;
-          color: #1f6f5c;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 11px;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          cursor: pointer;
-          margin-top: 12px;
-          padding: 0;
-          text-decoration: underline;
-        }
-        .coe-intro-reopen {
-          display: inline-block;
-          margin-bottom: 22px;
-          background: none;
-          border: none;
-          color: #1f6f5c;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 11px;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          cursor: pointer;
-          text-decoration: underline;
-          padding: 0;
-        }
-        .coe-data-badge {
-          display: inline-flex;
-          align-items: center;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10.5px;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: #8a7f68;
-        }
-
-        .coe-rule {
-          border: none;
-          border-top: 1px solid rgba(28,31,29,0.16);
-          margin: 28px 0;
-        }
-
-        .coe-field-label {
-          display: block;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10.5px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: #8a7f68;
-          margin-bottom: 8px;
-        }
-        .coe-key-row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          border-bottom: 1px solid rgba(28,31,29,0.22);
-          padding-bottom: 10px;
-          margin-bottom: 8px;
-        }
-        .coe-key-icon { color: #8a7f68; flex-shrink: 0; }
-        .coe-key-input {
-          flex: 1;
-          background: transparent;
-          border: none;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 13.5px;
-          color: #23241f;
-          padding: 3px 2px;
-        }
-        .coe-key-input:focus-visible { outline: 2px solid #b8862e; outline-offset: 3px; }
-        .coe-key-toggle {
-          background: none;
-          border: none;
-          color: #8a7f68;
-          cursor: pointer;
-          padding: 2px;
-          flex-shrink: 0;
-        }
-        .coe-key-toggle:hover { color: #23241f; }
-        .coe-key-toggle:focus-visible { outline: 2px solid #8a7f68; }
-        .coe-key-note {
-          font-size: 12px;
-          line-height: 1.6;
-          color: #8a7f68;
-          margin: 0 0 24px;
-        }
-        .coe-key-note a { color: #1f6f5c; }
-        .coe-key-forget {
-          background: none;
-          border: none;
-          color: #c0392b;
-          font-size: 12px;
-          text-decoration: underline;
-          cursor: pointer;
-          padding: 0;
-          font-family: 'IBM Plex Sans', sans-serif;
-        }
-
-        .coe-context {
-          width: 100%;
-          background: transparent;
-          border: none;
-          border-bottom: 1px solid rgba(28,31,29,0.22);
-          font-family: 'IBM Plex Sans', sans-serif;
-          font-size: 14.5px;
-          line-height: 1.55;
-          color: #23241f;
-          padding: 4px 2px 12px;
-          resize: vertical;
-          min-height: 54px;
-        }
-        .coe-context:focus-visible {
-          outline: 2px solid #b8862e;
-          outline-offset: 3px;
-        }
-
-        .coe-cat-headrow {
-          display: grid;
-          grid-template-columns: 1.1fr 90px 1.9fr 28px;
-          gap: 14px;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10.5px;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #8a7f68;
-          padding-bottom: 8px;
-          border-bottom: 1px solid rgba(28,31,29,0.22);
-        }
-        .coe-cat-row {
-          display: grid;
-          grid-template-columns: 1.1fr 90px 1.9fr 28px;
-          gap: 14px;
-          align-items: start;
-          padding: 13px 8px;
-          margin: 0 -8px;
-          border-bottom: 1px solid rgba(28,31,29,0.1);
-          border-radius: 6px;
-          transition: background 0.15s ease;
-        }
-        .coe-cat-row:hover { background: rgba(31,111,92,0.05); }
-        .coe-cat-row input,
-        .coe-cat-row textarea {
-          width: 100%;
-          background: transparent;
-          border: none;
-          font-family: 'IBM Plex Sans', sans-serif;
-          font-size: 13.5px;
-          color: #23241f;
-          padding: 3px 2px;
-          resize: none;
-        }
-        .coe-cat-row input[type='number'] {
-          font-family: 'IBM Plex Mono', monospace;
-        }
-        .coe-cat-row input:focus-visible,
-        .coe-cat-row textarea:focus-visible {
-          outline: 2px solid #b8862e;
-          outline-offset: 2px;
-          background: rgba(184,134,46,0.1);
-        }
-        .coe-remove-btn {
-          background: none;
-          border: none;
-          cursor: pointer;
-          color: #c0392b;
-          opacity: 0.55;
-          padding: 4px;
-          margin-top: 2px;
-        }
-        .coe-remove-btn:hover { opacity: 1; }
-        .coe-remove-btn:focus-visible { outline: 2px solid #c0392b; border-radius: 2px; }
-
-        .coe-add-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: none;
-          border: none;
-          border-top: 1px dashed rgba(184,134,46,0.65);
-          width: 100%;
-          padding-top: 13px;
-          margin-top: 4px;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 12px;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: #b8862e;
-          cursor: pointer;
-        }
-        .coe-add-btn:hover { color: #93691f; }
-        .coe-add-btn:focus-visible { outline: 2px solid #b8862e; }
-
-        .coe-actions {
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 12px 20px;
-          margin-top: 32px;
-        }
-        .coe-stamp-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          background: linear-gradient(135deg, #e0b364 0%, #b8862e 100%);
-          color: #23241f;
-          border: none;
-          padding: 15px 26px;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          cursor: pointer;
-          border-radius: 6px;
-          box-shadow: 0 8px 18px rgba(184,134,46,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
-          transition: transform 0.08s ease, box-shadow 0.15s ease, background 0.15s ease;
-        }
-        .coe-stamp-btn:hover:not(:disabled) { background: linear-gradient(135deg, #e8bd70, #c2913a); }
-        .coe-stamp-btn:active:not(:disabled) {
-          transform: translateY(2px) scale(0.98);
-          box-shadow: 0 3px 8px rgba(184,134,46,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
-        }
-        .coe-stamp-btn:disabled { opacity: 0.6; cursor: default; }
-        .coe-stamp-btn:focus-visible { outline: 2px solid #1f6f5c; outline-offset: 2px; }
-
-        .coe-reset-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: none;
-          border: none;
-          color: #8a7f68;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 12px;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          cursor: pointer;
-        }
-        .coe-reset-btn:hover { color: #23241f; }
-        .coe-reset-btn:focus-visible { outline: 2px solid #8a7f68; }
-
-        .coe-spin { animation: coe-spin 0.9s linear infinite; }
-        @keyframes coe-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .coe-error {
-          margin-top: 18px;
-          border: 1px dashed #c0392b;
-          color: #c0392b;
-          border-radius: 6px;
-          font-size: 13px;
-          padding: 10px 14px;
-          font-family: 'IBM Plex Sans', sans-serif;
-        }
-
-        .coe-results-head {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 11.5px;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #8a7f68;
-          margin-bottom: 6px;
-        }
-
-        .coe-result-row {
-          display: grid;
-          grid-template-columns: 1.7fr 1fr 1fr;
-          gap: 16px;
-          align-items: start;
-          padding: 20px 8px;
-          margin: 0 -8px;
-          border-bottom: 1px solid rgba(28,31,29,0.1);
-          border-radius: 6px;
-          opacity: 0;
-          animation: coe-rise 0.45s ease forwards;
-        }
-        @keyframes coe-rise {
-          from { opacity: 0; transform: translateY(10px) scale(0.98); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .coe-result-row { animation: none; opacity: 1; }
-        }
-
-        .coe-result-name {
-          font-weight: 700;
-          font-size: 15px;
-          margin-bottom: 4px;
-        }
-        .coe-result-rationale {
-          font-size: 12.5px;
-          font-style: italic;
-          color: #5c5a4d;
-          line-height: 1.5;
-          margin-bottom: 9px;
-        }
-        .coe-drivers {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          color: #8a7f68;
-          margin-bottom: 10px;
-        }
-
-        .coe-bar-track {
-          height: 6px;
-          width: 100%;
-          max-width: 220px;
-          background: rgba(28,31,29,0.08);
-          border-radius: 4px;
-          overflow: hidden;
-        }
-        .coe-bar-fill {
-          height: 100%;
-          border-radius: 4px;
-        }
-
-        .coe-result-range {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 13.5px;
-          color: #23241f;
-        }
-        .coe-result-range-label {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #8a7f68;
-          margin-bottom: 4px;
-        }
-
-        .coe-confidence-tag {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          margin-top: 10px;
-          border-radius: 20px;
-          padding: 4px 12px 4px 10px;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.07em;
-        }
-
-        .coe-exposure {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 19px;
-          font-weight: 700;
-          color: #c0392b;
-          text-align: right;
-        }
-        .coe-exposure-label {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10px;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #8a7f68;
-          text-align: right;
-          margin-bottom: 4px;
-        }
-
-        .coe-total-plate {
-          background: linear-gradient(125deg, #c0392b 0%, #7d2419 100%);
-          padding: 28px 46px 32px;
-          display: flex;
-          align-items: center;
-          gap: 22px;
-        }
-        .coe-seal {
-          width: 58px;
-          height: 58px;
-          border-radius: 50%;
-          background: rgba(251,248,239,0.16);
-          border: 1.5px solid rgba(251,248,239,0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #fbf8ef;
-          flex-shrink: 0;
-        }
-        .coe-total-label {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 12px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: #f4cdc4;
-          margin-bottom: 2px;
-        }
-        .coe-total-amount {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 52px;
-          font-weight: 700;
-          color: #fbf8ef;
-          line-height: 1;
-        }
-
-        .coe-footnote {
-          margin-top: 30px;
-          font-size: 11.5px;
-          line-height: 1.65;
-          color: #8a7f68;
-          font-style: italic;
-        }
-
-        @media (max-width: 640px) {
-          .coe-banner { padding: 28px 24px 24px; }
-          .coe-body { padding: 28px 24px 32px; }
-          .coe-title { font-size: 26px; }
-          .coe-total-plate { padding: 24px 24px 28px; }
-          .coe-total-amount { font-size: 38px; }
-          .coe-seal { width: 46px; height: 46px; }
-          .coe-cat-headrow { display: none; }
-          .coe-cat-row {
-            grid-template-columns: 1fr 28px;
-            grid-template-areas: "name remove" "freq remove" "desc desc";
-            row-gap: 4px;
-          }
-          .coe-cat-row > input:nth-of-type(1) { grid-area: name; }
-          .coe-cat-row > input:nth-of-type(2) { grid-area: freq; }
-          .coe-cat-row > textarea { grid-area: desc; }
-          .coe-remove-btn { grid-area: remove; }
-          .coe-result-row { grid-template-columns: 1fr; }
-          .coe-exposure, .coe-exposure-label, .coe-result-range { text-align: left; }
-        }
-      `}</style>
-
-      <div className="coe-page">
-        <div className="coe-banner">
-          <div>
-            <div className="coe-eyebrow">General Ledger — Product Risk Office</div>
-            <h1 className="coe-title">Cost-of-Error Estimator</h1>
-            <p className="coe-subtitle">
-              List what your AI product gets wrong and how often. Each category is estimated and ranked
-              by monthly exposure, so you know where eval and guardrail investment actually pays off.
-            </p>
-          </div>
-          <div className="coe-opened-tag">
-            Opened <b>{openedDate}</b>
-          </div>
-        </div>
-
-        <div className="coe-body">
-          {showIntro ? (
-            <div className="coe-intro">
-              <div className="coe-intro-title">
-                <Info size={13} /> First time here? Start with this
-              </div>
-              <ol>
-                <li>Describe your product below in a sentence or two — who uses it, and roughly how many.</li>
-                <li>List the ways your AI gets things wrong, and how often each happens in a typical month.</li>
-                <li>
-                  Click <strong>Estimate exposure</strong>. Claude reads what you entered and estimates
-                  what each mistake probably costs, then ranks them so you can see what's worth fixing
-                  first.
-                </li>
-              </ol>
-              <p className="coe-intro-note">
-                <strong>Where the numbers come from:</strong> they are not pulled from your real support
-                tickets, billing, or CRM data. Claude (Anthropic's AI) estimates each cost based only on
-                the context and categories you type in below. Use this to compare failures against each
-                other and decide what to fix first — not as an audited financial figure.
+      {section === 'start' && (
+        <section>
+          <div className="hero">
+            <div className="hero-text">
+              <div className="kicker">For PMs deciding where guardrails go</div>
+              <h1>Which AI failure should you fix first?</h1>
+              <p>
+                The failure you see most often is rarely the one costing most. List the ways your AI gets things wrong and roughly how often. You get a cost per incident, a
+                monthly total for each, and a ranking that tells you where evaluation and guardrail work will pay back.
               </p>
-              <button type="button" className="coe-intro-toggle" onClick={() => setShowIntro(false)}>
-                Hide this
-              </button>
+              <div className="row">
+                <button className="btn primary" onClick={() => go('examples')}>
+                  <FlaskConical size={18} /> See a worked example
+                </button>
+                <button className="btn ghost" onClick={() => go('setup')}>
+                  Estimate mine <ArrowRight size={18} />
+                </button>
+              </div>
             </div>
-          ) : (
-            <button type="button" className="coe-intro-reopen" onClick={() => setShowIntro(true)}>
-              How does this work?
-            </button>
-          )}
-
-          <label className="coe-field-label" htmlFor="coe-key">
-            Anthropic API key
-          </label>
-          <div className="coe-key-row">
-            <Key size={15} className="coe-key-icon" />
-            <input
-              id="coe-key"
-              type={showKey ? 'text' : 'password'}
-              className="coe-key-input"
-              placeholder="sk-ant-…"
-              value={apiKey}
-              onChange={(e) => saveApiKey(e.target.value)}
-            />
-            <button
-              type="button"
-              className="coe-key-toggle"
-              onClick={() => setShowKey((v) => !v)}
-              aria-label={showKey ? 'Hide key' : 'Show key'}
-            >
-              {showKey ? <EyeOff size={15} /> : <Eye size={15} />}
-            </button>
+            <div className="hero-visual" aria-hidden="true">
+              <div className="hv-card" style={{ width: '92%', top: 14, left: 0, gap: 14 }}>
+                {[92, 34, 22, 12].map((w, i) => (
+                  <div key={i} className="row" style={{ flexWrap: 'nowrap' }}>
+                    <span style={{ width: 22, fontWeight: 800, fontSize: 13, color: 'var(--p-700)' }}>{i + 1}</span>
+                    <span className="hv-line" style={{ width: `${w}%`, height: 14, background: i === 0 ? 'var(--p-600)' : 'var(--p-200)' }} />
+                  </div>
+                ))}
+              </div>
+              <span className="hv-pill solid" style={{ bottom: 10, right: '4%' }}>
+                <Target size={15} /> Fix this first
+              </span>
+            </div>
           </div>
-          <p className="coe-key-note">
-            Stored only in this browser (localStorage), sent only to Anthropic's API. Get a key at{' '}
-            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noreferrer">
-              console.anthropic.com
-            </a>
-            . {apiKey && (
-              <button type="button" className="coe-key-forget" onClick={() => saveApiKey('')}>
-                Forget key
-              </button>
-            )}
-          </p>
-
-          <label className="coe-field-label" htmlFor="coe-context">
-            Account / product context
-          </label>
-          <textarea
-            id="coe-context"
-            className="coe-context"
-            value={context}
-            onChange={(e) => {
-              setContext(e.target.value);
-              setResults(null);
-            }}
-            rows={2}
+          <Steps
+            items={[
+              { icon: Building2, t: 'Describe the product', d: 'Who uses it, what a customer is worth, what a support contact costs.' },
+              { icon: ListChecks, t: 'List the failures', d: 'Each way the AI gets it wrong, and roughly how often a month.' },
+              { icon: BarChart3, t: 'Read the ranking', d: 'Monthly cost per failure, biggest first, then test a fix.' },
+            ]}
           />
-
-          <hr className="coe-rule" />
-
-          <div className="coe-cat-headrow">
-            <span>Failure category</span>
-            <span>Freq / mo</span>
-            <span>Description</span>
-            <span />
+          <div className="card soft">
+            <h3 className="card-title">
+              <Info size={18} /> Where the figures come from
+            </h3>
+            <IconList
+              items={[
+                { icon: Brain, text: <><b>Cost per incident</b> is a range estimated by a language model from the context you give. It is not pulled from your support or billing data.</> },
+                { icon: Sigma, text: <><b>Monthly totals, ranking and savings</b> are plain arithmetic in your browser: frequency × cost, so you can change a frequency and see the effect at once.</> },
+                { icon: Scale, text: <>Use it to <b>prioritise</b>, not as an audited number. The assumptions it made are listed under Ranking so you can check them.</> },
+              ]}
+            />
           </div>
-          {categories.map((c) => (
-            <div className="coe-cat-row" key={c.id}>
-              <input
-                type="text"
-                placeholder="e.g. Wrong pricing quoted"
-                value={c.name}
-                onChange={(e) => updateCategory(c.id, 'name', e.target.value)}
-              />
-              <input
-                type="number"
-                min="0"
-                value={c.frequency}
-                onChange={(e) => updateCategory(c.id, 'frequency', e.target.value)}
-              />
-              <textarea
-                rows={1}
-                placeholder="What happens, and who it affects"
-                value={c.description}
-                onChange={(e) => updateCategory(c.id, 'description', e.target.value)}
-              />
-              <button
-                type="button"
-                className="coe-remove-btn"
-                onClick={() => removeCategory(c.id)}
-                aria-label={`Remove ${c.name || 'this category'}`}
-              >
-                <Trash2 size={15} />
-              </button>
+        </section>
+      )}
+
+      {section === 'setup' && (
+        <section>
+          <SectionHead icon={SlidersHorizontal} kicker="Step 1" title="Your product">
+            The more real numbers you give, the more grounded the estimate. Frequencies can be rough: an order of magnitude is enough to rank.
+          </SectionHead>
+          <div className="card">
+            <ChipRow label="What kind of AI product?" options={productOpts} selected={product} onToggle={pickOne(setProduct)} onAdd={addOption(setProductOpts, setProduct, true)} single />
+            <ChipRow label="Currency" options={CURRENCIES} selected={currency} onToggle={(v) => setCurrency([v])} single />
+            <div className="field">
+              <label className="field-label" htmlFor="ctx">
+                <Building2 size={15} /> Business context
+              </label>
+              <textarea id="ctx" rows={3} value={context} onChange={(e) => setContext(e.target.value)} placeholder="Who uses it, how many, what they pay, team size, markets" />
             </div>
-          ))}
-          <button type="button" className="coe-add-btn" onClick={addCategory}>
-            <Plus size={14} /> Add failure category
-          </button>
-
-          <div className="coe-actions">
-            <button
-              type="button"
-              className="coe-stamp-btn"
-              onClick={estimateExposure}
-              disabled={isEstimating}
-            >
-              {isEstimating ? <Loader2 size={16} className="coe-spin" /> : <Stamp size={16} />}
-              {isEstimating ? 'Stamping ledger…' : 'Estimate exposure'}
-            </button>
-            <button type="button" className="coe-reset-btn" onClick={resetLedger}>
-              <RotateCcw size={13} /> Reset ledger
-            </button>
-            <span className="coe-data-badge">AI-estimated, not real data</span>
+            <div className="two-col">
+              <div className="field">
+                <label className="field-label" htmlFor="cc">
+                  <Receipt size={15} /> Cost of one human support contact <span className="field-hint">optional, {SYMBOL[cur]}</span>
+                </label>
+                <input id="cc" type="number" min="0" step="0.5" value={contactCost} onChange={(e) => setContactCost(e.target.value)} placeholder="e.g. 4.50" />
+              </div>
+              <div className="field">
+                <label className="field-label" htmlFor="cv">
+                  <Users size={15} /> Yearly value of a customer <span className="field-hint">optional, {SYMBOL[cur]}</span>
+                </label>
+                <input id="cv" type="number" min="0" value={customerValue} onChange={(e) => setCustomerValue(e.target.value)} placeholder="e.g. 780" />
+              </div>
+            </div>
           </div>
 
-          {error && <div className="coe-error">{error}</div>}
-
-          {results && (
-            <>
-              <hr className="coe-rule" />
-              <div className="coe-results-head">Ledger — ranked by monthly exposure</div>
-              {results.map((r, i) => {
-                const style = CONFIDENCE_STYLES[r.confidence] || CONFIDENCE_STYLES.medium;
-                const pct = total > 0 ? Math.max(4, (r.monthlyExposure / total) * 100) : 0;
-                return (
-                  <div className="coe-result-row" style={{ animationDelay: `${i * 0.07}s` }} key={r.id}>
-                    <div>
-                      <div className="coe-result-name">{r.name}</div>
-                      {r.rationale && <div className="coe-result-rationale">{r.rationale}</div>}
-                      {r.drivers.length > 0 && (
-                        <div className="coe-drivers">{r.drivers.join(' · ')}</div>
-                      )}
-                      <div className="coe-bar-track">
-                        <div
-                          className="coe-bar-fill"
-                          style={{ width: `${pct}%`, background: style.color }}
-                        />
-                      </div>
-                      <div
-                        className="coe-confidence-tag"
-                        style={{ color: style.color, background: `${style.color}1a` }}
-                      >
-                        <Stamp size={11} /> {style.label}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="coe-result-range-label">Cost / incident</div>
-                      <div className="coe-result-range">
-                        {fmt(r.costLow)}–{fmt(r.costHigh)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="coe-exposure-label">Monthly exposure</div>
-                      <div className="coe-exposure">{fmt(r.monthlyExposure)}</div>
+          <h3 className="sub">
+            <TriangleAlert size={18} /> How it gets things wrong
+          </h3>
+          <div className="rows" style={{ marginBottom: 14 }}>
+            {cats.map((c, i) => (
+              <div className="rowcard" key={i}>
+                <span className="il-icon">{i + 1}</span>
+                <div className="rowcard-body" style={{ gap: 10 }}>
+                  <div className="cat-grid">
+                    <input type="text" aria-label={`Failure ${i + 1} name`} value={c.name} onChange={(e) => setCat(i, { name: e.target.value })} placeholder="Name the failure, e.g. Wrong refund policy" />
+                    <div className="freq">
+                      <input type="number" min="0" aria-label={`Failure ${i + 1} per month`} value={c.frequency} onChange={(e) => setCat(i, { frequency: e.target.value })} placeholder="0" />
+                      <span>a month</span>
                     </div>
                   </div>
-                );
-              })}
+                  <textarea rows={2} aria-label={`Failure ${i + 1} description`} value={c.description} onChange={(e) => setCat(i, { description: e.target.value })} placeholder="What happens, and what it leads to" />
+                </div>
+                <button className="icon-btn" aria-label={`Remove failure ${i + 1}`} onClick={() => removeCat(i)} disabled={cats.length === 1}>
+                  <Trash2 size={17} />
+                </button>
+              </div>
+            ))}
+          </div>
+          <button className="chip add" onClick={addCat} disabled={cats.length >= 8}>
+            <Plus size={14} /> Add a failure {cats.length >= 8 && '(8 maximum)'}
+          </button>
+
+          <div className="run-bar">
+            <span>{cats.filter((c) => c.name.trim()).length} failures listed</span>
+            <div className="row">
+              <button className="btn ghost small" onClick={clearAll}>
+                <Eraser size={16} /> Clear
+              </button>
+              <button className="btn primary" onClick={run} disabled={busy}>
+                {busy ? <Loader2 size={18} className="spin" /> : <Play size={18} />} Estimate the cost
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {section === 'ranking' && (
+        <section>
+          <SectionHead icon={BarChart3} kicker="Step 2" title="Ranking">
+            Monthly cost of each failure at the middle of its range, biggest first. Change a frequency here and everything updates.
+          </SectionHead>
+          <SavedBanner title={saved} onClear={clearAll} />
+          {!est.ok ? (
+            noResult
+          ) : (
+            <>
+              {stale && (
+                <div className="alert" style={{ background: 'var(--warn-bg)', color: 'var(--warn)' }}>
+                  <TriangleAlert size={18} />
+                  <span>You added a failure since this estimate. Run it again from Your product to include it.</span>
+                </div>
+              )}
+              {top && (
+                <div className="verdict ok" style={{ borderLeftColor: 'var(--p-600)' }}>
+                  <div className="verdict-icon" style={{ background: 'var(--p-100)', color: 'var(--p-700)' }}>
+                    <Target size={30} />
+                  </div>
+                  <div>
+                    <div className="verdict-top">
+                      <h3>Fix first: {top.name}</h3>
+                      <Pill cls="brand">{Math.round(top.share * 100)}% of the total</Pill>
+                    </div>
+                    <p className="verdict-line">
+                      About {fmt(top.monthMid)} a month, from {top.freq} {top.freq === 1 ? "incident" : "incidents"} at {fmt(top.low)} to {fmt(top.high)} each.
+                    </p>
+                    <p>{est.summary}</p>
+                  </div>
+                </div>
+              )}
+              <div className="stats">
+                <div className="stat">
+                  <Coins size={18} />
+                  <b>{fmt(ranked.total)}</b>
+                  <span>a month, midpoint</span>
+                </div>
+                <div className="stat">
+                  <Layers size={18} />
+                  <b style={{ fontSize: 18 }}>
+                    {fmt(ranked.totalLow)} to {fmt(ranked.totalHigh)}
+                  </b>
+                  <span>monthly range</span>
+                </div>
+                <div className="stat">
+                  <CalendarDays size={18} />
+                  <b>{fmt(ranked.total * 12)}</b>
+                  <span>a year at this rate</span>
+                </div>
+                <div className="stat">
+                  <Hash size={18} />
+                  <b>{ranked.rows.reduce((s, r) => s + r.freq, 0).toLocaleString('en-GB')}</b>
+                  <span>incidents a month</span>
+                </div>
+              </div>
+
+              <div className="rows">
+                {ranked.rows.map((r, k) => (
+                  <div className={`rowcard ${k === 0 ? 'top' : ''}`} key={r.idx}>
+                    <span className="il-icon big" style={k === 0 ? { background: 'var(--p-600)', color: '#fff' } : {}}>
+                      {k + 1}
+                    </span>
+                    <div className="rowcard-body" style={{ gap: 8 }}>
+                      <div className="row between">
+                        <b style={{ fontSize: 16 }}>{r.name}</b>
+                        <b style={{ fontSize: 18, color: 'var(--p-700)' }}>{fmt(r.monthMid)}/mo</b>
+                      </div>
+                      <div className="bar" title={`${fmt(r.monthLow)} to ${fmt(r.monthHigh)} a month`}>
+                        <span className="bar-range" style={{ left: `${(r.monthLow / maxMid) * 100}%`, width: `${Math.max(0.5, ((r.monthHigh - r.monthLow) / maxMid) * 100)}%` }} />
+                        <span className="bar-mid" style={{ width: `${(r.monthMid / maxMid) * 100}%` }} />
+                      </div>
+                      <div className="row small-text" style={{ color: 'var(--ink-2)', gap: 14 }}>
+                        <span className="freq inline">
+                          <input
+                            type="number"
+                            min="0"
+                            aria-label={`${r.name} per month`}
+                            value={cats[r.idx - 1].frequency}
+                            onChange={(e) => setCat(r.idx - 1, { frequency: e.target.value })}
+                          />
+                          <span>a month ×</span>
+                        </span>
+                        <span>
+                          {fmt(r.low)} to {fmt(r.high)} each
+                        </span>
+                        <span>{Math.round(r.share * 100)}% of total</span>
+                        <Conf level={r.confidence} />
+                      </div>
+                      <div className="chips">
+                        {r.drivers.map((d) => (
+                          <span className="chip static" key={d}>
+                            {d}
+                          </span>
+                        ))}
+                      </div>
+                      {r.rationale && <p>{r.rationale}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="two-col" style={{ marginTop: 18 }}>
+                <div className="card">
+                  <h3 className="card-title">
+                    <ListChecks size={18} /> Assumptions to check
+                  </h3>
+                  <ul className="checklist">
+                    {est.assumptions.map((a, i) => (
+                      <li key={i}>
+                        <span className="box" />
+                        {a}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="card">
+                  <h3 className="card-title">
+                    <Eye size={18} /> Not in these figures
+                  </h3>
+                  <IconList tight items={est.watch.map((w) => ({ icon: TriangleAlert, text: w }))} />
+                </div>
+              </div>
+              <button className="btn primary" onClick={() => go('whatif')}>
+                <Calculator size={18} /> Test a fix
+              </button>
             </>
           )}
+        </section>
+      )}
 
-          {!results && (
-            <p className="coe-footnote">
-              How the total is worked out: (low + high cost per incident) ÷ 2, multiplied by how often
-              that incident happens per month. Every figure on this page is Claude's estimate from what
-              you typed in, not a number pulled from your real systems — treat it as a way to prioritise,
-              not an audited report.
-            </p>
+      {section === 'whatif' && (
+        <section>
+          <SectionHead icon={Calculator} title="What if we fix it?">
+            Pick a failure, say what share of incidents a guardrail or eval would stop, and what it costs to run. Plain arithmetic, no AI.
+          </SectionHead>
+          <SavedBanner title={saved} />
+          {!est.ok || !wiRow ? (
+            noResult
+          ) : (
+            <>
+              <div className="card">
+                <ChipRow
+                  label="Which failure?"
+                  options={ranked.rows.map((r) => r.name)}
+                  selected={[wiRow.name]}
+                  onToggle={(name) => setWhatIf((w) => ({ ...w, idx: ranked.rows.find((r) => r.name === name).idx }))}
+                  single
+                />
+                <div className="field">
+                  <label className="field-label" htmlFor="pct">
+                    <ShieldCheck size={15} /> Share of incidents the fix would stop <span className="field-hint">{whatIf.pct}%</span>
+                  </label>
+                  <input id="pct" type="range" min="0" max="100" step="5" value={whatIf.pct} onChange={(e) => setWhatIf((w) => ({ ...w, pct: Number(e.target.value) }))} />
+                </div>
+                <div className="field">
+                  <label className="field-label" htmlFor="gc">
+                    <Wand2 size={15} /> Monthly cost of running the fix <span className="field-hint">optional, {SYMBOL[cur]}: extra model calls, review time</span>
+                  </label>
+                  <input id="gc" type="number" min="0" value={whatIf.cost} onChange={(e) => setWhatIf((w) => ({ ...w, cost: e.target.value }))} placeholder="0" />
+                </div>
+              </div>
+              <div className="stats" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                <div className="stat">
+                  <PiggyBank size={18} />
+                  <b>{fmt(wiSave)}</b>
+                  <span>saved a month</span>
+                </div>
+                <div className={`stat ${wiNet < 0 ? 'bad' : 'ok'}`}>
+                  <Scale size={18} />
+                  <b>{fmt(wiNet)}</b>
+                  <span>net, after running cost</span>
+                </div>
+                <div className="stat">
+                  <CalendarDays size={18} />
+                  <b>{fmt(wiNet * 12)}</b>
+                  <span>net a year</span>
+                </div>
+              </div>
+              <div className="card">
+                <h3 className="card-title">
+                  <BarChart3 size={18} /> Total monthly cost, before and after
+                </h3>
+                {[
+                  ['Today', ranked.total],
+                  ['With the fix', ranked.total - wiSave + wiCost],
+                ].map(([label, v]) => (
+                  <div className="meter" key={label}>
+                    <div className="meter-top">
+                      <span>{label}</span>
+                      <span>{fmt(v)}</span>
+                    </div>
+                    <div className="meter-track">
+                      <div className={`meter-fill ${label === 'Today' ? 'light' : ''}`} style={{ width: `${Math.min(100, (v / Math.max(1, ranked.total)) * 100)}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
-        </div>
+        </section>
+      )}
 
-        {results && (
-          <>
-            <div className="coe-total-plate">
-              <div className="coe-seal">
-                <Stamp size={22} />
-              </div>
-              <div>
-                <div className="coe-total-label">Total Monthly Exposure</div>
-                <div className="coe-total-amount">{fmt(total)}</div>
-              </div>
+      {section === 'examples' && (
+        <section>
+          <SectionHead icon={FlaskConical} kicker="No key needed" title="Worked examples">
+            Saved estimates you can open straight away. Load one, then try changing a frequency on the Ranking page.
+          </SectionHead>
+          <div className="examples">
+            {EXAMPLES.map((ex) => {
+              const er = rank(ex.categories, parseEstimate(ex.report).costs);
+              return (
+                <button className="example" key={ex.id} onClick={() => loadExample(ex)}>
+                  <div className="example-top">
+                    <span className="chip static">{ex.product}</span>
+                    <Pill cls="brand" icon={Coins}>
+                      {money(er.total, ex.currency)}/mo
+                    </Pill>
+                  </div>
+                  <h3>{ex.title}</h3>
+                  <p>{ex.blurb}</p>
+                  <div className="example-foot">
+                    <span>Fix first: {er.rows[0].name}</span>
+                    <ArrowRight size={18} />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {section === 'method' && (
+        <section>
+          <SectionHead icon={BookOpen} title="Method">
+            Where each figure comes from, and how far to trust it.
+          </SectionHead>
+          <MethodGrid
+            items={[
+              { icon: Brain, t: 'Cost per incident', d: 'A model estimates a low and high cost for one incident from your context: staff time, refunds or credits, repeat contacts, likely churn times customer value, and legal exposure only where it plausibly applies.' },
+              { icon: Sigma, t: 'Monthly exposure', d: 'Frequency × the midpoint of the range, worked out in your browser. The range on each bar is frequency × low to frequency × high.' },
+              { icon: BarChart3, t: 'Ranking', d: 'Sorted by monthly exposure at the midpoint. A rare, expensive failure can outrank a frequent, cheap one, which is usually the point.' },
+              { icon: Calculator, t: 'What if', d: 'Saving = monthly exposure × the share of incidents stopped, minus the fix\'s running cost. No model involved.' },
+            ]}
+          />
+          <div className="two-col">
+            <div className="card">
+              <h3 className="card-title">
+                <TriangleAlert size={18} /> Limits
+              </h3>
+              <IconList
+                tight
+                items={[
+                  { icon: Brain, text: 'Estimates come from the context you type, not real cost data. Check the listed assumptions against your own numbers.' },
+                  { icon: Scale, text: 'Low-confidence costs (legal, regulatory) can swing by an order of magnitude. Treat them as a reason to look closer, not a forecast.' },
+                  { icon: Eye, text: 'Brand damage and lost future sales are mostly outside the figures. They are flagged under "Not in these figures".' },
+                ]}
+              />
             </div>
-            <div className="coe-body" style={{ paddingTop: 22 }}>
-              <p className="coe-footnote" style={{ marginTop: 0 }}>
-                How the total is worked out: (low + high cost per incident) ÷ 2, multiplied by how often
-                that incident happens per month. Every figure on this page is Claude's estimate from what
-                you typed in, not a number pulled from your real systems — treat it as a way to
-                prioritise, not an audited report.
-              </p>
+            <div className="card">
+              <h3 className="card-title">
+                <ShieldCheck size={18} /> Privacy
+              </h3>
+              <IconList
+                tight
+                items={[
+                  { icon: Info, text: 'Your inputs go once to the chosen model through this site\'s server function, then are discarded.' },
+                  { icon: ShieldCheck, text: 'The prompt and the default key stay on the server. If you use your own key, it is sent for that request only.' },
+                ]}
+              />
             </div>
-          </>
-        )}
-      </div>
-    </div>
+          </div>
+        </section>
+      )}
+
+      {section === 'settings' && <SettingsPanel settings={settings} setSettings={setSettings} provider={provider} intro="The chosen model estimates the cost range for each failure. Everything else is arithmetic in your browser." />}
+    </Shell>
   );
 }

@@ -1,49 +1,103 @@
 # Escalation Quality Scorer
 
-Part of an ongoing series of small AI product builds. Each one is scoped to a day and picks a single AI product-management problem worth prototyping. Sits alongside [Silent Failure Detector](https://github.com/kakkarprerna/silent-failure-detector) as a pair, both are about the gap between how an AI system looks like it's performing and what actually reaches the next person in the loop.
+**When an AI agent hands a customer to a human, did anything useful survive the handoff?**
+
+[Live app](https://escalation-quality-scorer.vercel.app) · part of [Daily AI Builds](../README.md) · companion to [Silent Failure Detector](../silent-failure-detector)
+
+Paste a bot conversation and the note it left for the human agent. The app lists what the agent needed to know, checks which of those facts made it into the note, finds every question the customer had to answer twice, rates the timing of the escalation, and writes a better note you can copy.
+
+Three worked examples load instantly with no key.
+
+---
 
 ## The problem
 
-When a conversational AI agent escalates to a human, the escalation itself is easy to measure, it either happens or it doesn't. What's much harder to see is whether anything useful survived the handoff. A customer who has to repeat their issue, their account details, or their frustration to a human after an AI already collected all of it has had a worse experience than if there had been no AI in the loop at all.
+Escalation is easy to measure: it happened or it didn't. Whether it worked is much harder to see. A customer who has to repeat their account number, the steps they've already tried and how long they've been waiting has had a worse experience than if there had been no bot at all. The bot collected all of it. It just didn't pass it on.
 
-## What it does
+I saw this pattern often enough running customer success for conversational AI products that I wanted a quick way to score it from the transcript alone.
 
-Paste a conversation transcript between an AI agent and a customer, along with the handoff note the AI wrote for the human agent, if one exists. A judge model (Claude) checks two things:
+## What you get
 
-- **Context transfer** — how much of what the human agent needs (the issue, identifying details, what's already been tried, whether the customer is frustrated) actually made it into the handoff note
-- **Redundant questions** — moments where the AI asked the customer for something they'd already provided earlier in the same conversation
+| Section | What it shows |
+| --- | --- |
+| **Handoff score** | Band and verdict, the score on a gauge, the sum behind it, escalation timing, whether urgency was passed on, and what to fix |
+| **What reached the human** | Each fact the agent needed, marked Carried, Partial or Missing, missing first |
+| **Asked twice** | Every repeated question, with what the customer had already said, highlighted in the transcript |
+| **Better note** | The bot's original note beside a rewritten one built only from the transcript, with a copy button |
 
-These combine into a single **handoff quality score**: context transfer minus a fixed penalty per redundant question, with three response bands:
+## How the score works
 
-- **80–100** — clean handoff, ready to route
-- **50–79** — needs a quick human skim before responding
-- **0–49** — broken handoff, the customer effectively restarts
-
-Escalation timing (early, appropriate, late) and whether urgency was flagged to the human agent show as separate pass/fail badges rather than folded into the score, since those are checklist items, not a spectrum.
-
-## Why this framing
-
-Context transfer and redundancy are scored separately rather than as one blended metric, because they fail for different reasons and point to different fixes. Low context transfer usually means the handoff note template is missing a field. Redundant questions usually mean the AI isn't referencing its own conversation history correctly. Conflating them into one number would hide which one to go fix.
-
-## Tech
-
-- React + Vite
-- Anthropic API (Claude), called directly from the browser for this demo, acting as the judge model
-- No backend, no data storage
-
-## Running it locally
-
-```bash
-npm install
-cp .env.example .env   # add your own Anthropic API key to .env
-npm run dev
+```
+context transfer = (carried + ½ × partial) ÷ facts needed × 100
+handoff score    = context transfer − 15 × repeated questions
 ```
 
-Load either of the two built-in examples to see it work end to end without writing your own test transcript.
+| Score | Band | Meaning |
+| --- | --- | --- |
+| 80 to 100 | Clean handoff | The agent can reply straight away |
+| 50 to 79 | Needs a skim | Usable, but read the transcript first |
+| 0 to 49 | Broken handoff | The customer effectively starts again |
 
-## Limitations
+Context transfer and repeated questions are kept apart because they fail for different reasons. A low context score usually means the note template is missing a field. Repeated questions usually mean the bot isn't using its own conversation history. Blending them would hide which one to fix.
 
-- The judge model scores the handoff from the transcript alone, with no access to the live account or CRM record a real human agent would see. Treat the output as a triage signal for QA sampling, not a definitive audit of any single handoff.
-- The 15-point penalty per redundant question is a judgement call for this demo, not a validated weighting. It's worth tuning against real transcripts before using the score for anything operational.
-- This demo calls the Anthropic API directly from the browser with a key read from `.env`, which is fine for local use but exposes the key client-side. A production version would route the call through a backend so the key never reaches the browser.
-- Inline highlighting depends on the judge model quoting the transcript verbatim. Paraphrased matches still appear in the redundancy log even if they aren't underlined in the transcript.
+Timing (Early, Appropriate, Late) and urgency (Flagged, Not flagged, None to flag) appear as separate checks rather than in the score, since they are yes-or-no questions rather than a scale.
+
+## Worked examples
+
+| Example | Channel | What it shows | Score |
+| --- | --- | --- | --- |
+| The empty handoff | Chat, telco | Bot gathers everything, asks for the account number twice, hands over with "Customer needs help with internet" | 0 |
+| Close, but the frustration got lost | Voice, travel | Flight facts carried, but not that the app failed or that this is a third call | 52 |
+| The clean handoff | Chat, SaaS | Duplicate charge confirmed by the bot and handed over for the one step it can't do | 92 |
+
+The saved results were written in the model's output format to show each band. Paste your own transcript for a live review.
+
+## How it's built
+
+- **React + Vite**, one dominant colour (teal), fixed sidebar with a section per view.
+- **Server function holds the prompt and the key.** The browser calls `/api/score`.
+- **Free model by default.** Meta Muse Glimmer through NVIDIA's free endpoint, on the site's own key. Visitors can switch to Anthropic, OpenAI or Gemini with their own key, used for one request and never stored.
+- **Tagged lines instead of JSON**, for example `FACT: Missing | Account number 4471 2093 88 | Not in the note`. A broken line is skipped.
+- **The score is computed in the browser** from the fact and repeat lines, so the number always matches what you can see.
+- **Runs on Vercel or Cloudflare Pages.** The route lives in `server/routes/score.js`, wrapped by `api/score.js` (Vercel) and `functions/api/score.js` (Cloudflare).
+
+## Run it locally
+
+```bash
+cd escalation-quality-scorer
+npm install
+cp .env.example .env.local       # for Vercel
+cp .env.example .dev.vars        # for Cloudflare
+```
+
+Fill in `LLM_MODEL` and `LLM_API_KEY`, then:
+
+```bash
+npx vercel dev                   # Vercel runtime
+npm run dev:cloudflare           # Cloudflare runtime, on http://localhost:8788
+```
+
+## Deploy
+
+**Vercel:** import the repo, set Root Directory to `escalation-quality-scorer`, add the `LLM_` variables.
+
+**Cloudflare Pages:**
+
+```bash
+npx wrangler pages project create escalation-quality-scorer --production-branch main
+npx wrangler pages secret put LLM_API_KEY --project-name escalation-quality-scorer
+npx wrangler pages secret put LLM_MODEL --project-name escalation-quality-scorer
+npm run deploy:cloudflare
+```
+
+## Limits
+
+- The review sees only the pasted text. A real agent might also see a CRM record that fills some gaps.
+- The 15-point penalty is a judgement call. Tune it against your own transcripts before using the score for targets.
+- The list of needed facts is the model's judgement, so two runs can differ slightly. Use it for QA sampling, not to grade one agent.
+- Remove names and account numbers from real transcripts before pasting. Nothing is stored.
+
+## Changelog
+
+- **v2 (October 2026):** rebuilt with a server-held prompt and key, free default model with bring-your-own-key, fact-by-fact view, a rewritten handoff note, three worked examples, and deploy support for Vercel and Cloudflare Pages. The context score is now computed from the listed facts rather than taken from the model as a single number.
+- **v1:** browser-only prototype calling the Anthropic API directly with a local key.

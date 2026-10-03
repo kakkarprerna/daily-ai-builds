@@ -1,0 +1,13 @@
+/* Escalation Quality Scorer: one dominant colour (teal) used at several levels. */
+:root {
+  --p-50: #ebfaf8;
+  --p-100: #d3f3ef;
+  --p-200: #a7e6de;
+  --p-300: #6fd1c6;
+  --p-500: #14a091;
+  --p-600: #0d8478;
+  --p-700: #0b6a61;
+  --p-900: #063d38;
+  --p-rgb: 13, 132, 120;
+  --bg: #f6fbfa;
+}

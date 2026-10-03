@@ -1,0 +1,26 @@
+/* A/B Eval Dashboard: one dominant colour (rose) used at several levels. */
+:root {
+  --p-50: #fff0f6;
+  --p-100: #ffdeec;
+  --p-200: #ffbdd8;
+  --p-300: #f891bd;
+  --p-500: #e2448a;
+  --p-600: #c92e74;
+  --p-700: #a3225d;
+  --p-900: #5e1236;
+  --p-rgb: 201, 46, 116;
+  --bg: #fef8fb;
+}
+
+.vtag { width: 30px; height: 30px; border-radius: 10px; display: inline-grid; place-items: center; font-weight: 800; font-size: 13px; background: var(--p-100); color: var(--p-700); flex-shrink: 0; }
+.vtag.b { background: var(--p-600); color: #fff; }
+.stat .vtag { width: 24px; height: 24px; border-radius: 8px; font-size: 12px; }
+.crit { margin-bottom: 14px; }
+.crit .meter-top span:last-child { color: var(--ink-2); font-size: 13px; }
+.pair { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.pair-bar { height: 9px; border-radius: 9px; display: block; transition: width 0.4s; }
+.pair-bar.a { background: var(--p-200); }
+.pair-bar.b { background: var(--p-600); }
+.reply { border-radius: var(--r-md); padding: 14px; background: #fcfafb; border: 1px solid var(--line); }
+.reply.b { background: var(--p-50); border-color: var(--p-100); }
+.reply.won { border-color: var(--p-500); box-shadow: 0 0 0 3px var(--p-100); }

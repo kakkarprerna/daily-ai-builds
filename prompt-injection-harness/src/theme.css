@@ -1,0 +1,19 @@
+/* Prompt Injection Test Harness: one dominant colour (cerulean) used at several levels. */
+:root {
+  --p-50: #ebf6fd;
+  --p-100: #d4ecfa;
+  --p-200: #a9d8f4;
+  --p-300: #72bdeb;
+  --p-500: #1d8fd1;
+  --p-600: #0e76b5;
+  --p-700: #0c5e91;
+  --p-900: #073654;
+  --p-rgb: 14, 118, 181;
+  --bg: #f6fafd;
+}
+
+.presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+.attack-row { display: flex; gap: 12px; align-items: center; font-size: 14px; line-height: 1.5; padding: 4px 0; }
+.attack-row span { flex: 1; }
+.reply-box { white-space: pre-wrap; background: #fafcfe; border: 1px solid var(--line); border-radius: var(--r-sm); padding: 14px; font-size: 14px; line-height: 1.6; color: var(--ink-2); max-height: 320px; overflow: auto; }
+@media (max-width: 860px) { .presets { grid-template-columns: 1fr; } }

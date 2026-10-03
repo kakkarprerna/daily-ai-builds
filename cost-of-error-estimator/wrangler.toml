@@ -1,0 +1,6 @@
+# Cloudflare Pages settings, used by "npm run deploy:cloudflare" and
+# "npm run dev:cloudflare". Functions in functions/api/ are picked up
+# automatically. Secrets are set with: npx wrangler pages secret put LLM_API_KEY
+name = "cost-of-error-estimator"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-09-01"

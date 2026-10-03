@@ -1,0 +1,29 @@
+/* Cost-of-Error Estimator: one dominant colour (violet) used at several levels. */
+:root {
+  --p-50: #f7f0ff;
+  --p-100: #eedfff;
+  --p-200: #dcbfff;
+  --p-300: #c497fb;
+  --p-500: #9a4ce8;
+  --p-600: #8436d4;
+  --p-700: #6a28ad;
+  --p-900: #3e1468;
+  --p-rgb: 132, 54, 212;
+  --bg: #fbf8fe;
+}
+
+/* Category editor */
+.cat-grid { display: grid; grid-template-columns: 1fr 190px; gap: 10px; }
+.freq { display: flex; align-items: center; gap: 8px; }
+.freq input { text-align: right; }
+.freq span { font-size: 13px; color: var(--ink-3); white-space: nowrap; }
+.freq.inline input { width: 84px; padding: 6px 10px; font-weight: 700; }
+.rowcard.top { border-color: var(--p-300); box-shadow: var(--shadow-up); }
+
+/* Range bar: faint band for low to high, solid bar to the midpoint */
+.bar { position: relative; height: 14px; border-radius: 10px; background: var(--p-50); border: 1px solid var(--p-100); overflow: hidden; }
+.bar-range { position: absolute; top: 0; bottom: 0; background: var(--p-200); border-radius: 10px; }
+.bar-mid { position: absolute; top: 3px; bottom: 3px; left: 0; background: var(--p-600); border-radius: 10px; }
+
+input[type='range'] { width: 100%; accent-color: var(--p-600); }
+@media (max-width: 860px) { .cat-grid { grid-template-columns: 1fr; } }
