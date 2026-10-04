@@ -2,9 +2,11 @@
 
 **A calm check for parents.** Describe something you have noticed about your child, and see what official child health bodies say is typical for that age, what to try at home, and when it is worth asking a professional.
 
-**Live:** https://is-this-normal-check.vercel.app
+[![Live demo](https://img.shields.io/badge/Live%20demo-is--this--normal--check.vercel.app-c93a68?style=for-the-badge&logo=vercel&logoColor=white)](https://is-this-normal-check.vercel.app)
 
-![Is This Normal? preview](public/og-image.png)
+**Try it now:** https://is-this-normal-check.vercel.app (open **Examples** to see three saved checks without a key)
+
+[![Is This Normal? preview](public/og-image.png)](https://is-this-normal-check.vercel.app)
 
 Part of my [daily AI builds](https://github.com/kakkarprerna/daily-ai-builds) series.
 
