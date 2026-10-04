@@ -8,8 +8,8 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
-**[Prompt Drift Watch](./prompt-drift-watch)** · [live app](https://prompt-drift-watch.vercel.app)
-Paste the current and proposed versions of a system prompt, say what you meant to change, and add a few real user messages. Each message runs under both prompts, and every difference is labelled as intended or a side effect, ending in Ship, Retest or Hold. It also quotes the wording in the new prompt most likely behind each side effect.
+**[Is This Normal?](./is-this-normal)** · [live app](https://is-this-normal-check.vercel.app)
+A parent describes something they've noticed about their child, from first steps to sleep or tantrums, and sees what CDC, WHO, NHS, AAP and AEP guidance says is typical for that age. The answer is Typical, Worth watching or Check with a professional, with things to try at home and who to ask in Spain, the UK or the US. It never diagnoses. A child who has lost a skill always gets "check", and emergency words bring up the right number, both set by fixed rules rather than the model. In multilingual homes, words are counted across every language.
 
 ---
 
@@ -77,6 +77,7 @@ Several of these came from living in Spain as an expat.
 | --- | --- | --- |
 | [Dígame](./digame) | Writes a phone script for calling a Spanish office, in the order the call happens, with Spanish read aloud | [Live](https://digame-rho.vercel.app) |
 | [As Printed](./as-printed) | Translates Spanish medical documents literally, expands abbreviations and lists questions for the doctor. It does not interpret | [Live](https://as-printed.vercel.app) |
+| [Is This Normal?](./is-this-normal) | Describe something you've noticed about your child and see what official guidance says is typical for that age, and when to ask a professional | [Live](https://is-this-normal-check.vercel.app) |
 | [Says Who?](./says-who) | Paste a parenting tip for ages 0 to 3 and see how well official health bodies back it | [Live](https://says-who-advice.vercel.app) |
 | [Before the Basket](./before-the-basket) | Scores a grocery item on how it was produced and processed, from its ingredients or a label photo | [Live](https://before-the-basket.vercel.app) |
 | [Lab Report Translator](./lab-report-translator) | Reads a soil or leaf analysis and returns per-nutrient status, timed actions and the limits of the test | [Live](https://lab-report-translator-read.vercel.app) |
@@ -91,7 +92,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a Vercel serverless function, not in the browser bundle.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally
