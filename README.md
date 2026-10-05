@@ -8,8 +8,8 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
-**[Is This Normal?](./is-this-normal)** · [live app](https://is-this-normal-check.vercel.app)
-A parent describes something they've noticed about their child, from first steps to sleep or tantrums, and sees what CDC, WHO, NHS, AAP and AEP guidance says is typical for that age. The answer is Typical, Worth watching or Check with a professional, with things to try at home and who to ask in Spain, the UK or the US. It never diagnoses. A child who has lost a skill always gets "check", and emergency words bring up the right number, both set by fixed rules rather than the model. In multilingual homes, words are counted across every language.
+**[How Did That Go?](./how-did-that-go)** · [live app](https://how-did-that-go.vercel.app)
+A debrief for candidates straight after an interview round. You note each question and roughly what you said, and it shows what the question was really testing, whether your answer landed, the specific gap and a stronger version to reuse. It ends with fixes in priority order, a short follow-up note to send and what the next round will probably test. The model is told to cite only what you wrote and never to guess the outcome. Four fixed checks on your notes (a result, a real example, your own part, enough detail) run in the browser with no model involved. It is the other half of Loop Ready, which prepares you before each round.
 
 ---
 
@@ -18,9 +18,11 @@ A parent describes something they've noticed about their child, from first steps
 Every build has its own folder with a README. **Live** opens the deployed app, where the worked examples run without a key.
 
 ### PM practice and career
+Including tools for the candidate's side of hiring, drawn from my time in HR tech.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [How Did That Go?](./how-did-that-go) | Debriefs an interview round: what each question was testing, where your answer fell short and what to fix before the next one | [Live](https://how-did-that-go.vercel.app) |
 | [Loop Ready](./loop-ready) | JD and hiring stages in, prep plan per round out, with verified resources only | [Live](https://loop-ready.vercel.app) |
 | [AI or Me?](./ai-or-me) | Helps a PM decide whether a task needs AI at all, or is better done by hand to keep the skill | [Live](https://ai-or-me-advice.vercel.app) |
 | [Exit Criteria Builder](./exit-criteria-builder) | Gives every stage of a roadmap a measurable finish line the team can check | [Live](https://exit-criteria-builder.vercel.app) |
