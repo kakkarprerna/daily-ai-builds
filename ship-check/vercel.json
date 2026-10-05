@@ -1,0 +1,3 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)ship-check\" \":(top,exclude)ship-check/vercel.json\""
+}

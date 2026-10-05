@@ -3,5 +3,6 @@
     "api/*.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)cost-of-error-estimator\" \":(top,exclude)cost-of-error-estimator/vercel.json\""
 }

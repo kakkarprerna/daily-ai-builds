@@ -3,5 +3,6 @@
     "api/*.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)prompt-injection-harness\" \":(top,exclude)prompt-injection-harness/vercel.json\""
 }

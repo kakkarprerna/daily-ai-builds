@@ -3,5 +3,6 @@
     "api/*.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)escalation-quality-scorer\" \":(top,exclude)escalation-quality-scorer/vercel.json\""
 }

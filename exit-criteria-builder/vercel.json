@@ -1,0 +1,3 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)exit-criteria-builder\" \":(top,exclude)exit-criteria-builder/vercel.json\""
+}

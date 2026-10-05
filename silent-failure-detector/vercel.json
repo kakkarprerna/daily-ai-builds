@@ -3,5 +3,6 @@
     "api/*.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)silent-failure-detector\" \":(top,exclude)silent-failure-detector/vercel.json\""
 }

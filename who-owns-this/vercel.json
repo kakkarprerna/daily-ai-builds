@@ -1,0 +1,3 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)who-owns-this\" \":(top,exclude)who-owns-this/vercel.json\""
+}

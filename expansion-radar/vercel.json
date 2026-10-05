@@ -1,0 +1,3 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)expansion-radar\" \":(top,exclude)expansion-radar/vercel.json\""
+}

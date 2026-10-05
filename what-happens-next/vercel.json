@@ -1,0 +1,3 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)what-happens-next\" \":(top,exclude)what-happens-next/vercel.json\""
+}

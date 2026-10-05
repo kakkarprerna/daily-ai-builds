@@ -1,0 +1,3 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)lab-report-translator\" \":(top,exclude)lab-report-translator/vercel.json\""
+}

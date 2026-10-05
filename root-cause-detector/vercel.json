@@ -1,0 +1,3 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)root-cause-detector\" \":(top,exclude)root-cause-detector/vercel.json\""
+}

@@ -1,5 +1,8 @@
 {
   "functions": {
-    "api/*.js": { "maxDuration": 60 }
-  }
+    "api/*.js": {
+      "maxDuration": 60
+    }
+  },
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)prompt-drift-watch\" \":(top,exclude)prompt-drift-watch/vercel.json\""
 }
