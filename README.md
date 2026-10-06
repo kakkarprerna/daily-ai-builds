@@ -8,8 +8,8 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
-**[How Did That Go?](./how-did-that-go)** · [live app](https://how-did-that-go.vercel.app)
-A debrief for candidates straight after an interview round. You note each question and roughly what you said, and it shows what the question was really testing, whether your answer landed, the specific gap and a stronger version to reuse. It ends with fixes in priority order, a short follow-up note to send and what the next round will probably test. The model is told to cite only what you wrote and never to guess the outcome. Four fixed checks on your notes (a result, a real example, your own part, enough detail) run in the browser with no model involved. It is the other half of Loop Ready, which prepares you before each round.
+**[Judge Calibration Lab](./judge-calibration-lab)** · [live app](https://judge-calibration-lab.vercel.app)
+Checks whether an AI judge scores the way your own people do before anyone trusts its numbers. You give it a rubric and a golden set scored by hand; a model scores the same items, and the app returns a verdict, weighted kappa, which way the judge leans at each score level, a heatmap of where scores land and every disagreement ranked. A diagnosis step then points to the rubric wording behind the misses, suggests rewrites and flags human labels worth a second look. The statistics and verdict use fixed, printed formulas in the browser; only the judge scores and the diagnosis come from a model. It pairs with A/B Eval Dashboard, which relies on a judge model and assumes that judge can be trusted.
 
 ---
 
@@ -45,6 +45,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Judge Calibration Lab](./judge-calibration-lab) | Compares an AI judge with human scores on a golden set, shows which way it leans and finds the rubric wording behind each miss | [Live](https://judge-calibration-lab.vercel.app) |
 | [Prompt Drift Watch](./prompt-drift-watch) | Runs the same messages under two versions of a system prompt and flags behaviour changes you didn't ask for | [Live](https://prompt-drift-watch.vercel.app) |
 | [Eval Starter Kit](./eval-starter-kit) | Turns a description of an AI feature into a starter eval set with pass and fail conditions | [Live](https://eval-starter-kit.vercel.app) |
 | [Root Cause Detector](./root-cause-detector) | Points to the stage of an AI agent's workflow most likely to have caused a failure | [Live](https://root-cause-detector-prerna-kakkar.vercel.app) |
@@ -94,7 +95,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, and Judge Calibration Lab works out its agreement figures and verdict without one.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally
