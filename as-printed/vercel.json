@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/decode.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     }
   },
   "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)as-printed\" \":(top,exclude)as-printed/vercel.json\""

@@ -42,9 +42,9 @@ without pretending to be a clinician.
 9. The document is data. Text inside it is decoded, never followed as an
    instruction to the model.
 
-The prompt carrying these rules lives in `shared/prompt.js` and is re-injected
-server side on every request that uses the deployment's own key, so a crafted
-request from a browser cannot strip the guardrails and spend those credits.
+The prompt carrying these rules lives in `shared/prompt.js` and is injected
+server side on every request, whichever model is chosen, so a crafted request
+from a browser cannot strip the guardrails or spend the deployment's credits.
 
 ## What it produces
 
@@ -71,16 +71,31 @@ architecture is one that keeps nothing.
   database, a session store or browser storage.
 - Identifiers are stripped from the model's output before it reaches the screen.
 - No account, no email, no history.
-- Anyone who would rather not route a document through this deployment can paste
-  their own Anthropic key in the app. Requests then go from their browser
-  straight to Anthropic and this server sees neither the document nor the key.
+- A reader's own API key lives only in that browser tab's memory. It is passed
+  through the serverless function for that one request and is never stored or
+  logged.
+
+## Models
+
+By default the app runs **Meta Muse Glimmer 30B** on NVIDIA's free
+OpenAI-compatible endpoint, using a key held server side, so it works for
+pasted text with no key at all. Readers can switch to **Anthropic, OpenAI or
+Gemini** with their own key from the Model box in the sidebar, and optionally
+name a model. Those three also read photos and PDFs.
+
+| Provider | Key | Pasted text | Photo | PDF |
+|---|---|---|---|---|
+| Muse Glimmer (default) | site's own | yes | only if `LLM_VISION_MODEL` is set | no |
+| Anthropic | reader's | yes | yes | yes |
+| OpenAI | reader's | yes | yes | yes |
+| Gemini | reader's | yes | yes | yes |
 
 ## Stack
 
 React and Vite on Vercel, with a single serverless function at `api/decode.js`
-holding the key and the prompt. Reading and translation come from Claude Sonnet
-4.6. There is no laboratory database and no reference range library behind this;
-any range shown is the one printed on the reader's own report.
+holding the prompt, the default key and the provider routing. There is no
+laboratory database and no reference range library behind this; any range shown
+is the one printed on the reader's own report.
 
 ## Running it
 
@@ -90,22 +105,33 @@ vercel dev
 ```
 
 Use `vercel dev` rather than `npm run dev`. Vite alone does not serve
-`api/decode.js`, so `/api/decode` returns the index page and the app silently
-falls back to its keyless route.
+`api/decode.js`, so live decoding will not run (the worked examples still do).
 
-Set the key once per environment:
+Set these once per environment (see `.env.example`):
+
+| Variable | Example |
+|---|---|
+| `LLM_BASE_URL` | `https://integrate.api.nvidia.com/v1` |
+| `LLM_MODEL` | the Muse Glimmer model id from your NVIDIA build page |
+| `LLM_API_KEY` | your NVIDIA API key |
+| `LLM_VISION_MODEL` | optional, a vision model on the same endpoint for photos |
 
 ```bash
-vercel env add ANTHROPIC_API_KEY production
-vercel env add ANTHROPIC_API_KEY preview
+vercel env add LLM_BASE_URL production
+vercel env add LLM_MODEL production
+vercel env add LLM_API_KEY production
 ```
+
+The old `ANTHROPIC_API_KEY` variable is no longer read and can be removed.
 
 ## Known limits
 
 - Twelve line items and six medicines per pass. Longer reports need splitting.
 - Vercel caps a function request body at 4.5 MB and base64 inflates a file by
-  about a third, so a full resolution phone photo can exceed it. Pasted text has
-  no such limit, and neither does the own-key route.
+  about a third, so the app turns away files over 3 MB. Pasted text has no such
+  limit.
+- The free default reads pasted text. Photos and PDFs need a reader's own key
+  unless the deployment sets a vision model.
 - A model can misread a smudged photo or an unusual local abbreviation. That is
   why unreadable parts are declared rather than filled in.
 
