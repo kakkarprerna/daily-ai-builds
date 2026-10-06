@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)judge-calibration-lab\" \":(top,exclude)judge-calibration-lab/vercel.json\"",
+  "functions": { "api/judge.js": { "maxDuration": 60 } }
+}
