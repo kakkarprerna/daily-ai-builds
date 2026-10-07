@@ -2,7 +2,7 @@
 
 **Describe a workflow the way it happens today and see which steps an AI agent should run, which need a person to approve, and which a plain rule does better.**
 
-[Live app](who-does-what-daily-ai.vercel.app) · Three worked examples run without a key
+[Live app](https://who-does-what-daily-ai.vercel.app) · Three worked examples run without a key
 
 ![Who Does What? preview](./public/og-image.png)
 
