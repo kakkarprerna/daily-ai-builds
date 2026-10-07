@@ -11,6 +11,9 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 **[Worth Building?](./worth-building)** · [live app](https://worth-building.vercel.app)
 Turns an AI feature idea into a business case. You enter the volume, time saved, adoption and costs, tagging each number as measured, benchmark or guess, and the app returns a verdict, payback month, net value, three scenarios and a ranked list of the inputs the result rests on. A model then writes the case for each person who signs it off, with their likely objection and an answer, checks to run, stop rules and a non-AI option. Every figure is worked out in the browser with printed formulas, and a figure check flags any number in the written case that is not on the calculated sheet.
 
+**[Found or Fumbled?](./found-or-fumbled)** · [live app](https://found-or-fumbled.vercel.app)
+Your AI assistant gave a wrong answer from its documents. Which part broke? You give it the question, the bad answer and the chunks search returned, and it names which of eight stages most likely failed, from a stale document to a search miss to a model that ignored the right chunk. It returns the evidence, checks you can run yourself, who owns the fix and a draft ticket.
+
 ---
 
 ## The builds
@@ -46,6 +49,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Found or Fumbled?](./found-or-fumbled) | Takes one wrong answer from a document-backed assistant and names which of eight stages broke, with checks, the fix owner and a draft ticket | [Live](https://found-or-fumbled.vercel.app) |
 | [Judge Calibration Lab](./judge-calibration-lab) | Compares an AI judge with human scores on a golden set, shows which way it leans and finds the rubric wording behind each miss | [Live](https://judge-calibration-lab.vercel.app) |
 | [Prompt Drift Watch](./prompt-drift-watch) | Runs the same messages under two versions of a system prompt and flags behaviour changes you didn't ask for | [Live](https://prompt-drift-watch.vercel.app) |
 | [Eval Starter Kit](./eval-starter-kit) | Turns a description of an AI feature into a starter eval set with pass and fail conditions | [Live](https://eval-starter-kit.vercel.app) |
