@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)who-says-yes\" \":(top,exclude)who-says-yes/vercel.json\"",
+  "functions": { "api/map.js": { "maxDuration": 60 } }
+}

@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
+**[Who Says Yes?](./who-says-yes)** · [live app](https://who-says-yes.vercel.app)
+Map who has to agree to a proposal and in what order. Describe the proposal and what you know about the people around it, and a model lists them and suggests five facts about each. Printed rules then give every person one of five plays, from sponsor to keep posted, warn about blockers and people with no route in, set seven rounds of meetings from lining up cover to the decision, and give a straight verdict on whether you are ready to ask. Change anyone's stance and the map, the order and the verdict move. The whole plan exports as Markdown.
+
 **[Pass the Call](./pass-the-call)** · [live app](https://pass-the-call.vercel.app)
 Plan when an AI voice agent should hand a call to a person. Describe the phone line, and a model splits it into call moments and suggests five facts about each. Printed rules then put every moment in one of four lanes, from the agent resolving it to straight to a person, switch on live triggers for anything that happens mid-call (asking twice for a person, failed turns, distress, background noise, languages the agent does not speak) and show what each lane does out of hours. A preview shows what the person sees on pickup, so the caller never repeats themselves, and the whole plan exports as a handoff spec.
-
-**[Who Does What?](./who-does-what)** · [live app](https://who-does-what-daily-ai.vercel.app)
-Describe a workflow the way it happens today and see which steps an AI agent should run. A model splits the work into steps and suggests five facts about each one. Fixed, printed rules then place every step in one of five lanes, from plain rules to a person deciding, group the approval points and build a three-phase rollout. Change any fact and the step moves, with the rule that moved it shown alongside. The whole map exports as an agent brief.
 
 ---
 
@@ -25,6 +25,7 @@ Including tools for the candidate's side of hiring, drawn from my time in HR tec
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Who Says Yes?](./who-says-yes) | Maps who has to agree to a proposal, gives each person a play, sets the order to meet them and says whether you are ready to ask | [Live](https://who-says-yes.vercel.app) |
 | [Worth Building?](./worth-building) | Turns an AI feature idea into a business case with payback, scenarios, the assumptions to check first and a pitch per approver | [Live](https://worth-building.vercel.app) |
 | [How Did That Go?](./how-did-that-go) | Debriefs an interview round: what each question was testing, where your answer fell short and what to fix before the next one | [Live](https://how-did-that-go.vercel.app) |
 | [Loop Ready](./loop-ready) | JD and hiring stages in, prep plan per round out, with verified resources only | [Live](https://loop-ready.vercel.app) |
@@ -102,7 +103,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, and Who Says Yes? does the same for the people behind a decision.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally
