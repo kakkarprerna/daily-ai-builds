@@ -8,8 +8,8 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
-**[Found or Fumbled?](./found-or-fumbled)** · [live app](https://found-or-fumbled.vercel.app)
-Takes one wrong answer from an AI assistant that searches before it answers, plus the chunks its search returned, and points to the stage that broke: the documents, chunking, search, ranking or the answer writing. You get a verdict from eight stages, every claim in the answer traced to a chunk or marked unsupported, checks a PM can run without engineering, the likely fix and a draft ticket. A second reading built from fixed word and number rules runs in the browser and is compared with the model verdict, so you can see when the two disagree. The idea comes from Jinn Live, where a voice agent sometimes answered from an old version of its knowledge base.
+**[Worth Building?](./worth-building)** · [live app](https://worth-building.vercel.app)
+Turns an AI feature idea into a business case. You enter the volume, time saved, adoption and costs, tagging each number as measured, benchmark or guess, and the app returns a verdict, payback month, net value, three scenarios and a ranked list of the inputs the result rests on. A model then writes the case for each person who signs it off, with their likely objection and an answer, checks to run, stop rules and a non-AI option. Every figure is worked out in the browser with printed formulas, and a figure check flags any number in the written case that is not on the calculated sheet.
 
 ---
 
@@ -22,6 +22,7 @@ Including tools for the candidate's side of hiring, drawn from my time in HR tec
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Worth Building?](./worth-building) | Turns an AI feature idea into a business case with payback, scenarios, the assumptions to check first and a pitch per approver | [Live](https://worth-building.vercel.app) |
 | [How Did That Go?](./how-did-that-go) | Debriefs an interview round: what each question was testing, where your answer fell short and what to fix before the next one | [Live](https://how-did-that-go.vercel.app) |
 | [Loop Ready](./loop-ready) | JD and hiring stages in, prep plan per round out, with verified resources only | [Live](https://loop-ready.vercel.app) |
 | [AI or Me?](./ai-or-me) | Helps a PM decide whether a task needs AI at all, or is better done by hand to keep the skill | [Live](https://ai-or-me-advice.vercel.app) |
@@ -45,7 +46,6 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
-| [Found or Fumbled?](./found-or-fumbled) | Takes a wrong answer and the chunks search returned, and finds the stage that broke: documents, chunking, search, ranking or answer writing | [Live](https://found-or-fumbled.vercel.app) |
 | [Judge Calibration Lab](./judge-calibration-lab) | Compares an AI judge with human scores on a golden set, shows which way it leans and finds the rubric wording behind each miss | [Live](https://judge-calibration-lab.vercel.app) |
 | [Prompt Drift Watch](./prompt-drift-watch) | Runs the same messages under two versions of a system prompt and flags behaviour changes you didn't ask for | [Live](https://prompt-drift-watch.vercel.app) |
 | [Eval Starter Kit](./eval-starter-kit) | Turns a description of an AI feature into a starter eval set with pass and fail conditions | [Live](https://eval-starter-kit.vercel.app) |
@@ -96,7 +96,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Found or Fumbled? sets a rule-based reading beside the model's verdict.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number, then checks the written case against the calculated sheet.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally

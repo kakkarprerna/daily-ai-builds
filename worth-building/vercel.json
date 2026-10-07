@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)worth-building\" \":(top,exclude)worth-building/vercel.json\"",
+  "functions": { "api/case.js": { "maxDuration": 60 } }
+}
