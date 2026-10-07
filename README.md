@@ -8,7 +8,7 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
-**[Who Does What?](./who-does-what)** · [live app](https://who-does-what.vercel.app)
+**[Who Does What?](./who-does-what)** · [live app](who-does-what-daily-ai.vercel.app)
 Describe a workflow the way it happens today and see which steps an AI agent should run. A model splits the work into steps and suggests five facts about each one. Fixed, printed rules then place every step in one of five lanes, from plain rules to a person deciding, group the approval points and build a three-phase rollout. Change any fact and the step moves, with the rule that moved it shown alongside. The whole map exports as an agent brief.
 
 **[Worth Building?](./worth-building)** · [live app](https://worth-building.vercel.app)
