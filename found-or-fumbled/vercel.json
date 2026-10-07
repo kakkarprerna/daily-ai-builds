@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)found-or-fumbled\" \":(top,exclude)found-or-fumbled/vercel.json\"",
+  "functions": { "api/diagnose.js": { "maxDuration": 60 } }
+}
