@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
+**[Who Does What?](./who-does-what)** · [live app](https://who-does-what.vercel.app)
+Describe a workflow the way it happens today and see which steps an AI agent should run. A model splits the work into steps and suggests five facts about each one. Fixed, printed rules then place every step in one of five lanes, from plain rules to a person deciding, group the approval points and build a three-phase rollout. Change any fact and the step moves, with the rule that moved it shown alongside. The whole map exports as an agent brief.
+
 **[Worth Building?](./worth-building)** · [live app](https://worth-building.vercel.app)
 Turns an AI feature idea into a business case. You enter the volume, time saved, adoption and costs, tagging each number as measured, benchmark or guess, and the app returns a verdict, payback month, net value, three scenarios and a ranked list of the inputs the result rests on. A model then writes the case for each person who signs it off, with their likely objection and an answer, checks to run, stop rules and a non-AI option. Every figure is worked out in the browser with printed formulas, and a figure check flags any number in the written case that is not on the calculated sheet.
-
-**[Found or Fumbled?](./found-or-fumbled)** · [live app](https://found-or-fumbled.vercel.app)
-Your AI assistant gave a wrong answer from its documents. Which part broke? You give it the question, the bad answer and the chunks search returned, and it names which of eight stages most likely failed, from a stale document to a search miss to a model that ignored the right chunk. It returns the evidence, checks you can run yourself, who owns the fix and a draft ticket.
 
 ---
 
@@ -49,6 +49,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Who Does What?](./who-does-what) | Splits a workflow into steps and puts each in a lane, from plain rules to a person deciding, with approval points, tool access and a rollout plan | [Live](https://who-does-what.vercel.app) |
 | [Found or Fumbled?](./found-or-fumbled) | Takes one wrong answer from a document-backed assistant and names which of eight stages broke, with checks, the fix owner and a draft ticket | [Live](https://found-or-fumbled.vercel.app) |
 | [Judge Calibration Lab](./judge-calibration-lab) | Compares an AI judge with human scores on a golden set, shows which way it leans and finds the rubric wording behind each miss | [Live](https://judge-calibration-lab.vercel.app) |
 | [Prompt Drift Watch](./prompt-drift-watch) | Runs the same messages under two versions of a system prompt and flags behaviour changes you didn't ask for | [Live](https://prompt-drift-watch.vercel.app) |
@@ -100,7 +101,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number, then checks the written case against the calculated sheet.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally
