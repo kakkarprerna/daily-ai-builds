@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
-**[Who Does What?](./who-does-what)** · [live app](who-does-what-daily-ai.vercel.app)
-Describe a workflow the way it happens today and see which steps an AI agent should run. A model splits the work into steps and suggests five facts about each one. Fixed, printed rules then place every step in one of five lanes, from plain rules to a person deciding, group the approval points and build a three-phase rollout. Change any fact and the step moves, with the rule that moved it shown alongside. The whole map exports as an agent brief.
+**[Pass the Call](./pass-the-call)** · [live app](https://pass-the-call.vercel.app)
+Plan when an AI voice agent should hand a call to a person. Describe the phone line, and a model splits it into call moments and suggests five facts about each. Printed rules then put every moment in one of four lanes, from the agent resolving it to straight to a person, switch on live triggers for anything that happens mid-call (asking twice for a person, failed turns, distress, background noise, languages the agent does not speak) and show what each lane does out of hours. A preview shows what the person sees on pickup, so the caller never repeats themselves, and the whole plan exports as a handoff spec.
 
-**[Worth Building?](./worth-building)** · [live app](https://worth-building.vercel.app)
-Turns an AI feature idea into a business case. You enter the volume, time saved, adoption and costs, tagging each number as measured, benchmark or guess, and the app returns a verdict, payback month, net value, three scenarios and a ranked list of the inputs the result rests on. A model then writes the case for each person who signs it off, with their likely objection and an answer, checks to run, stop rules and a non-AI option. Every figure is worked out in the browser with printed formulas, and a figure check flags any number in the written case that is not on the calculated sheet.
+**[Who Does What?](./who-does-what)** · [live app](https://who-does-what.vercel.app)
+Describe a workflow the way it happens today and see which steps an AI agent should run. A model splits the work into steps and suggests five facts about each one. Fixed, printed rules then place every step in one of five lanes, from plain rules to a person deciding, group the approval points and build a three-phase rollout. Change any fact and the step moves, with the rule that moved it shown alongside. The whole map exports as an agent brief.
 
 ---
 
@@ -49,6 +49,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Pass the Call](./pass-the-call) | Plans when a voice agent hands a call to a person: a lane per call moment, live triggers, out-of-hours rules and the context packet | [Live](https://pass-the-call.vercel.app) |
 | [Who Does What?](./who-does-what) | Splits a workflow into steps and puts each in a lane, from plain rules to a person deciding, with approval points, tool access and a rollout plan | [Live](https://who-does-what.vercel.app) |
 | [Found or Fumbled?](./found-or-fumbled) | Takes one wrong answer from a document-backed assistant and names which of eight stages broke, with checks, the fix owner and a draft ticket | [Live](https://found-or-fumbled.vercel.app) |
 | [Judge Calibration Lab](./judge-calibration-lab) | Compares an AI judge with human scores on a golden set, shows which way it leans and finds the rubric wording behind each miss | [Live](https://judge-calibration-lab.vercel.app) |

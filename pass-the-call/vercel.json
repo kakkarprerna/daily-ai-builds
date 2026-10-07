@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)pass-the-call\" \":(top,exclude)pass-the-call/vercel.json\"",
+  "functions": { "api/plan.js": { "maxDuration": 60 } }
+}
