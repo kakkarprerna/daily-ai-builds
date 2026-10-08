@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
+**[Wrong Turn](./wrong-turn)** · [live app](https://wrong-turn-trace.vercel.app)
+Find the step where an AI agent run went wrong. Paste the trace in any format, and a rule-based scan flags error lines and repeated calls before any model runs. A model then splits the run into steps and suggests a status, a problem and a quote for each. Printed rules check every quote against the trace, pick the first step that went wrong, set the confidence and name the layer to fix and who usually owns it, with a check that confirms the cause and an eval case to stop it coming back. In all three worked examples, the step where the user noticed the failure is not where it started. The diagnosis exports as a ticket.
+
 **[Who Says Yes?](./who-says-yes)** · [live app](https://who-says-yes.vercel.app)
 Map who has to agree to a proposal and in what order. Describe the proposal and what you know about the people around it, and a model lists them and suggests five facts about each. Printed rules then give every person one of five plays, from sponsor to keep posted, warn about blockers and people with no route in, set seven rounds of meetings from lining up cover to the decision, and give a straight verdict on whether you are ready to ask. Change anyone's stance and the map, the order and the verdict move. The whole plan exports as Markdown.
-
-**[Pass the Call](./pass-the-call)** · [live app](https://pass-the-call.vercel.app)
-Plan when an AI voice agent should hand a call to a person. Describe the phone line, and a model splits it into call moments and suggests five facts about each. Printed rules then put every moment in one of four lanes, from the agent resolving it to straight to a person, switch on live triggers for anything that happens mid-call (asking twice for a person, failed turns, distress, background noise, languages the agent does not speak) and show what each lane does out of hours. A preview shows what the person sees on pickup, so the caller never repeats themselves, and the whole plan exports as a handoff spec.
 
 ---
 
@@ -50,6 +50,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Wrong Turn](./wrong-turn) | Reads an agent trace step by step, checks each quote against it and names the first step that went wrong, the layer to fix and how to confirm it | [Live](https://wrong-turn-trace.vercel.app) |
 | [Pass the Call](./pass-the-call) | Plans when a voice agent hands a call to a person: a lane per call moment, live triggers, out-of-hours rules and the context packet | [Live](https://pass-the-call.vercel.app) |
 | [Who Does What?](./who-does-what) | Splits a workflow into steps and puts each in a lane, from plain rules to a person deciding, with approval points, tool access and a rollout plan | [Live](https://who-does-what-daily-ai.vercel.app) |
 | [Found or Fumbled?](./found-or-fumbled) | Takes one wrong answer from a document-backed assistant and names which of eight stages broke, with checks, the fix owner and a draft ticket | [Live](https://found-or-fumbled.vercel.app) |
@@ -103,7 +104,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, and Who Says Yes? does the same for the people behind a decision.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, Who Says Yes? does the same for the people behind a decision, and Wrong Turn lets the model describe each step of an agent run but picks the wrong turn with rules and checks every quote it cites against the trace.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally
