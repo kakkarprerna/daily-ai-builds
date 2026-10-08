@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
+**[Frontline Pulse](./frontline-pulse)** · [live app](https://frontline-pulse.vercel.app)
+Turn notes from sales calls, support tickets, customer success or shop visits into owned fixes. A model groups the notes into recurring signals and lists every mention with its account, value and quote. Printed rules check each quote and figure against the notes, count accounts, turn monthly order values into yearly ones and count each account once, then score every signal and route it to an owner by the kind of fix: this week, the next roadmap review, the monthly review or watch. Each signal comes with one ask for its owner and a reply the field can use today, and the field brief tells reps what to say and who is working on what. The routing exports as a digest.
+
 **[So What?](./so-what)** · [live app](https://so-what-plan.vercel.app)
 Turn research, feedback or a metric readout into a plan the team can start on Monday. A model pulls out the insights and proposes actions, picking every judgement from fixed word lists. Printed rules then check each insight's quote against the material, score every action on reach, evidence, goal fit and effort, and fill a Do now column only up to the person-days you set, with the rest in Plan next, Test first or Park. Each action has an owner, a first step for this week, a metric and a stop condition, plus a money or hours range if you add your own baselines. Change any call and the plan reorders. The plan exports as an action brief.
-
-**[Wrong Turn](./wrong-turn)** · [live app](https://wrong-turn-trace.vercel.app)
-Find the step where an AI agent run went wrong. Paste the trace in any format, and a rule-based scan flags error lines and repeated calls before any model runs. A model then splits the run into steps and suggests a status, a problem and a quote for each. Printed rules check every quote against the trace, pick the first step that went wrong, set the confidence and name the layer to fix and who usually owns it, with a check that confirms the cause and an eval case to stop it coming back. In all three worked examples, the step where the user noticed the failure is not where it started. The diagnosis exports as a ticket.
 
 ---
 
@@ -25,6 +25,7 @@ Including tools for the candidate's side of hiring, drawn from my time in HR tec
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Frontline Pulse](./frontline-pulse) | Groups field notes into recurring blockers, counts the accounts and money behind each, routes them to an owner with a date and writes what the field should say now | [Live](https://frontline-pulse.vercel.app) |
 | [So What?](./so-what) | Turns findings into ranked actions that fit your capacity, each with an owner, a first step this week, a metric, a stop condition and a rough impact range | [Live](https://so-what-plan.vercel.app) |
 | [Who Says Yes?](./who-says-yes) | Maps who has to agree to a proposal, gives each person a play, sets the order to meet them and says whether you are ready to ask | [Live](https://who-says-yes.vercel.app) |
 | [Worth Building?](./worth-building) | Turns an AI feature idea into a business case with payback, scenarios, the assumptions to check first and a pitch per approver | [Live](https://worth-building.vercel.app) |

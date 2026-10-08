@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)frontline-pulse\" \":(top,exclude)frontline-pulse/vercel.json\"",
+  "functions": { "api/pulse.js": { "maxDuration": 60 } }
+}
