@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)what-it-counts\" \":(top,exclude)what-it-counts/vercel.json\"",
+  "functions": { "api/explain.js": { "maxDuration": 60 } }
+}

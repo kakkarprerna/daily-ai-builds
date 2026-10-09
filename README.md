@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
+**[What It Counts](./what-it-counts)** · [live app](https://what-it-counts.vercel.app)
+Read the SQL behind a metric before you quote it. Twelve pattern checks run in the browser as you type, with no model, and flag traps such as double counting after a join, a LEFT JOIN undone by a filter, an OR that skips the other filters or a share that rounds down to 0. A model explains the query in plain English line by line, says what one row stands for and whether the query answers your question, and quotes the exact line for every point. Each quoted line is checked against the query. Printed rules set the severity and a verdict that gets stricter when the number is for a decision or a board deck, then write the message to the analyst and a caveat line for the slide.
+
 **[Frontline Pulse](./frontline-pulse)** · [live app](https://frontline-pulse.vercel.app)
 Turn notes from sales calls, support tickets, customer success or shop visits into owned fixes. A model groups the notes into recurring signals and lists every mention with its account, value and quote. Printed rules check each quote and figure against the notes, count accounts, turn monthly order values into yearly ones and count each account once, then score every signal and route it to an owner by the kind of fix: this week, the next roadmap review, the monthly review or watch. Each signal comes with one ask for its owner and a reply the field can use today, and the field brief tells reps what to say and who is working on what. The routing exports as a digest.
-
-**[So What?](./so-what)** · [live app](https://so-what-plan.vercel.app)
-Turn research, feedback or a metric readout into a plan the team can start on Monday. A model pulls out the insights and proposes actions, picking every judgement from fixed word lists. Printed rules then check each insight's quote against the material, score every action on reach, evidence, goal fit and effort, and fill a Do now column only up to the person-days you set, with the rest in Plan next, Test first or Park. Each action has an owner, a first step for this week, a metric and a stop condition, plus a money or hours range if you add your own baselines. Change any call and the plan reorders. The plan exports as an action brief.
 
 ---
 
@@ -40,6 +40,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [What It Counts](./what-it-counts) | Explains a SQL query in plain English line by line, marks the traps that could skew its number and writes the questions for the analyst | [Live](https://what-it-counts.vercel.app) |
 | [Signal Translator](./signal-translator) | Turns a stack trace, failed API response or webhook payload into a plain verdict, blast radius and draft ticket | [Live](https://signal-translator-prerna-kakkar.vercel.app) |
 | [Repro Builder](./repro-builder) | Turns a vague user complaint into a reproduction script that isolates one variable at a time | [Live](https://repro-builder.vercel.app) |
 | [Handback](./handback) | Audits a draft PRD and lists the questions engineering will send back, ranked by what they block. No model, rules only | [Live](https://handback-weld.vercel.app) |
@@ -106,7 +107,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, Who Says Yes? does the same for the people behind a decision, and Wrong Turn lets the model describe each step of an agent run but picks the wrong turn with rules and checks every quote it cites against the trace.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, Who Says Yes? does the same for the people behind a decision, Wrong Turn lets the model describe each step of an agent run but picks the wrong turn with rules and checks every quote it cites against the trace, and What It Counts finds known SQL traps with pattern checks before any model call and lets the model only explain and point at lines.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally
