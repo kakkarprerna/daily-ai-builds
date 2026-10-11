@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
+**[Ready to Go Live?](./ready-to-go-live)** · [live app](https://ready-to-go-live.vercel.app)
+A launch check for an AI voice or chat agent going live at a customer. You answer 24 checks across scope, test evidence, connected systems, handoff, safety and launch operations, and paste your rollout notes. Printed rules set the risk level from what the agent can change, mark each check as a pass, gap or blocker with its fix and owner, and give a verdict of Not ready, Pilot first, Go live with watch items or Go live, with a staged rollout plan, exit criteria and rollback triggers. A model reads the notes and flags any answer they contradict, quoting them. Each quote is checked against the notes, and nothing changes until you apply it.
+
 **[Which Tier?](./which-tier)** · [live app](https://which-tier.vercel.app)
 Sort an AI feature under the EU AI Act, with the dates as amended by the 2026 AI Omnibus. You describe the feature and answer chip questions on your role, banned practices, regulated products, Annex III uses, profiling and transparency. Printed rules set the tier, show the rule trail and a confidence level, and list the duties for your role with the article behind each and whether it applies now or in how many days. A model reads the description and flags any answer your own words contradict, quoting them. Each quote is checked against the description, and nothing changes until you apply it.
-
-**[What It Counts](./what-it-counts)** · [live app](https://what-it-counts.vercel.app)
-Read the SQL behind a metric before you quote it. Twelve pattern checks run in the browser as you type, with no model, and flag traps such as double counting after a join, a LEFT JOIN undone by a filter, an OR that skips the other filters or a share that rounds down to 0. A model explains the query in plain English line by line, says what one row stands for and whether the query answers your question, and quotes the exact line for every point. Each quoted line is checked against the query. Printed rules set the severity and a verdict that gets stricter when the number is for a decision or a board deck, then write the message to the analyst and a caveat line for the slide.
 
 ---
 
@@ -53,6 +53,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Ready to Go Live?](./ready-to-go-live) | Checks an AI agent is ready to launch at a customer: 24 checks by gate, a go, pilot or not-yet verdict, a staged rollout plan with rollback triggers, and a second read of your rollout notes | [Live](https://ready-to-go-live.vercel.app) |
 | [Wrong Turn](./wrong-turn) | Reads an agent trace step by step, checks each quote against it and names the first step that went wrong, the layer to fix and how to confirm it | [Live](https://wrong-turn-trace.vercel.app) |
 | [Pass the Call](./pass-the-call) | Plans when a voice agent hands a call to a person: a lane per call moment, live triggers, out-of-hours rules and the context packet | [Live](https://pass-the-call.vercel.app) |
 | [Who Does What?](./who-does-what) | Splits a workflow into steps and puts each in a lane, from plain rules to a person deciding, with approval points, tool access and a rollout plan | [Live](https://who-does-what-daily-ai.vercel.app) |
@@ -113,7 +114,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, Who Says Yes? does the same for the people behind a decision, Wrong Turn lets the model describe each step of an agent run but picks the wrong turn with rules and checks every quote it cites against the trace, What It Counts finds known SQL traps with pattern checks before any model call and lets the model only explain and point at lines, and Which Tier? sets the AI Act tier, duties and dates with printed rules while the model only checks your answers against your description.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, Who Says Yes? does the same for the people behind a decision, Wrong Turn lets the model describe each step of an agent run but picks the wrong turn with rules and checks every quote it cites against the trace, What It Counts finds known SQL traps with pattern checks before any model call and lets the model only explain and point at lines, Which Tier? sets the AI Act tier, duties and dates with printed rules while the model only checks your answers against your description, and Ready to Go Live? sets every launch check, the verdict and the rollout plan with rules while the model only checks your answers against your rollout notes.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally

@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)ready-to-go-live\" \":(top,exclude)ready-to-go-live/vercel.json\"",
+  "functions": { "api/read.js": { "maxDuration": 60 } }
+}
