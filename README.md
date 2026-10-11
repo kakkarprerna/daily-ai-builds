@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
+**[Which Tier?](./which-tier)** · [live app](https://which-tier.vercel.app)
+Sort an AI feature under the EU AI Act, with the dates as amended by the 2026 AI Omnibus. You describe the feature and answer chip questions on your role, banned practices, regulated products, Annex III uses, profiling and transparency. Printed rules set the tier, show the rule trail and a confidence level, and list the duties for your role with the article behind each and whether it applies now or in how many days. A model reads the description and flags any answer your own words contradict, quoting them. Each quote is checked against the description, and nothing changes until you apply it.
+
 **[What It Counts](./what-it-counts)** · [live app](https://what-it-counts.vercel.app)
 Read the SQL behind a metric before you quote it. Twelve pattern checks run in the browser as you type, with no model, and flag traps such as double counting after a join, a LEFT JOIN undone by a filter, an OR that skips the other filters or a share that rounds down to 0. A model explains the query in plain English line by line, says what one row stands for and whether the query answers your question, and quotes the exact line for every point. Each quoted line is checked against the query. Printed rules set the severity and a verdict that gets stricter when the number is for a decision or a board deck, then write the message to the analyst and a caveat line for the slide.
-
-**[Frontline Pulse](./frontline-pulse)** · [live app](https://frontline-pulse.vercel.app)
-Turn notes from sales calls, support tickets, customer success or shop visits into owned fixes. A model groups the notes into recurring signals and lists every mention with its account, value and quote. Printed rules check each quote and figure against the notes, count accounts, turn monthly order values into yearly ones and count each account once, then score every signal and route it to an owner by the kind of fix: this week, the next roadmap review, the monthly review or watch. Each signal comes with one ask for its owner and a reply the field can use today, and the field brief tells reps what to say and who is working on what. The routing exports as a digest.
 
 ---
 
@@ -67,6 +67,12 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 | [Prompt Injection Test Harness](./prompt-injection-harness) | Runs 14 injection attempts against a prompt and checks each reply for the secret, with a positive control | [Live](https://prompt-injection-harness.vercel.app) |
 | [A/B Eval Dashboard](./ab-eval-dashboard) | Compares two system prompts on one test set with a judge model, and checks the verdict survives swapping the order | [Live](https://ab-eval-dashboard.vercel.app) |
 
+### AI governance and compliance
+
+| Build | What it does | Try it |
+| --- | --- | --- |
+| [Which Tier?](./which-tier) | Places an AI feature in an EU AI Act tier with printed rules, lists the duties for your role with dates as amended in 2026, and checks your answers against your own description | [Live](https://which-tier.vercel.app) |
+
 ### Customer success diagnostics
 Drawn from my time running customer success alongside product.
 
@@ -107,7 +113,7 @@ The same patterns run through most of them.
 - **Prompts stay on the server.** The system prompt and API key sit in a serverless function, not in the browser bundle. The newest builds keep that function host-neutral, so the same folder deploys to Vercel or Cloudflare Pages.
 - **Tagged lines instead of JSON.** Models reply in lines like `STAGE|2|Hiring manager|...`. A broken line is skipped, so one bad line doesn't sink the result, and changing provider is cheap.
 - **Three worked examples per build.** Saved results load instantly, so anyone can see the tool work without a key.
-- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, Who Says Yes? does the same for the people behind a decision, Wrong Turn lets the model describe each step of an agent run but picks the wrong turn with rules and checks every quote it cites against the trace, and What It Counts finds known SQL traps with pattern checks before any model call and lets the model only explain and point at lines.
+- **Rules where a model is the wrong tool.** Handback, Pulse Check, Expansion Radar and What Happens Next use fixed, printed rules because the answer has to be the same every time. Is This Normal? keeps its safety rules out of the model for the same reason, Judge Calibration Lab works out its agreement figures and verdict without one, and Worth Building? never lets the model produce a number and checks the written case against the calculated sheet. Who Does What? lets the model describe each step but sets every lane with printed rules, Who Says Yes? does the same for the people behind a decision, Wrong Turn lets the model describe each step of an agent run but picks the wrong turn with rules and checks every quote it cites against the trace, What It Counts finds known SQL traps with pattern checks before any model call and lets the model only explain and point at lines, and Which Tier? sets the AI Act tier, duties and dates with printed rules while the model only checks your answers against your description.
 - **Sources shown.** Each app says where its data or judgement comes from and what it cannot do.
 
 ## Running a build locally
