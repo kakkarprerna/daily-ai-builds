@@ -14,13 +14,13 @@ import {
 import { EXAMPLES } from './examples.js';
 
 const SECTIONS = [
-  { id: 'map', icon: Map, label: 'Map activation', desc: 'Your milestones, counts, help in place and notes' },
-  { id: 'ladder', icon: TrendingDown, label: 'Where they stall', desc: 'Each milestone, who gets there and how long it takes' },
-  { id: 'stuck', icon: Filter, label: 'Stuck points', desc: 'Every finding, ranked, with its reason' },
-  { id: 'fixes', icon: Wrench, label: 'Fix plan', desc: 'What to change first and how to test it' },
-  { id: 'report', icon: FileText, label: 'Report', desc: 'A write-up to share with the team' },
-  { id: 'how', icon: Scale, label: 'How it works', desc: 'The printed rules and alert lines' },
-  { id: 'examples', icon: Layers, label: 'Examples', desc: 'Three worked products, no key needed' }
+  { id: 'map', icon: Map, label: 'Map activation', desc: 'Milestones, counts and notes' },
+  { id: 'ladder', icon: TrendingDown, label: 'Where they stall', desc: 'Gaps and time to value' },
+  { id: 'stuck', icon: Filter, label: 'Stuck points', desc: 'Every finding, ranked' },
+  { id: 'fixes', icon: Wrench, label: 'Fix plan', desc: 'What to test first' },
+  { id: 'report', icon: FileText, label: 'Report', desc: 'Copy or download' },
+  { id: 'how', icon: Scale, label: 'How it works', desc: 'The rules and lines' },
+  { id: 'examples', icon: Layers, label: 'Examples', desc: 'Three, no key needed' }
 ];
 
 const TYPE_ICONS = {
@@ -190,7 +190,7 @@ export default function App() {
           <div className="brand-mark"><Sprout size={20} /></div>
           <div>
             <div className="brand-name">Then What?</div>
-            <div className="brand-sub">Find where new users stall after sign-up</div>
+            <div className="brand-sub">Where new users stall</div>
           </div>
         </div>
         <nav className="nav">
@@ -212,7 +212,7 @@ export default function App() {
           {L.timeToWin !== null && <div className="side-meta"><Timer size={13} /> {fmtHours(L.timeToWin)} to the first win</div>}
           {L.biggest && <div className="side-meta"><TrendingDown size={13} /> <span>Biggest gap: before {stepName(L.biggest.step)}, {fmt(L.biggest.lost)} lost</span></div>}
         </div>
-        <div className="side-foot">A daily AI build by Prerna Kakkar. Printed rules decide. A model only reads your notes.</div>
+        <div className="side-foot">A daily AI build by Prerna Kakkar</div>
       </aside>
 
       <main className="main" ref={mainRef}>
@@ -365,13 +365,13 @@ function Notices({ loadedExample, stale, go }) {
       {loadedExample && (
         <div className="notice">
           <Info size={16} />
-          <span>Worked example with a saved read of its notes. <button className="link" onClick={() => go('map')}>Change any milestone</button> and the rules run again at once.</span>
+          <span>Worked example. <button className="link" onClick={() => go('map')}>Edit it</button></span>
         </div>
       )}
       {stale && (
         <div className="notice warn">
           <TriangleAlert size={16} />
-          <span>Your notes changed after the model read them. The rule findings are current. <button className="link" onClick={() => go('map')}>Read the notes again</button> to refresh the stuck moments.</span>
+          <span>Notes changed since the last read. <button className="link" onClick={() => go('map')}>Read again</button></span>
         </div>
       )}
     </>
@@ -467,37 +467,35 @@ function MapSection(p) {
       <PageHead
         icon={Map}
         eyebrow="Map activation"
-        title="Find where new users stall after sign-up, and what to fix first."
-        lede="List the milestones from sign-up to the first win and beyond, add counts and times if you have them, and paste what you know about the first week."
+        title="Where do new users stall?"
+        lede="Map sign-up to first win, add what you know, get ranked fixes."
       >
         <div className="steps">
-          <Step n="1" icon={Milestone} text="Map the milestones and add counts" />
-          <Step n="2" icon={Sparkles} text="A model points at stuck moments in your notes" />
-          <Step n="3" icon={Scale} text="Printed rules rank fixes and plan tests" />
+          <Step n="1" icon={Milestone} text="Map milestones" />
+          <Step n="2" icon={Sparkles} text="Model reads notes" />
+          <Step n="3" icon={Scale} text="Rules rank fixes" />
         </div>
         {p.loadedExample && (
           <div className="notice">
             <Info size={16} />
-            <span>Showing a worked example. Edit it, <button className="link" onClick={p.startBlank}>start blank</button> or <button className="link" onClick={() => p.go('examples')}>pick another</button>.</span>
+            <span>Worked example. <button className="link" onClick={p.startBlank}>Start blank</button> or <button className="link" onClick={() => p.go('examples')}>pick another</button></span>
           </div>
         )}
       </PageHead>
 
       <div className="build-grid">
         <div className="build-form">
-          <Card icon={Lightbulb} title="The product" sub="Who signs up and what counts as activated">
+          <Card icon={Lightbulb} title="The product" sub="Who signs up and what counts">
             <div className="two">
               <TextField label="Name" value={form.name} onChange={(x) => set('name', x)} placeholder="Rota Kit" />
               <TextField label="What it does" value={form.pitch} onChange={(x) => set('pitch', x)} placeholder="Staff rotas for restaurants" />
             </div>
             <div className="q-block">
               <span className="field-label">Who signs up</span>
-              <span className="field-hint">Sales-assisted accounts get longer time lines, rule T1.</span>
               <Chips options={SEGMENTS} value={form.segment} onChange={(x) => set('segment', x)} placeholder="Your segment" />
             </div>
             <div className="q-block">
               <span className="field-label">What counts as activated today?</span>
-              <span className="field-hint">Rules D1 and D2 check this first.</span>
               <Chips options={WIN_DEFS} value={form.winDef} onChange={(x) => set('winDef', x)} hints={WIN_HINT} placeholder="Your definition" />
             </div>
             <div className="q-block">
@@ -506,9 +504,9 @@ function MapSection(p) {
             </div>
           </Card>
 
-          <Card icon={Milestone} title="The milestones, in order" sub="From sign-up to the first win, then the next use. Counts and times are optional">
+          <Card icon={Milestone} title="The milestones, in order" sub="Counts and times optional">
             {!hasWin && (
-              <div className="notice warn"><TriangleAlert size={16} /><span>No first win on the ladder. Rule D1 flags it: add the moment the product first proves its value.</span></div>
+              <div className="notice warn"><TriangleAlert size={16} /><span>Add a first win milestone (rule D1).</span></div>
             )}
             <div className="flow-list">
               {form.steps.map((s, i) => (
@@ -530,19 +528,18 @@ function MapSection(p) {
             </div>
           </Card>
 
-          <Card icon={HandHelping} title="Help in place" sub="What new users see first and what reaches them in week one">
+          <Card icon={HandHelping} title="Help in place" sub="First screen and nudges">
             <div className="q-block">
               <span className="field-label">First screen after sign-up</span>
               <Chips options={FIRST_SCREENS} value={form.firstScreen} onChange={(x) => set('firstScreen', x)} placeholder="Describe it" />
             </div>
             <div className="q-block">
-              <span className="field-label">Help and nudges. Pick all that apply</span>
-              <span className="field-hint">A welcome email alone does not count as a nudge, rule N1.</span>
+              <span className="field-label">Help and nudges</span>
               <MultiChips options={SUPPORT} value={form.support} onChange={(x) => set('support', x)} placeholder="e.g. Webinar" />
             </div>
           </Card>
 
-          <Card icon={Split} title="Segments" sub="Optional. Activation rate by plan, source, role or company size">
+          <Card icon={Split} title="Segments" sub="Optional, activation % each">
             {(form.segments || []).map((s) => (
               <div key={s.id} className="seg-edit">
                 <TextField label="Segment" value={s.name} onChange={(x) => p.setSeg(s.id, 'name', x)} placeholder="e.g. Agencies" />
@@ -553,11 +550,10 @@ function MapSection(p) {
             <div className="chip-row"><button className="chip sm dashed" onClick={p.addSeg}><Plus size={12} /> Add a segment</button></div>
           </Card>
 
-          <Card icon={Quote} title="Activation notes" sub="The model quotes these words back">
+          <Card icon={Quote} title="Activation notes" sub="Tickets, interviews, recordings">
             <TextField
               area rows={9} value={form.notes} onChange={(x) => set('notes', x)}
-              hint="Paste support tickets, interview notes, survey answers, what you saw in session recordings or the copy on the first screens. The more specific, the better."
-              placeholder="What new users see first, what support hears in week one, where people say they got stuck, why they stopped coming back..."
+              placeholder="Where people get stuck, what support hears, why they stop coming back..."
             />
           </Card>
         </div>
@@ -565,7 +561,7 @@ function MapSection(p) {
         <div className="sticky-results">
           <div className={`panel live v-${VERDICTS[a.verdict].tone}`}>
             <div className="panel-title"><Scale size={16} /> Verdict, live</div>
-            <div className="panel-sub">Printed rules, in your browser, no key.</div>
+            <div className="panel-sub">Rules only, no key</div>
             <Verdict a={a} compact />
             <div className="live-meta">
               <span><OctagonX size={13} /> {a.bySev.High} high</span>
@@ -576,7 +572,7 @@ function MapSection(p) {
           </div>
           <div className="panel">
             <div className="panel-title"><KeyRound size={16} /> Read the notes</div>
-            <div className="panel-sub">A model points at moments people stall, quoting your notes. It never scores or ranks them.</div>
+            <div className="panel-sub">Quotes your notes, never scores</div>
             <div className="chip-row">
               {PROVIDERS.map((x) => (
                 <button key={x.id} className={`chip sm ${p.provider === x.id ? 'on' : ''}`} onClick={() => p.setProvider(x.id)}>
@@ -586,12 +582,12 @@ function MapSection(p) {
             </div>
             {p.provider !== 'muse' ? (
               <div className="key-fields">
-                <TextField label="Your API key" type="password" value={p.apiKey} onChange={p.setApiKey} placeholder="Sent once with this request, never stored" />
-                <TextField label="Model (optional)" value={p.model} onChange={p.setModel} placeholder="Leave blank for the default" />
+                <TextField label="Your API key" type="password" value={p.apiKey} onChange={p.setApiKey} placeholder="Never stored" />
+                <TextField label="Model (optional)" value={p.model} onChange={p.setModel} placeholder="Default if blank" />
               </div>
             ) : (
               <div className="key-fields">
-                <TextField label="Your NVIDIA key (optional)" type="password" value={p.apiKey} onChange={p.setApiKey} placeholder="Leave blank to use this site's key" />
+                <TextField label="Your NVIDIA key (optional)" type="password" value={p.apiKey} onChange={p.setApiKey} placeholder="Blank uses this site's key" />
               </div>
             )}
             <button className="btn primary wide" onClick={p.read} disabled={p.busy}>
@@ -602,10 +598,10 @@ function MapSection(p) {
           <div className="panel">
             <div className="panel-title"><ListChecks size={16} /> What you get</div>
             <ul className="icon-list">
-              <li><TrendingDown size={16} /> Where people stall, milestone by milestone</li>
-              <li><Timer size={16} /> Where the time to the first win goes</li>
-              <li><Filter size={16} /> Every stuck point, ranked, with its rule</li>
-              <li><FlaskConical size={16} /> A test per fix, with what to measure and watch</li>
+              <li><TrendingDown size={16} /> Gaps by milestone</li>
+              <li><Timer size={16} /> Where time goes</li>
+              <li><Filter size={16} /> Ranked stuck points</li>
+              <li><FlaskConical size={16} /> A test per fix</li>
             </ul>
           </div>
         </div>
@@ -636,15 +632,15 @@ function LadderSection({ form, a, go, loadedExample, stale }) {
       <Verdict a={a} />
 
       <div className="kpis">
-        <Kpi icon={Trophy} label="Reach the first win" value={L.activation !== null ? `${L.activation}%` : 'n/a'} sub={L.activation !== null ? `Of sign-ups, ${form.window} window` : 'Add counts to see it'} tone={L.activation !== null && L.activation < 25 ? 'bad' : ''} />
-        <Kpi icon={Timer} label="Time to first win" value={fmtHours(L.timeToWin)} sub={L.timeToWin !== null ? 'Median, for those who get there' : 'Add times to see it'} tone={L.timeToWin !== null && L.timeToWin > tl.medium ? 'warn' : ''} />
-        <Kpi icon={Magnet} label="Come back after it" value={L.stick !== null ? `${L.stick}%` : 'n/a'} sub={L.stick !== null ? `Reach ${stepName(L.rows[L.sIdx].step)}` : 'Add a second-use milestone'} tone={L.stick !== null && L.stick < 40 ? 'bad' : ''} />
-        <Kpi icon={Footprints} label="Required before the win" value={a.reqBetween} sub="Milestones between sign-up and the win" tone={a.reqBetween > 3 ? 'warn' : ''} />
+        <Kpi icon={Trophy} label="Reach the first win" value={L.activation !== null ? `${L.activation}%` : 'n/a'} sub={L.activation !== null ? `${form.window} window` : 'Add counts'} tone={L.activation !== null && L.activation < 25 ? 'bad' : ''} />
+        <Kpi icon={Timer} label="Time to first win" value={fmtHours(L.timeToWin)} sub={L.timeToWin !== null ? 'Median' : 'Add times'} tone={L.timeToWin !== null && L.timeToWin > tl.medium ? 'warn' : ''} />
+        <Kpi icon={Magnet} label="Come back after it" value={L.stick !== null ? `${L.stick}%` : 'n/a'} sub={L.stick !== null ? stepName(L.rows[L.sIdx].step) : 'Add a second use'} tone={L.stick !== null && L.stick < 40 ? 'bad' : ''} />
+        <Kpi icon={Footprints} label="Required before the win" value={a.reqBetween} sub="Milestones" tone={a.reqBetween > 3 ? 'warn' : ''} />
       </div>
 
-      <Card icon={TrendingDown} title="The ladder, milestone by milestone" sub="Bar = people who reach it. Above each, the share who get there from the milestone before, against its alert line">
+      <Card icon={TrendingDown} title="The ladder" sub="People at each milestone, against its alert line">
         {!L.hasCounts && (
-          <div className="notice"><Info size={16} /><span>No counts yet. The findings still stand on the rules alone (rule G3). <button className="link" onClick={() => go('map')}>Add counts</button> from your analytics to see the gaps.</span></div>
+          <div className="notice"><Info size={16} /><span>No counts yet. <button className="link" onClick={() => go('map')}>Add counts</button> to see gaps.</span></div>
         )}
         <div className="funnel">
           {L.rows.map((r, i) => {
@@ -666,7 +662,7 @@ function LadderSection({ form, a, go, loadedExample, stale }) {
                         {isBig && <span className="big-tag">Biggest gap</span>}
                       </>
                     ) : (
-                      <span className="muted">Line {r.line}%. Add counts here and at the milestone before to check it</span>
+                      <span className="muted">Line {r.line}%</span>
                     )}
                   </div>
                 )}
@@ -685,7 +681,7 @@ function LadderSection({ form, a, go, loadedExample, stale }) {
       </Card>
 
       <div className="cols">
-        <Card icon={Hourglass} title="Where the time goes" sub="Median hours added at each milestone on the way to the first win">
+        <Card icon={Hourglass} title="Where the time goes" sub="Hours added per milestone">
           {timed.length ? (
             <div className="time-strip">
               {timed.map((r) => {
@@ -699,13 +695,13 @@ function LadderSection({ form, a, go, loadedExample, stale }) {
                   </div>
                 );
               })}
-              <div className="muted small-note"><Clock size={13} /> Total to the first win: {fmtHours(L.timeToWin)}. Time lines: over {fmtHours(tl.medium)} is medium, over {fmtHours(tl.high)} is high (rule T1).</div>
+              <div className="muted small-note"><Clock size={13} /> Total {fmtHours(L.timeToWin)} · alert over {fmtHours(tl.medium)}</div>
             </div>
           ) : (
-            <div className="empty"><Timer size={20} /><div>Add median hours after sign-up to each milestone up to the first win to see where the wait sits.</div></div>
+            <div className="empty"><Timer size={20} /><div>Add times to see this.</div></div>
           )}
         </Card>
-        <Card icon={Split} title="Segments" sub="Each segment's activation rate against the best one (rule SG1)">
+        <Card icon={Split} title="Segments" sub="Against the best one">
           {segs.length >= 2 ? (
             <div className="seg-list">
               {segs.map((s) => {
@@ -720,13 +716,13 @@ function LadderSection({ form, a, go, loadedExample, stale }) {
               })}
             </div>
           ) : (
-            <div className="empty"><Split size={20} /><div>Add two or more segments on <button className="link" onClick={() => go('map')}>Map activation</button> to compare who activates.</div></div>
+            <div className="empty"><Split size={20} /><div><button className="link" onClick={() => go('map')}>Add two segments</button> to compare.</div></div>
           )}
         </Card>
       </div>
 
       <div className="cols">
-        <Card icon={Flag} title="Rule trail" sub="Only these rules set the verdict">
+        <Card icon={Flag} title="Rule trail" sub="What set the verdict">
           <div className="trail">
             {a.trail.map((t, i) => (
               <div key={i} className={`trail-row ${t.fired ? 'fired' : ''}`}>
@@ -736,7 +732,7 @@ function LadderSection({ form, a, go, loadedExample, stale }) {
             ))}
           </div>
         </Card>
-        <Card icon={ListChecks} title="Top three to fix" sub="Full list on Stuck points">
+        <Card icon={ListChecks} title="Top three to fix">
           <div className="ranked">
             {a.ranked.slice(0, 3).map((f) => (
               <div key={f.key} className="ranked-row top">
@@ -748,7 +744,7 @@ function LadderSection({ form, a, go, loadedExample, stale }) {
                 <SevPill sev={f.sev} score={f.score} />
               </div>
             ))}
-            {!a.ranked.length && <div className="empty"><CircleCheck size={20} /><div>Nothing to fix. Keep counting each milestone.</div></div>}
+            {!a.ranked.length && <div className="empty"><CircleCheck size={20} /><div>Nothing to fix.</div></div>}
           </div>
           {a.ranked.length > 0 && <button className="link small" onClick={() => go('fixes')}>See the fix plan <ArrowRight size={12} /></button>}
         </Card>
@@ -790,7 +786,7 @@ function StuckSection({ form, a, go, loadedExample, stale, parsed, checked, togg
   const hasModel = !!(parsed.summary || parsed.moments.length);
   return (
     <div className="page">
-      <PageHead icon={Filter} eyebrow="Stuck points" title="Where new users stall, worst first" lede="Rules check the shape of the ladder. A model reads your notes and every quote is checked against them. Hide anything that does not apply and the verdict updates.">
+      <PageHead icon={Filter} eyebrow="Stuck points" title="Stuck points, worst first" lede="Hide any that do not apply.">
         <Notices loadedExample={loadedExample} stale={stale} go={go} />
       </PageHead>
 
@@ -822,24 +818,24 @@ function StuckSection({ form, a, go, loadedExample, stale, parsed, checked, togg
           )}
         </div>
         <div className="col">
-          <Card icon={Sparkles} title="Read of your notes" sub="Each quote checked against the notes before it counts">
+          <Card icon={Sparkles} title="Read of your notes" sub="Every quote checked">
             {!hasModel ? (
-              <div className="empty"><Bot size={22} /><div>No read yet. <button className="link" onClick={() => go('map')}>Paste your notes and run it</button>, or open an example.</div></div>
+              <div className="empty"><Bot size={22} /><div>No read yet. <button className="link" onClick={() => go('map')}>Run it</button></div></div>
             ) : (
               <>
                 {parsed.summary && <p className="summary"><Bot size={15} /> {parsed.summary}</p>}
-                <div className="agree"><ShieldCheck size={14} /> {pl(checked.kept.length, 'moment')} passed rules M1 and M2. Those that match a rule finding join it as evidence (rule M4).</div>
+                <div className="agree"><ShieldCheck size={14} /> {pl(checked.kept.length, 'quote')} verified</div>
                 {checked.dropped.length > 0 && (
                   <div className="dropped"><Info size={14} /> {pl(checked.dropped.length, 'moment')} dropped: {checked.dropped.map((d) => `"${d.quote}" (${d.reason.toLowerCase()})`).join('; ')}.</div>
                 )}
               </>
             )}
           </Card>
-          <Card icon={Scale} title="How severity is set" sub="Rule M3 for notes, the D, P, T, N, H and SG rules for the ladder">
+          <Card icon={Scale} title="How severity is set" sub="Set by kind, not the model">
             <ul className="icon-list">
               {KINDS.map((k) => {
                 const Icon = SEV_ICONS[k.sev];
-                return <li key={k.id}><Icon size={16} /> <span><b>{k.id}</b> is {k.sev.toLowerCase()}. <span className="muted">{k.ask}.</span></span></li>;
+                return <li key={k.id}><Icon size={16} /> <span><b>{k.id}</b> <span className="muted">{k.sev}</span></span></li>;
               })}
             </ul>
           </Card>
@@ -858,8 +854,8 @@ function FixSection({ form, a, go, loadedExample, stale, parsed }) {
     <div className="page">
       <PageHead
         icon={Wrench} eyebrow="Fix plan"
-        title={a.ranked.length ? 'Change one thing at a time, and measure it' : 'Nothing to fix right now'}
-        lede="Each fix comes with the change to test, the number that says whether it worked, and the number to watch so the fix does not break something else. Run them in order, one at a time, so you can tell which change did what."
+        title={a.ranked.length ? 'One change at a time' : 'Nothing to fix'}
+        lede="Each fix has a test, a number to measure and one to watch."
       >
         <Notices loadedExample={loadedExample} stale={stale} go={go} />
       </PageHead>
@@ -891,19 +887,19 @@ function FixSection({ form, a, go, loadedExample, stale, parsed }) {
       )}
 
       <div className="cols">
-        <Card icon={Search} title="Check in your data first" sub="From the read of your notes. Answer these before you change anything big">
+        <Card icon={Search} title="Check in your data first" sub="From your notes">
           {parsed.questions.length ? (
             <ul className="q-list">{parsed.questions.map((q, i) => <li key={i}><CircleHelp size={15} /> {q}</li>)}</ul>
           ) : (
-            <div className="empty"><CircleHelp size={20} /><div>Run the read on Map activation to get questions drawn from your notes.</div></div>
+            <div className="empty"><CircleHelp size={20} /><div>Run the read first.</div></div>
           )}
         </Card>
-        <Card icon={Hourglass} title="Before each test" sub="Agree these with design, engineering and whoever owns the number">
+        <Card icon={Hourglass} title="Before each test" sub="Agree with the team">
           <ul className="icon-list">
-            <li><Target size={16} /> The activation event you are judging against, written down</li>
-            <li><Users size={16} /> Enough sign-ups in each group to tell the difference, or a before-and-after window with nothing else shipping</li>
-            <li><Eye size={16} /> The watch number, and the level that stops the test early</li>
-            <li><BellRing size={16} /> Who reads the result, and when</li>
+            <li><Target size={16} /> The activation event</li>
+            <li><Users size={16} /> Enough sign-ups per group</li>
+            <li><Eye size={16} /> When to stop early</li>
+            <li><BellRing size={16} /> Who decides</li>
           </ul>
         </Card>
       </div>
@@ -917,7 +913,7 @@ function ReportSection({ report, copyText, copied, download, error }) {
   const text = report();
   return (
     <div className="page">
-      <PageHead icon={FileText} eyebrow="Report" title="A review to share with the team" lede="It carries the verdict, the ladder with its counts and times, every fix in order with its test, and the questions to check. Paste it into an email, Notion, Confluence or a ticket." />
+      <PageHead icon={FileText} eyebrow="Report" title="Share the review" lede="Markdown for email, Notion or a ticket." />
       <Card
         icon={FileText} title="Activation gap review" sub="Markdown"
         right={<div className="btn-row"><button className="btn small" onClick={() => copyText(text, 'report')}>{copied === 'report' ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}</button><button className="btn small" onClick={download}><Download size={14} /> Download</button></div>}
@@ -934,7 +930,7 @@ function ReportSection({ report, copyText, copied, download, error }) {
 function HowSection() {
   return (
     <div className="page">
-      <PageHead icon={Scale} eyebrow="How it works" title="Rules decide. A model reads." lede="The same ladder should get the same verdict every time, so every finding, score, ranking, fix and test comes from printed rules. The model does the one thing rules cannot: read a page of tickets and interview notes and point at the moments people stall." />
+      <PageHead icon={Scale} eyebrow="How it works" title="Rules decide. A model reads." lede="Same ladder, same verdict. The model only quotes your notes." />
       <div className="cols">
         <div className="col">
           <Card icon={Scale} title="The rules">
@@ -944,7 +940,7 @@ function HowSection() {
           </Card>
         </div>
         <div className="col">
-          <Card icon={Ruler} title="Alert lines" sub="Flag a milestone when fewer than this share of people at the one before get there">
+          <Card icon={Ruler} title="Alert lines" sub="Minimum share from the milestone before">
             <div className="line-grid">
               {STEP_TYPES.filter((t) => t.line !== null).map((t) => {
                 const Icon = iconFor(t.id);
@@ -955,13 +951,12 @@ function HowSection() {
           </Card>
           <Card icon={Info} title="Where the numbers come from">
             <ul className="icon-list">
-              <li><Ruler size={16} /> The alert lines and time lines are starting points I set from running onboarding and customer success for SaaS products. They are not published benchmarks. Your own history is a better line</li>
-              <li><Users size={16} /> The worked examples, their counts and their times are invented to show how the tool reads a ladder</li>
-              <li><Lightbulb size={16} /> The rules follow common activation practice: one agreed first win tied to a real result, value before setup, one person able to get there alone, and a reason to come back afterwards</li>
+              <li><Ruler size={16} /> Lines are my starting points from SaaS onboarding work, not benchmarks</li>
+              <li><Users size={16} /> Example products and numbers are invented</li>
             </ul>
           </Card>
           <Card icon={MonitorSmartphone} title="What it cannot do">
-            <p className="panel-text">It sees only the milestones, counts, times and notes you give it. It cannot see your product, so a problem nobody wrote down stays invisible unless it shows up as a gap. Counts from different tools, date ranges or cohorts can make a milestone look worse than it is, and a median time hides a long tail. It does not run the tests, and a fix that lifts one segment can hurt another.</p>
+            <p className="panel-text">It only sees what you enter. Mixed date ranges skew gaps, and medians hide long tails.</p>
           </Card>
         </div>
       </div>
@@ -974,7 +969,7 @@ function HowSection() {
 function ExamplesSection({ loadExample, loadedExample, startBlank }) {
   return (
     <div className="page">
-      <PageHead icon={Layers} eyebrow="Examples" title="Three products, three verdicts" lede="Each loads with a saved read of its notes, so it works without a key. All three products are invented." />
+      <PageHead icon={Layers} eyebrow="Examples" title="Three products, three verdicts" lede="Invented products, saved reads, no key." />
       <div className="examples">
         {EXAMPLES.map((ex) => {
           const r = assess(ex.form, checkMoments(parseReply(ex.text), ex.form).kept);
@@ -992,7 +987,7 @@ function ExamplesSection({ loadExample, loadedExample, startBlank }) {
           );
         })}
       </div>
-      <div className="notice"><Map size={16} /><span>Have your own product? <button className="link" onClick={startBlank}>Start blank</button>.</span></div>
+      <div className="notice"><Map size={16} /><span><button className="link" onClick={startBlank}>Start blank</button></span></div>
     </div>
   );
 }

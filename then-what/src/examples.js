@@ -12,7 +12,7 @@ export const EXAMPLES = [
     id: 'rotakit',
     sector: 'Shift rotas for restaurants',
     title: 'Rota Kit',
-    blurb: 'Owners have to set pay rates, upload a staff file and wait for staff to accept invites before they can publish a single rota. About one in seven gets there.',
+    blurb: 'Pay rates, a staff upload and staff invites before the first rota. One in seven gets there.',
     form: {
       name: 'Rota Kit',
       pitch: 'Staff rotas and shift swaps for restaurants and cafés',
@@ -56,7 +56,7 @@ QUESTION|Do owners who finish setup on day one publish a rota more often than th
     id: 'quillnote',
     sector: 'AI meeting notes',
     title: 'Quillnote',
-    blurb: 'More than half of sign-ups get a useful summary on day one. Then the bot has to be switched on for every meeting, nothing reminds people, and most never record a second.',
+    blurb: 'A great first summary, then most never record a second meeting.',
     form: {
       name: 'Quillnote',
       pitch: 'Joins your calls and sends a summary with action items',
@@ -94,7 +94,7 @@ QUESTION|How many of those who return in week two have a recurring meeting on th
     id: 'pingpost',
     sector: 'Uptime alerts for developers',
     title: 'Pingpost',
-    blurb: 'Sign-up is quick and the checklist works. The gap sits at the SDK install, where people have to redeploy before they see an alert, and agencies activate at half the rate of in-house teams.',
+    blurb: 'A smooth start, a gap at the SDK install, and agencies lagging.',
     form: {
       name: 'Pingpost',
       pitch: 'Uptime and webhook alerts in Slack for small engineering teams',

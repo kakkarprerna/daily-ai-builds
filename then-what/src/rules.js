@@ -88,134 +88,134 @@ const STEP0_HOSTS = {
 // Fix and test library. Every finding points at one of these.
 export const FIXES = {
   D1: {
-    fix: 'Pick the one action that shows the product did its job for this person (an invoice paid, a rota published, a summary read) and agree it with product, sales and customer success. Count it as an event from today.',
+    fix: 'Agree one action that proves value, like a rota published, and track it from today.',
     change: 'No test yet. Agree the first win and start counting it',
     metric: 'Sign-ups reaching that event inside the window',
     guard: 'None until the event exists'
   },
   D2: {
-    fix: 'Move the activation event to the first result people came for. Keep the visit or setup event as a milestone on the way.',
+    fix: 'Make activation the first real result. Keep the visit as a step on the way.',
     change: 'Activation redefined, and last quarter counted again against the new event',
     metric: 'Share reaching the new event, and how well it predicts who is still active in week four',
     guard: 'Reported activation will fall. Agree that with whoever owns the number first'
   },
   D3: {
-    fix: 'Add the milestone after the first win, such as a second use within seven days, so you can see whether the win led anywhere.',
+    fix: 'Track a second use within seven days.',
     change: 'Second-use event added and tracked',
     metric: 'People with a first win who come back within 7 days',
     guard: 'None needed'
   },
   P1: {
-    fix: 'Let one person reach the first win alone. Ask for the colleague, admin or approval after they have something to show.',
+    fix: 'Let one person reach the win alone. Ask for others afterwards.',
     change: 'A solo path to the first win, with the step that needs someone else moved after it',
     metric: 'Sign-ups reaching the first win inside the window',
     guard: 'Accounts with a second active person by day 30'
   },
   P2: {
-    fix: 'Load sample data or a ready template so people see a real result before they bring their own data. Offer the import once they want their own version.',
+    fix: 'Start with sample data. Offer the import after the first win.',
     change: 'Sample workspace on by default, import prompt after the first win',
     metric: 'Sign-ups reaching the first win within 24 hours',
     guard: 'Share who import real data by day 7'
   },
   P3: {
-    fix: 'Replace the empty first screen with one clear first action, or a sample to explore, and a line on what good looks like.',
+    fix: 'Give the first screen one clear action or a sample to explore.',
     change: 'Empty state rewritten around one action',
     metric: 'Sign-ups who take the first action on day one',
     guard: 'Support tickets in week one'
   },
   P4: {
-    fix: 'Cut or defer every required milestone that does not have to happen before the first win.',
+    fix: 'Move every non-essential step after the first win.',
     change: 'The two weakest required milestones moved after the first win',
     metric: 'Median time from sign-up to first win',
     guard: 'Setup completeness by day 30'
   },
   P5: {
-    fix: 'Give people a way to see the result before installing anything: a hosted sandbox, a test mode or a run on their own inputs.',
+    fix: 'Offer a sandbox or test mode before the install.',
     change: 'Try-it-first path ahead of the install',
     metric: 'Sign-ups reaching the first win, and installs among them',
     guard: 'Installs per new account by day 14'
   },
   T1: {
-    fix: 'Find the slowest stretch on the way to the first win and remove the wait, or give people something useful to do while it happens.',
+    fix: 'Remove the slowest wait, or give people something to do during it.',
     change: 'Slowest milestone shortened or moved after the first win',
     metric: 'Median hours from sign-up to first win',
     guard: 'Share reaching the first win at all'
   },
   T2: {
-    fix: 'Look at what people wait for here (an email, an approval, a sync, another person) and either remove it or let people carry on while it happens.',
+    fix: 'Remove the wait here, or let people carry on during it.',
     change: 'The wait at this milestone removed or made non-blocking',
     metric: 'Median hours spent getting to this milestone',
     guard: 'Errors or failed syncs at this milestone'
   },
   N1: {
-    fix: 'Add prompts that point people at the next step: a checklist in the product and two emails in the first week that each name one action.',
+    fix: 'Add a checklist and two week-one emails, each naming one action.',
     change: 'Checklist plus day-1 and day-3 emails for half of new sign-ups',
     metric: 'Sign-ups reaching the first win inside the window',
     guard: 'Unsubscribes and spam complaints'
   },
   N2: {
-    fix: 'Give people a reason to come back after the first win: the next result to get, a digest of what changed, or a reminder when the job comes round again.',
+    fix: 'Send a reason to return when the job comes round again.',
     change: 'One message after the first win pointing at the second use',
     metric: 'People with a first win who come back within 7 days',
     guard: 'Unsubscribes'
   },
   H1: {
-    fix: 'Talk to ten people who got the first win and did not return. Find out whether the job is occasional, the result was not good enough, or nothing reminded them, then fix the reason most of them give.',
+    fix: 'Ask ten people who did not return why, and fix the top reason.',
     change: 'One change aimed at the most common reason',
     metric: 'People with a first win who come back within 7 days',
     guard: 'Activation rate, so the fix does not trade one for the other'
   },
   SG1: {
-    fix: 'Look at that group’s path on its own. Either give it a first win and path that suit it, or decide it is not who the product is for and stop spending acquisition on it.',
+    fix: 'Build a path for this segment, or stop acquiring it.',
     change: 'A path built for that segment, or a change to who you target',
     metric: 'Activation rate for that segment',
     guard: 'Activation rate for the best segment'
   },
   G4: {
-    fix: 'Do not guess. Watch ten session recordings of people who stalled here and read the tickets that mention it, then write down what you saw.',
+    fix: 'Watch ten recordings of people who stalled here before changing anything.',
     change: 'No test yet. Find the cause first',
     metric: 'Share of people who reach this milestone',
     guard: 'None until the cause is known'
   },
   K: {
     'Waiting on someone': {
-      fix: 'Give the person a way forward on their own while the other party catches up, and chase that party for them.',
+      fix: 'Let them carry on alone while you chase the other party.',
       change: 'The dependency made non-blocking before the first win',
       metric: 'Share who reach the next milestone',
       guard: 'Whatever the dependency was protecting'
     },
     'Error or dead end': {
-      fix: 'Fix the error first, then give every error screen one clear next action and a way to reach a person.',
+      fix: 'Fix the error and give the screen one clear next step.',
       change: 'Bug fixed and the error screen rewritten',
       metric: 'Share who hit the error, then share who recover',
       guard: 'Support tickets about this milestone'
     },
     'Setup before payoff': {
-      fix: 'Ask only for what this moment needs and move the rest after the first win, with sensible defaults in its place.',
+      fix: 'Use defaults now and ask for the rest later.',
       change: 'Defaults in place of the required setup',
       metric: 'Share who reach the next milestone',
       guard: 'Setup completeness by day 30'
     },
     'Blank start': {
-      fix: 'Show one clear first action and an example of what good looks like on the first screen.',
+      fix: 'Show one clear first action and an example.',
       change: 'First screen redesigned around one action',
       metric: 'Sign-ups who take the first action on day one',
       guard: 'None needed'
     },
     'Value unclear': {
-      fix: 'Make the result point at what it saved or changed for the person, in their words, at the moment they see it.',
+      fix: 'Show what the result saved them, right when they see it.',
       change: 'The first result shows its payoff up front',
       metric: 'People with a first win who come back within 7 days',
       guard: 'Satisfaction with the result, from a one-question survey'
     },
     'Nothing brings them back': {
-      fix: 'Tie a return prompt to the moment the job comes round again, not to a fixed schedule.',
+      fix: 'Prompt a return when the job comes round again.',
       change: 'One triggered message or reminder',
       metric: 'People with a first win who come back within 7 days',
       guard: 'Unsubscribes'
     },
     'Confusing wording': {
-      fix: 'Rewrite the copy to say what happens next, using the words people use in tickets.',
+      fix: 'Rewrite the copy in the words people use in tickets.',
       change: 'New copy on this screen',
       metric: 'Share who reach the next milestone',
       guard: 'None needed'
@@ -224,11 +224,11 @@ export const FIXES = {
 };
 
 export const VERDICTS = {
-  define: { label: 'Agree what the first win is', tone: 'bad', line: 'Activation is not pinned to a result people came for, so any gap you find may be the wrong one. Settle the event first.' },
-  shorten: { label: 'Shorten the road to the first win', tone: 'bad', line: 'Something serious stands between sign-up and the first moment the product proves its value. Fix that before anything else.' },
-  stick: { label: 'Make the first win stick', tone: 'warn', line: 'People reach the first win, but too few come back. Keeping someone who already got value costs less than finding a new sign-up.' },
-  smooth: { label: 'Smooth the stuck points', tone: 'warn', line: 'Nothing blocks the way, but several moments slow people down. Work down the list one test at a time.' },
-  tune: { label: 'Measure and tune', tone: 'ok', line: 'No serious gap found. Keep counting each milestone and test small changes.' }
+  define: { label: 'Agree what the first win is', tone: 'bad', line: 'Pin activation to a real result before chasing gaps.' },
+  shorten: { label: 'Shorten the road to the first win', tone: 'bad', line: 'Something serious blocks the first win. Fix it first.' },
+  stick: { label: 'Make the first win stick', tone: 'warn', line: 'People get value once, then too few come back.' },
+  smooth: { label: 'Smooth the stuck points', tone: 'warn', line: 'Nothing blocks, but several moments slow people down.' },
+  tune: { label: 'Measure and tune', tone: 'ok', line: 'No serious gap. Keep counting and test small changes.' }
 };
 
 const n = (v) => {
@@ -339,52 +339,52 @@ export function assess(form, moments = [], dismissed = {}) {
 
   // D1 no agreed first win
   if (wIdx < 0 || form.winDef === 'Not agreed yet') {
-    add({ id: 'D1', sev: 'High', phase: 'win', stepIdx: null, title: wIdx < 0 ? 'No first win on the ladder' : 'The team has not agreed what activation is', why: 'Without one agreed moment where the product proves its value, every gap is measured against a moving finish line.' });
+    add({ id: 'D1', sev: 'High', phase: 'win', stepIdx: null, title: wIdx < 0 ? 'No first win on the ladder' : 'The team has not agreed what activation is', why: 'Without an agreed finish line, every gap is a guess.' });
   }
   // D2 activation counts the wrong thing
   if (wIdx >= 0 && form.winDef === 'A visit or sign-in') {
-    add({ id: 'D2', sev: 'High', phase: 'win', stepIdx: wIdx, title: 'Activation counts a visit, not a result', why: 'Coming back or signing in says nothing about whether the product did its job. The rate will look healthy while people leave.' });
+    add({ id: 'D2', sev: 'High', phase: 'win', stepIdx: wIdx, title: 'Activation counts a visit, not a result', why: 'A login says nothing about value. The rate looks healthy while people leave.' });
   } else if (wIdx >= 0 && form.winDef === 'A setup action') {
-    add({ id: 'D2', sev: 'Medium', phase: 'win', stepIdx: wIdx, title: 'Activation counts setup, not a result', why: 'Finishing setup shows effort, not value. People can complete it and still never get what they came for.' });
+    add({ id: 'D2', sev: 'Medium', phase: 'win', stepIdx: wIdx, title: 'Activation counts setup, not a result', why: 'Setup shows effort. People can finish it and still get nothing.' });
   }
   // D3 nothing after the win
   if (wIdx >= 0 && lad.sIdx < 0) {
-    add({ id: 'D3', sev: 'Medium', phase: 'stick', stepIdx: null, title: 'Nothing measures whether the first win sticks', why: 'With no second use or regular use on the ladder, a first win that leads nowhere looks the same as one that turns into a habit.' });
+    add({ id: 'D3', sev: 'Medium', phase: 'stick', stepIdx: null, title: 'Nothing measures whether the first win sticks', why: 'Without a second use, you cannot tell a habit from a one-off.' });
   }
   // P1 needs someone else before the win
   const p1 = new Set();
   steps.forEach((s, i) => {
     if (i > 0 && isBefore(i) && req(s) && (s.who === 'Needs someone else' || s.type === 'invite')) {
       p1.add(i);
-      add({ id: 'P1', sev: 'High', phase: phaseOf(i), stepIdx: i, title: `${name(i)} needs someone else before the first win`, why: 'The person who signed up cannot reach value until another person acts. Most of those people have no reason to hurry.' });
+      add({ id: 'P1', sev: 'High', phase: phaseOf(i), stepIdx: i, title: `${name(i)} needs someone else before the first win`, why: 'Value waits on someone with no reason to hurry.' });
     }
   });
   // P2 real data before the win, with nothing to try
   steps.forEach((s, i) => {
     if (i > 0 && isBefore(i) && req(s) && s.type === 'import' && !hasSample && !p1.has(i)) {
-      add({ id: 'P2', sev: 'High', phase: 'setup', stepIdx: i, title: `${name(i)} comes before any result, with nothing to try first`, why: 'Bringing real data takes time, files and trust. Without a sample, the product looks empty until it is done.' });
+      add({ id: 'P2', sev: 'High', phase: 'setup', stepIdx: i, title: `${name(i)} comes before any result, with nothing to try first`, why: 'Without a sample, the product looks empty until the data arrives.' });
     }
   });
   // P3 empty first screen
   if (form.firstScreen === 'Empty, no guidance' && !support.includes('Empty-state guidance') && !support.includes('Onboarding checklist')) {
-    add({ id: 'P3', sev: 'Medium', phase: 'setup', stepIdx: null, title: 'First screen is empty, with nothing to do', why: 'People who land on a blank screen have to work out the product before they can use it. Many close the tab instead.' });
+    add({ id: 'P3', sev: 'Medium', phase: 'setup', stepIdx: null, title: 'First screen is empty, with nothing to do', why: 'A blank screen makes people work it out alone. Many leave.' });
   }
   // P4 long road to the win
   const between = wIdx >= 0 ? steps.slice(1, wIdx) : steps.slice(1);
   const reqBetween = between.filter(req).length;
   if (reqBetween > 3) {
-    add({ id: 'P4', sev: reqBetween > 5 ? 'High' : 'Medium', phase: 'setup', stepIdx: null, title: `${reqBetween} required milestones before the first win`, why: 'Each milestone loses some people, and the losses multiply. Fewer stops on the way keep more of them.' });
+    add({ id: 'P4', sev: reqBetween > 5 ? 'High' : 'Medium', phase: 'setup', stepIdx: null, title: `${reqBetween} required milestones before the first win`, why: 'Each stop loses some people, and the losses multiply.' });
   }
   // P5 install before the win
   steps.forEach((s, i) => {
     if (i > 0 && isBefore(i) && req(s) && s.type === 'install' && !p1.has(i)) {
-      add({ id: 'P5', sev: 'Medium', phase: 'setup', stepIdx: i, title: `${name(i)} before any result`, why: 'Installing asks for a commitment, a release or an approval before people have seen whether it works for them.' });
+      add({ id: 'P5', sev: 'Medium', phase: 'setup', stepIdx: i, title: `${name(i)} before any result`, why: 'An install asks for commitment before any proof.' });
     }
   });
   // T1 slow to the win
   const t1 = lad.timeToWin !== null && lad.timeToWin > tl.medium;
   if (t1) {
-    add({ id: 'T1', sev: lad.timeToWin > tl.high ? 'High' : 'Medium', phase: 'win', stepIdx: null, title: `Half of those who get there take ${fmtHours(lad.timeToWin)} to the first win`, why: `Past ${fmtHours(tl.medium)} the first visit has gone cold, and the reason people signed up has often moved on.` });
+    add({ id: 'T1', sev: lad.timeToWin > tl.high ? 'High' : 'Medium', phase: 'win', stepIdx: null, title: `Half of those who get there take ${fmtHours(lad.timeToWin)} to the first win`, why: `Past ${fmtHours(tl.medium)} the reason people signed up has gone cold.` });
   }
   // T2 where the wait sits
   if (wIdx > 0 && lad.timeToWin) {
@@ -392,22 +392,22 @@ export function assess(form, moments = [], dismissed = {}) {
     if (hops.length) {
       const slow = hops.reduce((a, b) => (b.hop > a.hop ? b : a));
       if (slow.hop > tl.hop && slow.hop > lad.timeToWin / 2) {
-        add({ id: 'T2', sev: 'Medium', phase: phaseOf(slow.i), stepIdx: slow.i, title: `Most of the wait sits before ${name(slow.i)}`, why: `${fmtHours(slow.hop)} of the ${fmtHours(lad.timeToWin)} to the first win is spent getting to this milestone.` });
+        add({ id: 'T2', sev: 'Medium', phase: phaseOf(slow.i), stepIdx: slow.i, title: `Most of the wait sits before ${name(slow.i)}`, why: `${fmtHours(slow.hop)} of ${fmtHours(lad.timeToWin)} is spent here.` });
       }
     }
   }
   // N1 no nudges towards the win
   if (wIdx >= 0 && !support.some((x) => NUDGES.includes(x))) {
-    add({ id: 'N1', sev: t1 ? 'High' : 'Medium', phase: 'win', stepIdx: null, title: 'Nothing nudges people towards the first win', why: 'People who stall on day one get no prompt to come back and carry on, so a pause becomes an exit.' });
+    add({ id: 'N1', sev: t1 ? 'High' : 'Medium', phase: 'win', stepIdx: null, title: 'Nothing nudges people towards the first win', why: 'With no prompt back, a pause becomes an exit.' });
   }
   // H1 the win does not stick
   if (lad.stick !== null && lad.stick < 40) {
-    add({ id: 'H1', sev: 'High', phase: 'stick', stepIdx: lad.sIdx, title: `Only ${lad.stick}% come back after the first win`, why: 'Most people got value once and did not return. Activation without a second use rarely turns into a paying habit.' });
+    add({ id: 'H1', sev: 'High', phase: 'stick', stepIdx: lad.sIdx, title: `Only ${lad.stick}% come back after the first win`, why: 'Most got value once and never returned.' });
   }
   // N2 nothing after the win, and the stick milestones leak
   const stickGap = lad.rows.some((r) => wIdx >= 0 && r.i > wIdx && r.gap);
   if (stickGap && !support.includes('Messages after the first win')) {
-    add({ id: 'N2', sev: 'Medium', phase: 'stick', stepIdx: null, title: 'Nothing reaches people after the first win', why: 'The milestones after the win leak, and no message gives people a reason to come back for the second result.' });
+    add({ id: 'N2', sev: 'Medium', phase: 'stick', stepIdx: null, title: 'Nothing reaches people after the first win', why: 'Use after the win leaks, and nothing invites people back.' });
   }
   // SG1 segment gaps
   const segs = (form.segments || []).map((s) => ({ ...s, r: n(s.rate) })).filter((s) => s.name && s.r !== null);
@@ -417,7 +417,7 @@ export function assess(form, moments = [], dismissed = {}) {
       if (s === best || best.r <= 0) return;
       const ratio = s.r / best.r;
       if (ratio < 0.6) {
-        add({ id: 'SG1', segKey: s.name, sev: ratio < 0.4 ? 'High' : 'Medium', phase: 'win', stepIdx: null, title: `${s.name} activate at ${s.r}%, against ${best.r}% for ${best.name}`, why: `That is ${Math.round(ratio * 100)}% of the best segment's rate. The path may suit one kind of customer and not the other.` });
+        add({ id: 'SG1', segKey: s.name, sev: ratio < 0.4 ? 'High' : 'Medium', phase: 'win', stepIdx: null, title: `${s.name} activate at ${s.r}%, against ${best.r}% for ${best.name}`, why: `${Math.round(ratio * 100)}% of the best rate. The path may not suit them.` });
       }
     });
   }
@@ -448,7 +448,7 @@ export function assess(form, moments = [], dismissed = {}) {
   // G4: a gap with nothing explaining it
   lad.rows.forEach((r) => {
     if (r.gap && !found.some((f) => f.stepIdx === r.i)) {
-      add({ id: 'G4', sev: 'Medium', phase: phaseOf(r.i), stepIdx: r.i, title: `Unexplained gap before ${name(r.i)}`, why: `Only ${r.reach}% of people get here from the milestone before, under the ${r.line}% alert line, and nothing on the ladder or in your notes explains it yet.`, unexplained: true });
+      add({ id: 'G4', sev: 'Medium', phase: phaseOf(r.i), stepIdx: r.i, title: `Unexplained gap before ${name(r.i)}`, why: `${r.reach}% get here, under the ${r.line}% line, and nothing explains it yet.`, unexplained: true });
     }
   });
 
