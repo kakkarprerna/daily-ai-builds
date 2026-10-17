@@ -10,7 +10,8 @@
 // page; the words are the core words of each lesson's topic, not a copy of the
 // book's own word list.
 //
-// A word has one picture: an emoji (pic), a short label (num) or a colour swatch (sw).
+// A word has one picture: an emoji (pic), a short label (num), a colour swatch (sw)
+// or a how-often meter of 0 to 4 filled dots (meter).
 
 export const DATA = {
   de: {
@@ -150,10 +151,10 @@ export const DATA = {
       { id: 'l10', module: 'Modul 5 · Endlich Ferien', tag: 'Lektion 10', name: 'Was machst du gern?', icon: '🎮', words: [
         { w: 'gern', en: 'like doing', pic: '😊' },
         { w: 'nicht gern', en: "don't like doing", pic: '😖' },
-        { w: 'immer', en: 'always', num: '●●●●' },
-        { w: 'oft', en: 'often', num: '●●●○' },
-        { w: 'manchmal', en: 'sometimes', num: '●●○○' },
-        { w: 'nie', en: 'never', num: '○○○○' },
+        { w: 'immer', en: 'always', meter: 4 },
+        { w: 'oft', en: 'often', meter: 3 },
+        { w: 'manchmal', en: 'sometimes', meter: 2 },
+        { w: 'nie', en: 'never', meter: 0 },
         { w: 'allein', en: 'alone', pic: '🧍' },
         { w: 'zusammen', en: 'together', pic: '👫' },
         { art: 'die', w: 'Computerspiele', en: 'computer games', pic: '🎮' },
