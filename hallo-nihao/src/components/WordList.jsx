@@ -8,7 +8,7 @@ export default function WordList({ lang, sound }) {
     <section>
       <div className="hello">
         <h1>My words</h1>
-        <p>Tap 🔊 to hear any word. Handy for homework.</p>
+        <p>Every word from <b>{L.book}</b>, unit by unit. Tap 🔊 to hear one.</p>
       </div>
       <div className="legend">
         {lang === 'de' ? (
@@ -23,6 +23,7 @@ export default function WordList({ lang, sound }) {
       </div>
       {L.units.map((u) => (
         <section className="wsec" key={u.id}>
+          <span className="tag">{u.module ? `${u.module} · ${u.tag}` : u.tag}</span>
           <h2><span aria-hidden="true">{u.icon}</span> {u.name}</h2>
           {u.words.map((w) => (
             <div className="wrow" key={w.w}>

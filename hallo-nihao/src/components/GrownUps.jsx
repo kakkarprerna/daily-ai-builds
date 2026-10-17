@@ -1,11 +1,11 @@
 // A short explainer for parents and teachers.
 const POINTS = [
-  ['🗺️', 'Learn', 'Six beginner units per language. Each lesson mixes pictures, listening and matching. Missed questions come back at the end.'],
-  ['🏆', 'Quiz Battle', 'Ten timed questions from the units already opened. Faster answers score more, and the podium keeps the top five scores.'],
+  ['🗺️', 'Learn', 'One unit per textbook lesson or unit, all open, so your child can jump to the one the class is on. Each lesson mixes pictures, listening and matching. Missed questions come back at the end.'],
+  ['🏆', 'Quiz Battle', 'Ten timed questions from the units already practised. Faster answers score more, and the podium keeps the top five scores.'],
   ['📖', 'Words', 'Every word with its picture, meaning and a speaker button, for homework checks.'],
   ['🔊', 'Voices', "Words are read by your device's built-in voices. If a device has no Chinese voice, listening questions are skipped for Chinese."],
   ['🔒', 'Privacy', 'No sign-in and no tracking. Progress is saved only in this browser on this device.'],
-  ['📚', 'The words', 'Beginner topics that first-year school courses usually open with: greetings, numbers, colours, animals, family and food. German nouns show der, die or das. Chinese shows pinyin with tone marks.'],
+  ['📚', 'The words', 'German follows Paul, Lisa & Co Starter (Hueber), lesson by lesson, using the words in the publisher’s own lesson tests. Chinese follows the eight units of Kuaile Hanyu 1, with the core words of each lesson topic. Check them against the book pages, as the Chinese list is not copied from the book.'],
 ];
 
 export default function GrownUps({ onClose }) {

@@ -1,12 +1,12 @@
 import { DATA } from '../data.js';
-import { QUIZ_LENGTH, isUnlocked, quizPool } from '../lib/game.js';
+import { QUIZ_LENGTH, isPractised, quizPool } from '../lib/game.js';
 
 const MEDALS = ['🥇', '🥈', '🥉', '4', '5'];
 
 export default function QuizHome({ lang, stars, best, onStart }) {
   const L = DATA[lang];
   const pool = quizPool(stars, lang);
-  const open = L.units.filter((u, i) => isUnlocked(stars, lang, i)).length;
+  const done = L.units.filter((u, i) => isPractised(stars, lang, i)).length;
 
   return (
     <section>
@@ -15,7 +15,7 @@ export default function QuizHome({ lang, stars, best, onStart }) {
           <span className="c1">★</span><span className="c2">☾</span><span className="c3">♥</span><span className="c4">☁</span>
         </div>
         <h1>Quiz Battle</h1>
-        <p>{L.name} words from your {open} open unit{open > 1 ? 's' : ''} ({pool.length} words). Answer fast to score big, then try to beat your best.</p>
+        <p>{done ? `${L.name} words from the ${done} unit${done > 1 ? 's' : ''} you have practised (${pool.length} words).` : `${L.name} words from ${L.units[0].tag}. Practise more units to add their words.`} Answer fast to score big, then beat your best.</p>
         <div className="rules">
           <div><b>{QUIZ_LENGTH}</b>questions</div>
           <div><b>20 s</b>per question</div>

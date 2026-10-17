@@ -59,7 +59,7 @@ export default function Lesson({ lang, ui, sound, listenOk, onClose, onRetry, on
     if (i + 1 >= queue.length) {
       const xp = lessonXp(mistakes.current);
       const s = onFinish(unit.id, xp);
-      setSummary({ ...s, xp, perfect: mistakes.current === 0, cheer: pick(L.cheers).split(' ')[0] });
+      setSummary({ ...s, xp, perfect: mistakes.current === 0, cheer: lang === 'zh' ? pick(L.cheers).split(' ')[0] : pick(L.cheers) });
       beep(true, sound);
       setPhase('done');
       return;

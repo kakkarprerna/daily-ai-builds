@@ -55,6 +55,7 @@ h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-he
 .node .disc { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font-size: 38px; position: relative;
   background: var(--lc); box-shadow: 0 7px 0 color-mix(in srgb, var(--lc) 60%, #000); transition: transform .12s; }
 .node button:not([disabled]):active .disc { transform: translateY(5px); box-shadow: 0 2px 0 color-mix(in srgb, var(--lc) 60%, #000); }
+.node.fresh .disc { opacity: .78; }
 .node.locked .disc { background: var(--lock); box-shadow: 0 7px 0 color-mix(in srgb, var(--lock) 70%, #000); filter: grayscale(1); opacity: .85; }
 .node .nm { font-weight: 700; font-size: 15px; }
 .node.locked .nm { color: var(--lock-ink); }
@@ -63,6 +64,12 @@ h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-he
 .bubble { position: absolute; top: -34px; left: 50%; transform: translateX(-50%); background: var(--surface); color: var(--accent); border: 2px solid var(--line);
   font-family: var(--display); font-weight: 800; font-size: 14px; padding: 3px 10px; border-radius: 10px; white-space: nowrap; animation: bob 1.6s ease-in-out infinite; }
 @keyframes bob { 50% { transform: translate(-50%, -4px); } }
+
+.module { align-self: stretch; text-align: center; font-family: var(--display); font-weight: 800; font-size: 17px; color: var(--muted);
+  display: flex; align-items: center; gap: 12px; margin-block: 6px 16px; }
+.module::before, .module::after { content: ""; flex: 1; height: 2px; background: var(--line); }
+.tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.node .nm { max-width: 170px; text-align: center; }
 
 /* tabs */
 .tabs { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 2px solid var(--line); z-index: 5;
@@ -219,6 +226,7 @@ h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-he
 .legend span { padding: 4px 10px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); font-weight: 700; }
 .wsec { margin-top: 22px; display: flex; flex-direction: column; gap: 8px; }
 .wsec h2 { font-size: 22px; }
+.wsec .tag { margin-bottom: -4px; }
 .wrow { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 12px; padding: 8px 12px; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; }
 .wrow .pic { display: grid; place-items: center; }
 .wrow .emoji, .wrow .digit { font-size: 32px; }

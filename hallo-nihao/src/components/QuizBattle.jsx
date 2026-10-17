@@ -90,7 +90,7 @@ export default function QuizBattle({ lang, stars, sound, listenOk, onEnd, onAgai
   } else if (phase === 'end' && result) {
     const slot = (r, cls, place) => (
       <div className={`pod ${cls} ${r?.me ? 'me' : ''}`}>
-        <span className="sc">{r ? r.s : '–'}</span>
+        <span className="sc">{r ? r.s : '·'}</span>
         <span className="who">{r ? (r.me ? 'This game' : r.d) : 'empty'}</span>
         <div className="blk">{place}</div>
       </div>
