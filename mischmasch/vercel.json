@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)mischmasch\" \":(top,exclude)mischmasch/vercel.json\"",
+  "functions": { "api/words.js": { "maxDuration": 60 } }
+}
