@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)send-or-hold\" \":(top,exclude)send-or-hold/vercel.json\"",
+  "functions": { "api/read.js": { "maxDuration": 60 } }
+}
