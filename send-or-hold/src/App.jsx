@@ -807,7 +807,7 @@ function HowSection() {
           </Card>
           <Card icon={Info} title="Where the judgement comes from">
             <ul className="icon-list">
-              <li><House size={16} /> The lanes and lists are mine, from hosting my own holiday rentals and from building AI agents with human handoff</li>
+              <li><House size={16} /> The lanes and lists are mine, from building AI agents with human handoff at Jinn Live</li>
               <li><Phone size={16} /> 112 is the EU emergency number. Check what applies where your property is</li>
               <li><Layers size={16} /> Example properties, guests and places are invented</li>
             </ul>

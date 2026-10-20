@@ -16,7 +16,7 @@ The hard part is the other messages. A guest asks to arrive at 11:00 on a day an
 
 Writing a good reply is the part models already do well. The product question for an AI co-host is which replies can go out without the host, and what the host needs in front of them when one can't.
 
-I host two holiday rentals in Málaga and manage the bookings myself, and before that I built voice agents and chatbots with human handoff at Jinn Live. This build is where those two meet.
+At Jinn Live I built voice agents and chatbots with human handoff. This build asks the same handoff question for holiday rental guests.
 
 ## What it does
 
