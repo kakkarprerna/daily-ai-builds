@@ -18,6 +18,12 @@ Writing a good reply is the part models already do well. The product question fo
 
 At Jinn Live I built voice agents and chatbots with human handoff. This build asks the same handoff question for holiday rental guests.
 
+## How I got here
+
+My husband and I own holiday rentals in Málaga. A property manager runs them day to day and we follow bookings in Lodgify, and I have read the guest messages that come in myself. Most of them really are the wifi and the parking. The ones that worried me were the few that looked just as routine on the surface: a polite question about arriving early that clashes with someone else's checkout, or a pet request the house manual never mentions.
+
+I started with three lanes: auto-send, host review, and host must act. That split didn't hold. "Host review" was covering two different jobs. One is a draft that only needs a second look before it goes. The other is a request, such as an early arrival, a discount or a dog, that no draft can answer, because only the host can agree to it. The first needs a send button. The second needs the guest's exact words and a few options to choose from. So host review became two lanes, Host checks and Host decides, and the host note was built around the second one.
+
 ## What it does
 
 | | |
@@ -117,9 +123,14 @@ It reads one message, not the whole thread, so it can miss context from earlier 
 
 ## What I would test next
 
-- Run a month of real guest messages through it and count how many land in Send now. That share is the time the co-host actually saves.
-- Track how often the host overrides a lane, in each direction. Overrides up from Send now are the ones that matter.
-- Give it the thread, not one message, and check whether lanes get more accurate or just slower.
+Nobody outside me has used it yet, so the lanes are still my judgement rather than evidence.
+
+The first person I would put it in front of is the property manager who answers our guests, with a month of their real messages. I would ask them to sort each message into a lane by hand before seeing what the app says, then compare.
+
+- **Where they disagree, and in which direction.** If they keep moving messages up from Send now, the rules are too loose. If they keep pulling messages down from Host decides, the co-host is asking the host about things a manager settles without thinking, and it saves nobody time.
+- **What share lands in Send now.** That share is the time the co-host actually saves. If it is small, the build is a triage tool rather than a co-host, which is still useful but a different product.
+- **Which house facts were missing.** If the same gaps keep sending messages to Host checks, the fix is a better house manual template, and the rules can stay as they are.
+- **Whether one message is enough.** I would rerun the disagreements with the whole thread and see if the lanes change.
 
 ---
 
