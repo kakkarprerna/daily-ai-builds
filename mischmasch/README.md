@@ -10,6 +10,8 @@ Live: https://mischmasch-words.vercel.app
 
 My son is eight. At school in Málaga he learns in English and Spanish, and this year he started German and Chinese from zero. He loves letter-tile word games, and he plays them for far longer than he would ever sit with a vocabulary list.
 
+Living abroad, no screen time at all isn't realistic for us, so I keep his screen time to his school syllabus. That made this a learning tool built around his textbooks, with the games there to keep him coming back to it. The hand-checked word bank was the plan from day one for the same reason.
+
 Practice apps keep each language in its own box: pick one, do a lesson, switch. That isn't how he meets these languages. In one school day he hears a word in Spanish, reads it in English, and gets a German or Chinese version in class. I wanted a game where the languages sit side by side, so seeing *el gato* reminds him of *die Katze* and 猫, and where spelling something in one language starts from a clue in another.
 
 There is a second problem for a parent. A model can make endless new rounds, but I don't want a child learning a made-up German word or a wrong Chinese tone. So the core words are written in and checked, and the model is only used for optional extra sets that a grown-up reviews first.
@@ -71,6 +73,18 @@ So the New words screen can be tried without any key, three sets are written in:
 - **Rarer letters score more.** Q, X, Z, Ñ, Ü and ß are worth the most, which nudges attention to the letters that make each language look like itself. The table is my own, by how rare a letter is across these four languages.
 - **Grown-up in the loop for anything a model makes.** Review before add, a visible tag after, and a one-tap remove.
 - **Nothing to sign up for.** Scores, stars, topic choices and added sets stay in the browser. The only thing sent anywhere is the topic typed into New words.
+
+## What happened when he played it
+
+He played all four games and liked it a lot. The language mixing worked the way I hoped: he is picking up new words and can now say and recall them across languages.
+
+What I hadn't accounted for is how uneven his four languages are. I pitched each one at his textbook's level for the year, but his class hasn't covered the same amount in each book yet, and he knows some languages far better than others. In Chinese especially he was guessing at a lot of words. A guess that lands right in the four-way match still scores, so a good score there can hide that he didn't know the word.
+
+That changes what I would build next:
+
+- **Follow what has been taught.** The Chinese and German pools should grow lesson by lesson with his class, the way Hallo Nǐ Hǎo does, instead of covering the whole year's topics from the start.
+- **Separate knowing from guessing.** Ask for a quick "I knew it / I guessed" tap, or track words he gets right once and wrong later, so the score reflects what he actually knows.
+- **Level per language, set by the parent.** A simple setting for how far into each book he is would keep every round in reach without taking the mixing away.
 
 ## Limits
 
