@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)are-we-tracking-that\" \":(top,exclude)are-we-tracking-that/vercel.json\"",
+  "functions": { "api/audit.js": { "maxDuration": 60 } }
+}

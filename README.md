@@ -8,11 +8,11 @@ I'm Prerna Kakkar, a Senior Product Manager with 10+ years across conversational
 
 ## Latest
 
+**[Are We Tracking That?](./are-we-tracking-that)** · [live app](https://are-we-tracking-that.vercel.app)
+Checks whether a tracking plan can answer the questions a team will ask after launch. Paste the events, the funnel steps and the questions: printed rules flag personal data in properties, GA4 limits, duplicate names and missing failure events, and a model maps each question and step to events. Every event and property the model names is checked against the plan, and the check can only lower its answer. The verdict, a fix list worst first and a fixed plan as a CSV come out the other end. It is the step that has to happen before Front Door and Then What? are worth running.
+
 **[Send or Hold?](./send-or-hold)** · [live app](https://send-or-hold.vercel.app)
 Decides whether a holiday rental's AI co-host can answer a guest alone. Paste a guest message and your house facts: a model quotes what the guest wants and drafts a reply in their language, and printed rules put the message in one of four lanes, Send now, Host checks, Host decides or Act now. A safety word list in four languages runs before any model call, every number in the draft is checked against the house facts, and Act now sends a fixed safety message rather than model text. The host gets a note with each decision, the guest's words and options to pick from. It draws on my work on agents with human handoff at Jinn Live.
-
-**[Mischmasch](./mischmasch)** · [live app](https://mischmasch-words.vercel.app)
-Word games for a child learning English, Spanish, German and Chinese at once, where every round mixes all four. A tile builder that rotates the language to spell in (character tiles with pinyin for Chinese, rarer letters scoring more), a four-way picture match, a mini crossword where every clue is in one language and its answer in another, and a language spotter with an odd one out. German and Chinese stay at the level of his first-year books, while English and Spanish, his school languages, add longer stretch words. The 112 core words are written in and checked by hand. A model only suggests optional new sets on a topic, each line is checked for shape in the browser, and a grown-up reviews the set before it joins the games.
 
 ---
 
@@ -41,6 +41,7 @@ Tools that help a PM work out what is wrong before pulling in engineering.
 
 | Build | What it does | Try it |
 | --- | --- | --- |
+| [Are We Tracking That?](./are-we-tracking-that) | Checks a tracking plan against the questions you will be asked after launch, maps each question and funnel step to events, and returns a verdict, a fix list and a fixed plan as a CSV | [Live](https://are-we-tracking-that.vercel.app) |
 | [Then What?](./then-what) | Finds where new users stall between sign-up and the first win, where the time goes and which segments lag, and ranks the fixes, each with a test and the numbers to measure and watch | [Live](https://then-what-activation.vercel.app) |
 | [Front Door](./front-door) | Finds where a SaaS sign-up and sign-in flow loses people, step by step against alert lines, and ranks the fixes, each with a test and the numbers to measure and watch | [Live](https://front-door-signup.vercel.app) |
 | [What It Counts](./what-it-counts) | Explains a SQL query in plain English line by line, marks the traps that could skew its number and writes the questions for the analyst | [Live](https://what-it-counts.vercel.app) |
