@@ -12,11 +12,19 @@ My son is eight and started German and Chinese in the same school year, both fro
 
 The big language apps are built for adults choosing one language. They don't follow a school's topics, they nudge towards a subscription, and switching between two languages a child is learning side by side is clumsy. I wanted one small place where he can do five minutes of German, then five minutes of Chinese, on the words his class is actually covering. So the units follow his two school textbooks, lesson by lesson.
 
+## How I got here
+
+The prompt came from school. His Chinese teacher set some practice on Kahoot, and he already had a fair idea of Duolingo. Kahoot is a quiz on the day: fast and fun, and gone once the class moves on. Duolingo has the structure but follows its own course. I wanted the fun of Kahoot with the learning of a path that sticks to his books.
+
+That is where the two modes come from. The lesson path is the Duolingo half and the Quiz Battle is the Kahoot half.
+
+Living abroad, no screen time at all isn't realistic for us, so I keep his screen time to his school syllabus. That makes this a learning tool first. The games are there so he comes back to it, which is why units open in the book's order and are not a menu to dip into.
+
 ## What it does
 
 | | |
 | --- | --- |
-| 🗺️ **Learn** | One unit per textbook lesson (German) or unit (Chinese), grouped by the book's modules. Every unit is open, so a child can jump to the one the class is on. Each lesson is eight quick questions, with three hearts and up to three stars per unit. |
+| 🗺️ **Learn** | One unit per textbook lesson (German) or unit (Chinese), grouped by the book's modules. Units open in the book's order, each one unlocking once the one before has a star. Each lesson is eight quick questions, with three hearts and up to three stars per unit. |
 | 🏆 **Quiz Battle** | Ten questions from the units already practised, against a 20-second clock, with four coloured answer tiles. Faster answers score more, answers in a row add a bonus, and a podium shows the top three scores. |
 | 📖 **Words** | Every word with its picture, meaning and a speaker button. This is the homework checker. |
 | ℹ️ **For grown-ups** | A short sheet explaining how it works and what it stores. |
@@ -43,7 +51,7 @@ The book itself brings in *der*, *die* and *das* in Lektion 5, so German nouns o
 
 **The child's own books, in the books' order.** A general beginner course would have taught colours while his class was on countries. Following the textbooks means the app practises the same words as that week's homework, and the Words tab doubles as a revision list for each lesson.
 
-**Every unit open.** Duolingo-style apps lock units until the one before is done. A school child needs the opposite: to go straight to the lesson the class is on, or back to one before a test. Stars still show what has been practised, and the quiz battle only draws on practised units.
+**Units unlock in order.** A unit opens once the one before it has at least one star. Left open, a lesson path becomes one more game to tap around in, and the words never build on each other the way the book builds them. One star is enough to move on, so a child is never stuck behind a unit they find hard, and a unit already practised always stays open for revision before a test. The quiz battle only draws on practised units, so it follows the same order.
 
 **Built around each language's hard part.** For German, that is the article. Every noun is shown with *der*, *die* or *das* in blue, red or green, the colour convention many German teachers use, and there is a question type just for choosing it. For Chinese, it is tones and reading characters. Pinyin always shows tone marks, there is a "read it" question with the character on its own, and the Words tab carries a tone key.
 
@@ -75,10 +83,21 @@ The book itself brings in *der*, *die* and *das* in Lektion 5, so German nouns o
 
 - The Chinese words are chosen from each lesson's topic, not copied from the book's word list, so some will differ from the printed page. Checking against the book and editing `src/data.js` is quick.
 - The German words come from the publisher's lesson tests, which cover most but not every word in each lesson.
-- Pacing is the class's. The app doesn't know which lesson the class is on this week.
+- The app doesn't know which lesson the class is on this week. If the class is ahead, a child has to earn a star on each earlier unit first. That takes a few minutes per unit and doubles as revision, but a parent setting the starting unit would be quicker.
 - Speech quality depends on the device. Some built-in Chinese voices read single characters less clearly than full words.
 - It checks recognition, not writing or speaking. There is no handwriting or pronunciation practice.
 - Progress lives in one browser. Clearing site data or switching devices starts again.
+
+## How he uses it
+
+He picks by mood on the day, but mostly he goes for the lesson path rather than the Quiz Battle. That is the part that follows the book, so it is also the part that decides what unlocks.
+
+The device voices work for him on German and Chinese, so the listening questions stay in.
+
+What I'm watching for next:
+
+- **Whether the stars mean he knows the words.** In Mischmasch, which mixes his four languages, he was guessing a lot of Chinese. One star here can come from a lucky run, so I want to see if he gets the same words right a week later.
+- **Whether the locks frustrate him.** If he starts skipping the app on days the class is ahead of where he has unlocked, a parent-set starting unit moves up the list.
 
 ## Next
 

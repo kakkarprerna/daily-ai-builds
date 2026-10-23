@@ -1,6 +1,6 @@
 // A short explainer for parents and teachers.
 const POINTS = [
-  ['🗺️', 'Learn', 'One unit per textbook lesson or unit, all open, so your child can jump to the one the class is on. Each lesson mixes pictures, listening and matching. Missed questions come back at the end.'],
+  ['🗺️', 'Learn', 'One unit per textbook lesson or unit, opening in the order of the book: a unit unlocks once the one before has a star. Each lesson mixes pictures, listening and matching. Missed questions come back at the end.'],
   ['🏆', 'Quiz Battle', 'Ten timed questions from the units already practised. Faster answers score more, and the podium keeps the top five scores.'],
   ['📖', 'Words', 'Every word with its picture, meaning and a speaker button, for homework checks.'],
   ['🔊', 'Voices', "Words are read by your device's built-in voices. If a device has no Chinese voice, listening questions are skipped for Chinese."],
