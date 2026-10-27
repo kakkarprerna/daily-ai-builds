@@ -16,6 +16,14 @@ The people who leave are also the ones you never hear from. Support hears from t
 
 Running onboarding alongside product at Ylytic and Jinn Live taught me to look at the path to first value as one thing, from the first click to the first moment the product does its job, and to treat the way back in for returning people as part of it. Front Door puts that path on one page and says what to fix first.
 
+## How I got here
+
+Sign-up is where most users drop off, and the cause is often something basic: the screens, the landing page, or a forgotten-password flow that doesn't work. At both Ylytic and Jinn Live there were times our sign-up flow was broken. Reset links failed. Reset and confirmation emails sometimes landed in spam. In some cases the forgot-password flow created a new user in the database instead of resetting the existing one, so the person ended up with a second, empty account and none of their work. None of these were hard product problems. They were the basic requirements of a product, and they still cost us users who never got as far as seeing what it did.
+
+So I built this one for the basics, so they get checked as a whole flow before they lose anyone. That is why the way back in sits beside the way in. A returning user who can't reset a password is lost just as surely as a new one who never confirms their email, so rule S1 rates email and password sign-in with no self-serve reset as High.
+
+Front Door was the first of a pair. Once the way in was mapped, the next question was what happens between having an account and getting value from it, which became [Then What?](../then-what).
+
 ## What it does
 
 | | |
@@ -104,6 +112,16 @@ All three products are invented and their counts are illustrative.
 ## What it cannot do
 
 It sees only the steps, counts and notes you give it. It cannot see your screens, so a problem nobody wrote down stays invisible unless it shows up as a leak. Counts pulled from different tools or date ranges can make a step look worse than it is. It does not run the tests, and a fix that wins in one segment can lose in another.
+
+The flow starts at the sign-up button, so the landing page sits just outside it. A landing page that turns people away shows up only as fewer people reaching the first step, not as a finding of its own.
+
+## What I would test next
+
+The three worked examples are invented. The real test is a team whose sign-up flow has broken before, the way ours did, running their current flow through it.
+
+- **Would it have caught the break?** I would ask them to describe the flow as it was when it broke, and see whether Front Door puts that step at the top. I already know one gap from my own cases. Rule S1 fires when there is no self-serve reset, but a reset that exists and fails, or one that quietly creates a duplicate account, is only caught if a ticket or note says so and the model quotes it. If those breaks keep getting missed, the way back in needs its own steps and counts, the same as the way in.
+- **Do the basics rank high enough?** A missing password reset or a confirmation email that never arrives can look minor next to a long form. If teams keep moving those findings up, the severities are too low.
+- **Does the landing page need to be in the flow?** If most teams say the drop starts before the sign-up button, the next version should take the landing page as step zero.
 
 ## Models and keys
 
