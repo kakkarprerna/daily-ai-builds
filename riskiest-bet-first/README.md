@@ -100,6 +100,14 @@ The Nudge notes are a reconstruction for this tool, not the original document. P
 
 It ranks the bets you give it, so a bet nobody writes down stays invisible, apart from the three core categories rule C1 checks for. A generous evidence answer gives a generous verdict. It does not run the tests, and a passed test lowers the risk without removing it.
 
+## What I would test next
+
+So far the only real case behind it is Nudge, rebuilt after the fact, and I knew the answer before I ran it. That shows the rules can find a bet that was already known to be fatal. It does not show they can find one nobody has spotted yet.
+
+- **Run it before the answer is known.** I would give it to a founder or PM at the idea stage, keep their ranked bets, and come back after their first tests to see whether the bet that hurt them was near the top.
+- **Watch the evidence answers.** The verdict leans on how honestly people rate their own evidence. If teams keep calling a few friendly conversations "behaviour", rule E1 needs to ask for more than a label.
+- **Check whether reach deserves its own category.** I split it out because that is where Nudge broke. If it rarely ranks first for anyone else, it may belong back inside viability.
+
 ## Model and keys
 
 The default model is Meta's Muse Glimmer 30B on NVIDIA's free endpoint, running on this site's key, held in a serverless function and never sent to the browser. Visitors can switch to Anthropic, OpenAI or Gemini with their own key, which is sent once with the request and never stored. The prompt lives in the function and builds its category and evidence lists from the same file the rules use, so the two cannot drift apart. Output comes back as tagged lines rather than JSON, which keeps the provider swap cheap. The rules, the plan and the examples need no model at all.
