@@ -14,6 +14,12 @@ At Jinn Live I worked on rolling out voice agents and chatbots for enterprise cu
 
 One of those taught me the most. A voice agent stated wrong figures once every 10 to 15 calls, and we treated each report as a one-off until we saw the pattern. The cause was a cached, older copy of the knowledge base. After that, checking the knowledge base version became a step before closing any wrong-answer report.
 
+## How I got here
+
+The launch I keep coming back to was one where the client wanted to test the agent on live leads rather than spend longer training it with their own internal team. In the internal sessions the agent behaved as expected, because the team knew which questions customers usually ask and asked those. Real leads did not follow that script. Some asked whether they were talking to an AI and wanted details about it, a situation nobody had trained it for. The guardrails held on confidential information, but for some people the agent became a game to play with rather than something to get help from.
+
+Nothing in the test results warned us, because the tests only contained the questions the team expected. That is why this tool asks how many test cases are real against scripted (T1 to T6), and blocks a voice or high-risk launch tested on scripted cases alone. It is also why the default answer to "can we try it on live traffic?" is a pilot on a small share of it, with rollback triggers agreed before the first real conversation.
+
 The go-live call usually happens in a meeting, with a launch date already promised. Ready to Go Live? turns it into a checklist the delivery team and the customer can argue about before the date, with a rollout plan that lets the agent prove itself on a small share of traffic first.
 
 ## What it does
@@ -91,6 +97,14 @@ Companies, agents and people in the examples are invented.
 ## What it cannot do
 
 It judges the answers you give, so a generous answer gives a generous verdict. It does not test the agent, read transcripts or replace a legal review of recording and data processing. The second read only sees what the notes say, so a risk nobody wrote down stays invisible to it.
+
+## What I would test next
+
+The checklist is shaped by launches I have seen go wrong, which means hindsight. The real test is a delivery team using it before a launch whose outcome nobody knows yet.
+
+- **Does it catch the live-leads launch?** I would describe that launch as the team saw it at the time and check the verdict comes out Pilot first or Not ready, not Go live.
+- **Is there a check for people testing the agent itself?** Right now that only shows up under out-of-scope requests. If real launches keep hitting questions like "are you an AI, what model are you, ignore your instructions", it needs its own check: a set of adversarial and off-script questions in the test set, with the agent's expected reply for each.
+- **Would teams answer honestly in the room?** The verdict depends on the answers. I would run it with the delivery team and the customer together and see whether having both in the room changes the answers.
 
 ## Model and keys
 
