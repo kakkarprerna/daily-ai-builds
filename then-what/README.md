@@ -16,6 +16,14 @@ Activation reviews tend to go wrong in two places. The team has never agreed wha
 
 [Front Door](../front-door) in this repo looks at the way in, up to the first moment the product works. Then What? picks up from there. It came from running onboarding and customer success alongside product at Ylytic and Jinn Live, where the accounts we lost in month three had usually stalled in week one, and the clues were sitting in tickets and call notes nobody had lined up against the numbers.
 
+## How I got here
+
+Most of my career has been in startups, and there a PM rarely has the time to map a complete user workflow before something ships. What you usually have is a handful of steps you know a new user goes through, a few numbers if you are lucky, and a pile of support tickets. I wanted a PM to be able to start from just that and still get a picture of the whole journey from sign-up onwards, with the places people get stranded or drop off because of poor UX or UI, before those places show up as churn.
+
+That shaped two choices. Counts and times are optional (rule G3), so a ladder of steps with no data still gives ranked findings, and adding numbers sharpens them later. And the model only reads the notes a PM already has, quoting them, instead of asking for a research project first.
+
+The first version I built said too much. Every screen explained itself at length, which is the opposite of what a PM short on time needs, so I cut the copy across the whole app before shipping it.
+
 ## What it does
 
 | | |
@@ -103,6 +111,14 @@ All three products are invented, and their counts and times are illustrative.
 ## What it cannot do
 
 It sees only the milestones, counts, times and notes you give it. It cannot see your product, so a problem nobody wrote down stays invisible unless it shows up as a gap. Counts from different tools, date ranges or cohorts can make a milestone look worse than it is, and a median time hides a long tail. It does not run the tests, and a fix that lifts one segment can hurt another.
+
+## What I would test next
+
+The three worked examples are invented, so the rules have only been checked against products I made up. The test that matters is a PM at an early-stage startup mapping their own product with only the steps they know, and nothing else.
+
+- **Does a ladder with no numbers still point at the right place?** I would ask them where they think new users get stuck before they run it, then compare. If the top finding only repeats what they already knew, the tool saves them nothing.
+- **Do the findings hold up once real counts go in?** If adding numbers keeps reshuffling the ranking, the no-data mode is giving false confidence and should say so more plainly.
+- **Are my alert lines close to theirs?** Every line is a starting point I set. If most PMs override the same milestone, that line is wrong.
 
 ## Models and keys
 
