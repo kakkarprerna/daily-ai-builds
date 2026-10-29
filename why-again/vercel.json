@@ -1,0 +1,4 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- \":(top)why-again\" \":(top,exclude)why-again/vercel.json\"",
+  "functions": { "api/group.js": { "maxDuration": 60 } }
+}
